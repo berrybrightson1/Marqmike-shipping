@@ -2,6 +2,7 @@
 
 import { User, Bell, Globe, Shield, HelpCircle, ChevronRight, LogOut, ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function SettingsPage() {

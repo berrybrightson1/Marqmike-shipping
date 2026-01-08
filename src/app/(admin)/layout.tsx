@@ -1,6 +1,8 @@
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import GlobalSearchModal from "@/components/admin/GlobalSearchModal";
 
+export const dynamic = "force-dynamic";
+
 export default function AdminLayout({
     children,
 }: {
