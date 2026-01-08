@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String
+  name      String?
+  phone     String?
+  role      Role     @default(USER) 
+  orders    Order[]
+  procurementRequests ProcurementRequest[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  priceRMB    Float
+  priceGHS    Float
+  stock       Int      @default(0)
+  status      String   @default("In Stock") // "Ready in Ghana", "In China Warehouse"
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ProcurementRequest {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  itemName  String
+  itemUrl   String
+  status    String   @default("Pending") // "Pending", "In Review", "Approved", "Rejected"
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Shipment {
+  id            String   @id @default(cuid())
+  trackingId    String   @unique
+  status        String   // Renamed from currentStatus for consistency
+  
+  // UI Fields
+  shipperName   String   @default("Unknown")
+  recipientName String   @default("Unknown")
+  origin        String   @default("Unspecified")
+  destination   String   @default("Unspecified")
+  
+  events        ShipmentEvent[]
+}
+
+model ShipmentEvent {
+  id          String   @id @default(cuid())
+  shipmentId  String
+  shipment    Shipment @relation(fields: [shipmentId], references: [id])
+  status      String
+  location    String
+  timestamp   DateTime @default(now())
+}
+
+model CallLog {
+  id           String   @id @default(cuid())
+  customerName String
+  phoneNumber  String
+  summary      String   @db.Text 
+  outcome      String   // "Resolved", "Follow-up"
+  topic        String?  // "Inquiry", "Complaint", "Tracking"
+  adminId      String   
+  createdAt    DateTime @default(now())
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  adminName   String
+  action      String
+  details     String
+  timestamp   DateTime @default(now())
+}
+
+// Minimal Order model to satisfy User relation
+model Order {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
