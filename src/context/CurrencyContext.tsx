@@ -2,20 +2,21 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-type Currency = 'USD' | 'GHS' | 'NGN';
+type Currency = 'USD' | 'GHS' | 'NGN' | 'RMB';
 
 interface CurrencyContextType {
     currency: Currency;
     setCurrency: (currency: Currency) => void;
     exchangeRates: Record<Currency, number>;
-    convertPrice: (amountInUSD: number) => number;
-    formatPrice: (amountInUSD: number) => string;
+    convertPrice: (amountInRMB: number, baseCurrency?: 'RMB' | 'USD') => number;
+    formatPrice: (amountInRMB: number) => string;
 }
 
 const defaultRates: Record<Currency, number> = {
-    USD: 1,
-    GHS: 15.5,
-    NGN: 1600
+    USD: 0.14, // 1 RMB = 0.14 USD
+    GHS: 2.17, // 1 RMB = 2.17 GHS  
+    NGN: 224,  // 1 RMB = 224 NGN
+    RMB: 1
 };
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
@@ -29,8 +30,10 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         // Placeholder for fetching settings
     }, []);
 
-    const convertPrice = (amountInUSD: number) => {
-        return amountInUSD * exchangeRates[currency];
+    const convertPrice = (amountInRMB: number, baseCurrency: 'RMB' | 'USD' = 'RMB') => {
+        // If base is USD, first convert to RMB
+        const inRMB = baseCurrency === 'USD' ? amountInRMB / defaultRates.USD : amountInRMB;
+        return inRMB * exchangeRates[currency];
     };
 
     const formatPrice = (amountInUSD: number) => {
