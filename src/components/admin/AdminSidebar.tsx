@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Package, ShoppingBag, ClipboardList, Settings, LogOut, X, Menu, PhoneCall, Shield, User } from "lucide-react";
 import { useState } from "react";
-import { UserButton } from "@clerk/nextjs";
+import AdminLogoutButton from "./AdminLogoutButton";
 
 export default function AdminSidebar() {
     const pathname = usePathname();
@@ -121,15 +121,18 @@ export default function AdminSidebar() {
                 {/* Footer / User Profile */}
                 <div className="mt-auto pt-6">
                     {/* User Profile */}
-                    <div className="p-4 rounded-[24px] bg-[#053b87] border border-white/5 hover:border-white/10 transition-colors group cursor-pointer">
+                    <div className="p-4 rounded-[24px] bg-[#053b87] border border-white/5 hover:border-white/10 transition-colors">
                         <div className="flex items-center gap-3">
-                            <div className="bg-white p-1 rounded-full">
-                                <UserButton afterSignOutUrl="/" />
+                            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-brand-blue font-bold">
+                                A
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-bold text-white truncate">Admin User</p>
                                 <p className="text-xs text-white/60 truncate">admin@marqmike.com</p>
                             </div>
+                        </div>
+                        <div className="mt-3 pt-3 border-t border-white/10">
+                            <AdminLogoutButton />
                         </div>
                     </div>
 

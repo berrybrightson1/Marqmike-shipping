@@ -19,7 +19,25 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-    // If it's a protected route and user is not logged in, redirect to sign-in
+    // Check if this is an admin route
+    if (req.nextUrl.pathname.startsWith('/admin')) {
+        // Allow /admin/login to be public
+        if (req.nextUrl.pathname === '/admin/login') {
+            return;
+        }
+
+        // Check for admin session cookie
+        const adminSession = req.cookies.get('admin-session');
+        if (adminSession?.value === 'authenticated') {
+            // Admin is authenticated via session, allow access
+            return;
+        }
+
+        // No admin session, redirect to admin login
+        return Response.redirect(new URL('/admin/login', req.url));
+    }
+
+    // For non-admin protected routes, use Clerk
     if (isProtectedRoute(req)) {
         const { userId, redirectToSignIn } = await auth();
         if (!userId) {
