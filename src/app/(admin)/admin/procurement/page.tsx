@@ -6,29 +6,28 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { getProcurementRequests } from "@/app/actions/admin";
 
-// Mock Data
-const [requests, setRequests] = useState<any[]>([]);
-const [loading, setLoading] = useState(true);
-
-useEffect(() => {
-    const fetchRequests = async () => {
-        const res = await getProcurementRequests();
-        if (res.success && res.data) {
-            setRequests(res.data.map((r: any) => ({
-                id: r.id,
-                user: r.user?.email || "Unknown",
-                item: r.itemName,
-                url: r.itemUrl,
-                status: r.status,
-                date: new Date(r.createdAt).toLocaleDateString()
-            })));
-        }
-        setLoading(false);
-    };
-    fetchRequests();
-}, []);
-
 export default function AdminProcurementPage() {
+    const [requests, setRequests] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchRequests = async () => {
+            const res = await getProcurementRequests();
+            if (res.success && res.data) {
+                setRequests(res.data.map((r: any) => ({
+                    id: r.id,
+                    user: r.user?.email || "Unknown",
+                    item: r.itemName,
+                    url: r.itemUrl,
+                    status: r.status,
+                    date: new Date(r.createdAt).toLocaleDateString()
+                })));
+            }
+            setLoading(false);
+        };
+        fetchRequests();
+    }, []);
+
     return (
         <div className="p-6 md:p-10 space-y-8 h-screen overflow-y-auto pb-20 bg-[#F2F6FC]">
             <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
