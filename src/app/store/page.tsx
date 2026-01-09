@@ -1,26 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, SlidersHorizontal, Package, Loader2 } from "lucide-react";
+import { Search, SlidersHorizontal, Package, Loader2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useCart } from "@/context/CartContext";
+import CartDrawer from "@/components/cart/CartDrawer";
 
 // Mock fetch - replace with real server action
 async function getProducts() {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
     return [
-        { id: "1", name: "iPhone 15 Pro Max Case", priceRMB: 45, priceGHS: 85, category: "Electronics", image: "/placeholder.jpg", status: "In Stock" },
-        { id: "2", name: "Wireless Earbuds", priceRMB: 120, priceGHS: 220, category: "Electronics", image: "/placeholder.jpg", status: "In Stock" },
-        { id: "3", name: "Smart Watch", priceRMB: 280, priceGHS: 520, category: "Electronics", image: "/placeholder.jpg", status: "Ready in Ghana" },
+        { id: "1", name: "iPhone 15 Pro Max Case", priceRMB: 45, priceGHS: 85, category: "Electronics", image: "/placeholder.jpg", status: "In Stock", cbm: 0.0001 },
+        { id: "2", name: "Wireless Earbuds", priceRMB: 120, priceGHS: 220, category: "Electronics", image: "/placeholder.jpg", status: "In Stock", cbm: 0.0002 },
+        { id: "3", name: "Smart Watch", priceRMB: 280, priceGHS: 520, category: "Electronics", image: "/placeholder.jpg", status: "Ready in Ghana", cbm: 0.0003 },
     ];
 }
 
 export default function StorePage() {
     const { currency, convertPrice } = useCurrency();
+    const { getTotalItems } = useCart();
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [cartOpen, setCartOpen] = useState(false);
 
     useEffect(() => {
         getProducts().then(data => {
@@ -60,7 +64,10 @@ export default function StorePage() {
                             className="w-full pl-12 pr-4 py-3 bg-slate-50 rounded-xl border-none focus:ring-2 focus:ring-brand-blue/20 outline-none font-medium"
                         />
                     </div>
-                    <button className="p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+                    <button
+                        className="p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"
+                        aria-label="Filter products"
+                    >
                         <SlidersHorizontal size={20} className="text-slate-600" />
                     </button>
                 </div>
@@ -113,6 +120,23 @@ export default function StorePage() {
                     </div>
                 )}
             </div>
+
+            {/* Floating Cart Button */}
+            <button
+                onClick={() => setCartOpen(true)}
+                className="fixed bottom-6 right-6 w-16 h-16 bg-brand-blue hover:bg-[#003d91] text-white rounded-full shadow-2xl shadow-brand-blue/40 flex items-center justify-center transition-all hover:scale-110 z-30"
+                aria-label="Open cart"
+            >
+                <ShoppingCart size={24} />
+                {getTotalItems() > 0 && (
+                    <div className="absolute -top-2 -right-2 w-7 h-7 bg-brand-pink rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                        {getTotalItems()}
+                    </div>
+                )}
+            </button>
+
+            {/* Cart Drawer */}
+            <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
         </div>
     );
 }

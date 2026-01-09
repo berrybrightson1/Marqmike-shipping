@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, ShoppingBag, ClipboardList, Settings, LogOut, X, Menu, PhoneCall, Shield, User } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, ClipboardList, Settings, LogOut, X, Menu, PhoneCall, Shield, User, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import AdminLogoutButton from "./AdminLogoutButton";
 
@@ -37,6 +37,7 @@ export default function AdminSidebar() {
             title: "SYSTEM",
             items: [
                 { name: "Settings", href: "/admin/settings", icon: Settings },
+                { name: "Help Center", href: "/help", icon: HelpCircle },
             ]
         }
     ];

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, use } from "react";
-import { ChevronLeft, Package, Ruler, ShoppingCart, Calculator } from "lucide-react";
+import { ChevronLeft, Package, Ruler, ShoppingCart, Calculator, Plus } from "lucide-react";
 import Link from "next/link";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useCart } from "@/context/CartContext";
 import WhatsAppCheckoutModal from "@/components/checkout/WhatsAppCheckoutModal";
 
 // Mock product data
@@ -25,12 +26,22 @@ const mockProduct = {
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const { currency, convertPrice } = useCurrency();
+    const { addToCart } = useCart();
     const [quantity, setQuantity] = useState(1);
     const [checkoutOpen, setCheckoutOpen] = useState(false);
     const [showCBM, setShowCBM] = useState(false);
 
     const product = mockProduct; // In real app: fetch by ID
     const totalCBM = (product.specs.cbm * quantity).toFixed(6);
+
+    const handleAddToCart = () => {
+        addToCart({
+            id: product.id,
+            name: product.name,
+            priceRMB: product.priceRMB,
+            cbm: product.specs.cbm
+        }, quantity);
+    };
 
     return (
         <>
@@ -74,6 +85,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 <button
                                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                     className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-600"
+                                    aria-label="Decrease quantity"
                                 >
                                     −
                                 </button>
@@ -81,6 +93,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 <button
                                     onClick={() => setQuantity(quantity + 1)}
                                     className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-600"
+                                    aria-label="Increase quantity"
                                 >
                                     +
                                 </button>
@@ -91,6 +104,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         <button
                             onClick={() => setShowCBM(!showCBM)}
                             className="w-full bg-slate-50 rounded-2xl p-4 flex items-center justify-between hover:bg-slate-100 transition-colors mb-6"
+                            aria-label="Toggle CBM calculator"
                         >
                             <div className="flex items-center gap-3">
                                 <Calculator size={20} className="text-brand-blue" />
@@ -119,14 +133,23 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             </div>
                         )}
 
-                        {/* Buy Button */}
-                        <button
-                            onClick={() => setCheckoutOpen(true)}
-                            className="w-full bg-brand-pink text-white font-bold py-4 rounded-xl shadow-xl shadow-brand-pink/30 hover:bg-[#e0007d] transition-all flex items-center justify-center gap-2"
-                        >
-                            <ShoppingCart size={20} />
-                            Order via WhatsApp
-                        </button>
+                        {/* Action Buttons */}
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleAddToCart}
+                                className="flex-1 bg-brand-blue text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-blue/20 hover:bg-[#003d91] transition-all flex items-center justify-center gap-2"
+                            >
+                                <Plus size={20} />
+                                Add to Cart
+                            </button>
+                            <button
+                                onClick={() => setCheckoutOpen(true)}
+                                className="flex-1 bg-brand-pink text-white font-bold py-4 rounded-xl shadow-xl shadow-brand-pink/30 hover:bg-[#e0007d] transition-all flex items-center justify-center gap-2"
+                            >
+                                <ShoppingCart size={20} />
+                                Buy Now
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

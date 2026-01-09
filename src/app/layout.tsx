@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { ClerkProvider } from "@clerk/nextjs";
 import { CurrencyProvider } from "@/context/CurrencyContext";
+import { CartProvider } from "@/context/CartContext";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -25,8 +26,10 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${sora.variable} font-sans antialiased text-sm`}>
           <CurrencyProvider>
-            {children}
-            <Toaster richColors position="top-center" />
+            <CartProvider>
+              {children}
+              <Toaster richColors position="top-center" />
+            </CartProvider>
           </CurrencyProvider>
         </body>
       </html>

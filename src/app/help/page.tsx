@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Search, HelpCircle, Package, Shield, BookOpen, User, MapPin, ChevronRight, ExternalLink } from "lucide-react";
+import { Search, HelpCircle, Package, Shield, BookOpen, User, MapPin, ChevronRight, ExternalLink, ChevronLeft } from "lucide-react";
+import Link from "next/link";
 
 export default function HelpPage() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -231,6 +232,14 @@ export default function HelpPage() {
                         </button>
                     )}
                 </div>
+            </div>
+
+            {/* Back Button */}
+            <div className="max-w-3xl mx-auto px-6 mb-6">
+                <Link href="/dashboard" className="flex items-center gap-2 text-slate-500 hover:text-brand-blue transition-colors w-fit">
+                    <ChevronLeft size={18} />
+                    <span className="font-bold text-sm">Back to Dashboard</span>
+                </Link>
             </div>
 
             {/* Content */}
