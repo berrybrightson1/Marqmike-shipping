@@ -1,6 +1,6 @@
 "use client";
 
-import { Package, ShoppingCart, Calculator, CreditCard } from "lucide-react";
+import { Package, ShoppingCart, Calculator, HelpCircle } from "lucide-react";
 import Link from "next/link";
 
 interface ActionButtonProps {
@@ -36,7 +36,7 @@ export default function ActionGrid() {
         { label: "Delivery", icon: Package, href: "/dashboard/create", active: true },
         { label: "Buy For Me", icon: ShoppingCart, href: "/dashboard/procurement", active: false },
         { label: "Get Quote", icon: Calculator, href: "/dashboard/quote", active: false },
-        { label: "Payments", icon: CreditCard, href: "/dashboard/payments", active: false },
+        { label: "Help Center", icon: HelpCircle, href: "/help", active: false },
     ];
 
     return (

@@ -4,6 +4,7 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { Search, Plus, Upload, DollarSign, Package, AlertCircle, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getInventory } from "@/app/actions/admin";
+import Link from "next/link";
 
 // Mock Data for now until we connect Vercel Blob and DB
 const [inventory, setInventory] = useState<any[]>([]);
@@ -28,9 +29,9 @@ export default function InventoryManagerPage() {
                     <h1 className="text-3xl font-bold text-slate-800">Inventory Manager</h1>
                     <p className="text-slate-500 mt-1">Creator Studio: Upload and manage products.</p>
                 </div>
-                <button className="bg-brand-blue text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-brand-blue/20 hover:bg-[#003d91] transition-colors flex items-center gap-2">
+                <Link href="/admin/inventory/new" className="bg-brand-blue text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-brand-blue/20 hover:bg-[#003d91] transition-colors flex items-center gap-2">
                     <Plus size={18} /> Add New Product
-                </button>
+                </Link>
             </header>
 
             {/* Upload Area (Creator Studio) */}

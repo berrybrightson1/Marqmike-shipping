@@ -22,6 +22,7 @@ export default function AdminSidebar() {
                 { name: "Overview", href: "/admin", icon: LayoutDashboard },
                 { name: "Shipments", href: "/admin/shipments", icon: Package },
                 { name: "Customers", href: "/admin/customers", icon: User }, // Added based on image
+                { name: "Inventory", href: "/admin/inventory", icon: ClipboardList },
                 { name: "Procurement", href: "/admin/procurement", icon: ShoppingBag },
             ]
         },
