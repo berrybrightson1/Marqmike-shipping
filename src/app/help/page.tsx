@@ -6,6 +6,8 @@ import Link from "next/link";
 
 export default function HelpPage() {
     const [searchQuery, setSearchQuery] = useState("");
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [isSearching, setIsSearching] = useState(false);
 
     // FAQ and Guide Data
     const guides = [
@@ -55,12 +57,13 @@ export default function HelpPage() {
                         "Review the price in your preferred currency (RMB/GHS/USD)",
                         "Check the CBM (shipping volume) by expanding the calculator",
                         "Select your quantity using the +/- buttons",
-                        "Click 'Order via WhatsApp'",
+                        "Click 'Add to Cart' or 'Buy Now'",
+                        "For cart: Open cart drawer and click 'Checkout via WhatsApp'",
                         "Fill in your phone number and delivery location",
                         "Click 'Continue on WhatsApp' to finalize your order with our team",
                         "You'll receive a unique reference code (e.g., MQM-XXXX) for tracking"
                     ],
-                    tags: ["buy", "store", "shop", "purchase", "whatsapp"]
+                    tags: ["buy", "store", "shop", "purchase", "whatsapp", "cart"]
                 },
                 {
                     title: "'Buy For Me' Service Explained",
@@ -200,6 +203,8 @@ export default function HelpPage() {
         )
     })).filter(category => category.items.length > 0);
 
+    const displayGuides = isSearching || searchQuery ? filteredGuides : guides;
+
     return (
         <div className="min-h-screen bg-[#F2F6FC] pb-24">
             {/* Header */}
@@ -212,24 +217,89 @@ export default function HelpPage() {
                 </div>
             </header>
 
-            {/* Search Bar */}
+            {/* Search Bar with Dropdown */}
             <div className="max-w-3xl mx-auto px-6 -mt-12 relative z-20 mb-8">
-                <div className="bg-white rounded-2xl shadow-2xl border border-white/60 p-2 flex items-center gap-3">
-                    <Search className="text-slate-400 ml-4" size={24} />
-                    <input
-                        type="text"
-                        placeholder="Search for help... (e.g., 'how to track', 'CBM calculator', 'buy for me')"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="flex-1 py-4 px-2 bg-transparent border-none focus:outline-none text-slate-800 placeholder:text-slate-400 text-lg"
-                    />
-                    {searchQuery && (
+                <div className="relative">
+                    <div className="bg-white rounded-2xl shadow-2xl border border-white/60 p-2 flex items-center gap-3">
+                        <Search className="text-slate-400 ml-4" size={24} />
+                        <input
+                            type="text"
+                            placeholder="Search for help... (e.g., 'how to track', 'CBM calculator', 'buy for me')"
+                            value={searchQuery}
+                            onChange={(e) => {
+                                setSearchQuery(e.target.value);
+                                setShowDropdown(e.target.value.length > 0);
+                                setIsSearching(false);
+                            }}
+                            onFocus={() => searchQuery && setShowDropdown(true)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    setIsSearching(true);
+                                    setShowDropdown(false);
+                                }
+                            }}
+                            className="flex-1 py-4 px-2 bg-transparent border-none focus:outline-none text-slate-800 placeholder:text-slate-400 text-lg"
+                        />
+                        {searchQuery && (
+                            <button
+                                onClick={() => {
+                                    setSearchQuery("");
+                                    setShowDropdown(false);
+                                    setIsSearching(false);
+                                }}
+                                className="mr-2 text-slate-400 hover:text-slate-600 transition-colors text-sm font-bold"
+                            >
+                                Clear
+                            </button>
+                        )}
                         <button
-                            onClick={() => setSearchQuery("")}
-                            className="mr-4 text-slate-400 hover:text-slate-600 transition-colors"
+                            onClick={() => {
+                                setIsSearching(true);
+                                setShowDropdown(false);
+                            }}
+                            className="bg-brand-blue hover:bg-[#003d91] text-white px-6 py-3 rounded-xl font-bold transition-colors flex items-center gap-2"
                         >
-                            Clear
+                            <Search size={18} />
+                            Search
                         </button>
+                    </div>
+
+                    {/* Dropdown Suggestions */}
+                    {showDropdown && !isSearching && filteredGuides.length > 0 && (
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-100 max-h-[400px] overflow-y-auto z-50">
+                            {filteredGuides.slice(0, 3).map((category, idx) => (
+                                <div key={idx} className="border-b border-slate-100 last:border-none">
+                                    <div className="px-6 py-3 bg-slate-50 font-bold text-slate-700 text-sm flex items-center gap-2">
+                                        <category.icon size={16} className={category.color} />
+                                        {category.category}
+                                    </div>
+                                    {category.items.slice(0, 3).map((item, itemIdx) => (
+                                        <button
+                                            key={itemIdx}
+                                            onClick={() => {
+                                                setIsSearching(true);
+                                                setShowDropdown(false);
+                                            }}
+                                            className="w-full px-6 py-3 hover:bg-slate-50 transition-colors text-left"
+                                        >
+                                            <div className="font-bold text-slate-800 text-sm mb-1">{item.title}</div>
+                                            <div className="text-xs text-slate-500 line-clamp-1">
+                                                {item.content[0]}
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            ))}
+                            <button
+                                onClick={() => {
+                                    setIsSearching(true);
+                                    setShowDropdown(false);
+                                }}
+                                className="w-full px-6 py-3 bg-brand-blue/5 hover:bg-brand-blue/10 text-brand-blue font-bold text-sm transition-colors"
+                            >
+                                View all results ({filteredGuides.reduce((sum, cat) => sum + cat.items.length, 0)})
+                            </button>
+                        </div>
                     )}
                 </div>
             </div>
@@ -244,19 +314,22 @@ export default function HelpPage() {
 
             {/* Content */}
             <div className="max-w-3xl mx-auto px-6 space-y-6">
-                {filteredGuides.length === 0 ? (
+                {displayGuides.length === 0 ? (
                     <div className="text-center py-12 text-slate-400">
                         <Package size={48} className="mx-auto mb-4 opacity-50" />
                         <p>No results found for "{searchQuery}"</p>
                         <button
-                            onClick={() => setSearchQuery("")}
+                            onClick={() => {
+                                setSearchQuery("");
+                                setIsSearching(false);
+                            }}
                             className="mt-4 text-brand-blue hover:text-brand-pink transition-colors font-bold"
                         >
                             Clear search
                         </button>
                     </div>
                 ) : (
-                    filteredGuides.map((category, idx) => (
+                    displayGuides.map((category, idx) => (
                         <section key={idx} className="bg-white/80 backdrop-blur-xl border border-white/60 rounded-[32px] p-8 shadow-xl shadow-slate-200/50">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className={`p-3 ${category.color} rounded-2xl`}>
