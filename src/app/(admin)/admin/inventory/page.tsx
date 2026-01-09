@@ -6,22 +6,21 @@ import { useState, useEffect } from "react";
 import { getInventory } from "@/app/actions/admin";
 import Link from "next/link";
 
-// Mock Data for now until we connect Vercel Blob and DB
-const [inventory, setInventory] = useState<any[]>([]);
-const [loading, setLoading] = useState(true);
-
-useEffect(() => {
-    const fetchInventory = async () => {
-        const res = await getInventory();
-        if (res.success && res.data) {
-            setInventory(res.data);
-        }
-        setLoading(false);
-    };
-    fetchInventory();
-}, []);
-
 export default function InventoryManagerPage() {
+    const [inventory, setInventory] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchInventory = async () => {
+            const res = await getInventory();
+            if (res.success && res.data) {
+                setInventory(res.data);
+            }
+            setLoading(false);
+        };
+        fetchInventory();
+    }, []);
+
     return (
         <div className="p-6 md:p-10 space-y-8 h-screen overflow-y-auto pb-20">
             <header className="flex justify-between items-center mb-8">
