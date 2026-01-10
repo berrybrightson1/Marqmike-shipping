@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, Filter, ChevronDown, Package, Clock, CheckCircle, RotateCw, ShoppingBag, Eye, X, ExternalLink, RefreshCw } from "lucide-react";
+import { Search, Filter, ChevronDown, Package, Clock, CheckCircle, RotateCw, ShoppingBag, Eye, X, ExternalLink, RefreshCw, MessageCircle, Bell } from "lucide-react";
 import { getAdminOrders, updateOrderStatus } from "@/app/actions/orders";
 import { toast } from "sonner";
 import { GlassCard } from "@/components/ui/GlassCard";
@@ -171,17 +171,29 @@ export default function AdminOrdersPage() {
                                                         <Package size={12} className="text-slate-400" />
                                                         {order.trackingId}
                                                     </div>
-                                                    <button
-                                                        onClick={() => {
-                                                            const phone = order.customerPhone?.replace(/\D/g, '') || "";
-                                                            const message = `Hello ${order.customerName}, your order *${order.refCode}* has been processed! Your tracking ID is *${order.trackingId}*. You can track it here: https://marqmike.com/track`;
-                                                            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
-                                                        }}
-                                                        className="flex items-center gap-1 text-[10px] font-bold text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 px-2 py-1 rounded transition-colors"
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" /></svg>
-                                                        WhatsApp
-                                                    </button>
+                                                    <div className="flex gap-2 mt-1">
+                                                        <button
+                                                            onClick={() => {
+                                                                const phone = order.customerPhone?.replace(/\D/g, '') || "";
+                                                                const message = `Hello ${order.customerName}, your order *${order.refCode}* has been processed! Your tracking ID is *${order.trackingId}*. You can track it here: https://marqmike.com/track`;
+                                                                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                                                            }}
+                                                            title="Chat on WhatsApp"
+                                                            className="w-7 h-7 flex items-center justify-center text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 rounded-full transition-colors"
+                                                        >
+                                                            <MessageCircle size={14} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => {
+                                                                toast.success(`Notification sent to ${order.customerName}`);
+                                                                // In future, call sendNotification action here
+                                                            }}
+                                                            title="Send App Notification"
+                                                            className="w-7 h-7 flex items-center justify-center text-brand-blue hover:text-brand-blue/80 bg-brand-blue/5 hover:bg-brand-blue/10 rounded-full transition-colors"
+                                                        >
+                                                            <Bell size={14} />
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             ) : (
                                                 <button

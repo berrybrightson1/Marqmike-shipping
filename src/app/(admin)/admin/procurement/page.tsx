@@ -1,7 +1,7 @@
 "use client";
 
 import { GlassCard } from "@/components/ui/GlassCard";
-import { Search, ExternalLink, Package, Clock, CheckCircle, Truck, XCircle, MoreHorizontal } from "lucide-react";
+import { Search, ExternalLink, Package, Clock, CheckCircle, Truck, XCircle, MoreHorizontal, DollarSign } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getAdminProcurementRequests, updateProcurementStatus } from "@/app/actions/procurement";
 import { toast } from "sonner";
@@ -72,7 +72,7 @@ export default function ProcurementAdminPage() {
                     <h1 className="text-3xl font-bold text-slate-800">Procurement Manager</h1>
                     <p className="text-slate-500 mt-1">Manage "Buy For Me" requests from customers.</p>
                 </div>
-                <button onClick={handleRefresh} className="p-2 text-slate-400 hover:text-brand-blue hover:bg-brand-blue/5 rounded-xl transition-colors">
+                <button onClick={handleRefresh} title="Refresh Requests" className="p-2 text-slate-400 hover:text-brand-blue hover:bg-brand-blue/5 rounded-xl transition-colors">
                     <CheckCircle size={20} className={loading ? "animate-spin" : ""} />
                 </button>
             </header>
@@ -145,7 +145,7 @@ export default function ProcurementAdminPage() {
                                             )}
                                             {req.status === "Item Available" && (
                                                 <button onClick={() => handleStatusUpdate(req.id, "Paid")} title="Mark Paid" className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100">
-                                                    <DollarSignIcon />
+                                                    <DollarSign size={16} />
                                                 </button>
                                             )}
                                             {req.status === "Paid" && (

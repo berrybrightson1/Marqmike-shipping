@@ -132,8 +132,7 @@ export default function ProcurementPage() {
                         </div>
                     </div>
 
-                    {/* Calculator Tool */}
-                    <CBMCalculator />
+
 
                     {/* Request History */}
                     <div className="flex-1 pb-10">

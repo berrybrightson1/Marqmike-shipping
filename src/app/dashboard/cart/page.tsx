@@ -5,6 +5,8 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import { Trash2, ArrowRight, ShoppingBag, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import CheckoutModal from "@/components/checkout/CheckoutModal";
+import { useState } from "react";
 
 export default function CartPage() {
     const { cart, removeFromCart, clearCart, totalItems } = useCart();
@@ -16,33 +18,19 @@ export default function CartPage() {
         }, 0);
     };
 
-    const handleCheckout = () => {
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+
+    const handleCheckoutTrigger = () => {
         if (cart.length === 0) {
             toast.error("Your cart is empty");
             return;
         }
-
-        // Format message for WhatsApp
-        let message = "Hello Marqmike, I want to order the following:\n\n";
-        cart.forEach((item, index) => {
-            message += `${index + 1}. *${item.name}* (x${item.quantity}) - $${item.price}\n`;
-            if (item.url) message += `   Link: ${item.url}\n`;
-        });
-        message += `\n*Total Estimate: $${calculateTotal().toFixed(2)}*`;
-
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/233249999065?text=${encodedMessage}`; // Using the business number from task.md or context
-
-        window.open(whatsappUrl, "_blank");
-        clearCart(); // Optional: clear cart after successful handover? Maybe keep for record. Keeping for now.
+        setIsCheckoutOpen(true);
     };
 
     return (
         <div className="min-h-screen bg-[#F2F6FC] pb-24">
-            {/* Header Mock - ideally we fetch user here too, but for Cart page simple header is fine */}
-            {/* Using a simpler header or the real one if we fetch user. For speed, I'll assume client header is okay here or skip it */}
-            {/* Actually, user expects consistent header. I should probably fetch user in a server page wrapper again. */}
-            {/* For now, just a simple titled header to avoid complexity in this step */}
+            {/* Header Mock */}
             <div className="bg-brand-blue pt-12 pb-8 px-6 rounded-b-[40px] shadow-lg mb-6 relative">
                 <Link href="/dashboard" className="absolute top-12 left-6 text-white/80 hover:text-white transition-colors">
                     <ArrowRight className="rotate-180" size={24} />
@@ -94,7 +82,7 @@ export default function CartPage() {
                                 <span className="text-2xl font-bold text-slate-800">${calculateTotal().toFixed(2)}</span>
                             </div>
                             <button
-                                onClick={handleCheckout}
+                                onClick={handleCheckoutTrigger}
                                 className="w-full py-4 bg-[#25D366] text-white rounded-xl font-bold text-lg shadow-lg shadow-green-200 flex items-center justify-center gap-2 hover:bg-[#128C7E] transition-colors"
                             >
                                 <MessageCircle size={20} />
@@ -107,6 +95,16 @@ export default function CartPage() {
                     </>
                 )}
             </div>
+
+            <CheckoutModal
+                isOpen={isCheckoutOpen}
+                onClose={() => setIsCheckoutOpen(false)}
+                cartItems={cart.map(item => ({
+                    ...item,
+                    itemName: item.name, // Map for API
+                    itemUrl: item.url
+                }))}
+            />
         </div>
     );
 }

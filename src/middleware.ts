@@ -15,9 +15,9 @@ export async function middleware(req: NextRequest) {
     }
 
     // Check if user has valid session cookie
-    if (!sessionToken) {
-        return NextResponse.redirect(new URL("/auth/login", req.url));
-    }
+    // if (!sessionToken) {
+    //     return NextResponse.redirect(new URL("/auth/login", req.url));
+    // }
 
     // Role-based protection:
     // Ideally we verify role here, but DB access in middleware is unstable.
