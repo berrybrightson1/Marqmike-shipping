@@ -196,9 +196,36 @@ export default function AdminHelpPage() {
                         <strong className="text-brand-blue block mt-2">Search below to find instant solutions.</strong>
                     </p>
                 </header>
+                {/* Quick Actions (Direct Links) */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                    <Link href="/admin/procurement" className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all group">
+                        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <Box size={20} />
+                        </div>
+                        <span className="text-sm font-bold text-slate-700">Procurements</span>
+                    </Link>
+                    <Link href="/admin/shipments" className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all group">
+                        <div className="w-12 h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <Package size={20} />
+                        </div>
+                        <span className="text-sm font-bold text-slate-700">New Shipment</span>
+                    </Link>
+                    <Link href="/admin/customers" className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all group">
+                        <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <Users size={20} />
+                        </div>
+                        <span className="text-sm font-bold text-slate-700">Customers</span>
+                    </Link>
+                    <Link href="/admin/settings" className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all group">
+                        <div className="w-12 h-12 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <Download size={20} />
+                        </div>
+                        <span className="text-sm font-bold text-slate-700">Reports</span>
+                    </Link>
+                </div>
 
                 {/* Search */}
-                <div className="relative max-w-xl mx-auto mb-12">
+                <div className="relative max-w-2xl mx-auto mb-12">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                     <input
                         type="text"

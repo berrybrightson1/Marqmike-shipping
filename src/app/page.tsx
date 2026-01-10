@@ -24,7 +24,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#074eaf] relative overflow-hidden flex flex-col items-center justify-center p-6 font-sans">
       {/* Brand Logo */}
-      <div className="absolute top-20 left-0 w-full flex justify-center z-20">
+      <div className="absolute top-12 left-0 w-full flex justify-center z-20">
         <motion.img
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -39,7 +39,8 @@ export default function LandingPage() {
       <div className="relative z-10 w-full max-w-md text-center">
         <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-[1.1] tracking-tight pt-10">
           Track your <br />
-          <span className="text-[#ff1493]">packages</span> instantly.
+          Packages <br />
+          <span className="text-[#ff1493]">Instantly</span>
         </h2>
 
         <p className="text-white/80 mb-12 text-sm md:text-base leading-relaxed max-w-[280px] mx-auto font-bold tracking-tight">
