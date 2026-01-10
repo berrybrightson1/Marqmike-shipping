@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prevent iOS auto‑zoom on inputs */
+@media (max-width: 639px) {
+
+  input,
+  select,
+  textarea {
+    @apply text-base;
+    /* 16px */
+  }
+}
+
 :root {
   --background: #f0f5ff;
   /* Slightly blue tinted white */

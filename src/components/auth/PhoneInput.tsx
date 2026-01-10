@@ -86,11 +86,11 @@ export default function PhoneInput({ value, onChange, onEnter, disabled }: Phone
 
     return (
         <div className="relative" ref={dropdownRef}>
-            {/* Unified Container */}
+            {/* Unified Container - Glassmorphic Style */}
             <div
                 className={`
-                    flex items-center w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2
-                    focus-within:ring-2 focus-within:ring-brand-pink/20 focus-within:border-brand-pink/50 
+                    flex items-center w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-[28px] px-6 py-2 h-20
+                    focus-within:ring-4 focus-within:ring-white/5 focus-within:border-white/20 
                     transition-all
                     ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
                 `}
@@ -100,14 +100,14 @@ export default function PhoneInput({ value, onChange, onEnter, disabled }: Phone
                     type="button"
                     onClick={() => setIsOpen(!isOpen)}
                     disabled={disabled}
-                    className="flex items-center gap-2 pr-3 border-r border-slate-200 hover:bg-slate-100/50 py-2 -ml-2 pl-2 rounded-lg transition-colors flex-shrink-0"
+                    className="flex items-center gap-3 pr-4 border-r border-white/10 hover:bg-white/5 py-3 -ml-2 pl-2 rounded-xl transition-colors flex-shrink-0"
                 >
-                    {/* Circular Flag Container */}
-                    <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    {/* Circular Flag Container - Slightly larger */}
+                    <div className="w-8 h-8 rounded-full bg-white/10 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
                         <selectedCountry.flag title={selectedCountry.country} className="w-full h-full object-cover" />
                     </div>
-                    <span className="font-medium text-slate-700">{selectedCountry.code}</span>
-                    <ChevronDown className="text-slate-400" size={16} />
+                    <span className="font-bold text-white text-lg">{selectedCountry.code}</span>
+                    <ChevronDown className="text-white/40" size={20} />
                 </button>
 
                 {/* Phone Number Input */}
@@ -116,61 +116,52 @@ export default function PhoneInput({ value, onChange, onEnter, disabled }: Phone
                     value={formatPhoneDisplay()}
                     onChange={handlePhoneChange}
                     onKeyDown={(e) => e.key === "Enter" && onEnter?.()}
-                    placeholder="123456789"
+                    placeholder="123 456 789"
                     disabled={disabled}
-                    className="flex-1 bg-transparent border-none px-4 py-2 font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0 w-full"
+                    className="flex-1 bg-transparent border-none px-4 py-2 font-mono text-xl text-white placeholder:text-white/20 focus:outline-none focus:ring-0 w-full"
                 />
             </div>
 
-            {/* Dropdown Menu */}
+            {/* Dropdown Menu - Dark Glass */}
             {isOpen && (
-                <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-slate-200 z-50 overflow-hidden">
+                <div className="absolute top-full left-0 mt-2 w-80 bg-[#001e4d]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden">
                     {/* Search */}
-                    <div className="p-3 border-b border-slate-100">
+                    <div className="p-4 border-b border-white/10">
                         <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={18} />
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Search for countries"
-                                className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/20"
+                                placeholder="Search countries..."
+                                className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/10 placeholder:text-white/20"
                             />
                         </div>
                     </div>
 
                     {/* Country List */}
-                    <div className="max-h-64 overflow-y-auto scrollbar-hide">
-                        <style jsx>{`
-                            .scrollbar-hide::-webkit-scrollbar {
-                                display: none;
-                            }
-                            .scrollbar-hide {
-                                -ms-overflow-style: none;
-                                scrollbar-width: none;
-                            }
-                        `}</style>
+                    <div className="max-h-64 overflow-y-auto no-scrollbar">
                         {filteredCountries.map((country) => (
                             <button
                                 key={country.code}
                                 type="button"
                                 onClick={() => handleCountrySelect(country)}
-                                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors text-left"
+                                className="w-full flex items-center gap-4 px-5 py-4 hover:bg-white/5 transition-colors text-left border-b border-white/5 last:border-0"
                             >
-                                <div className="w-6 h-4 shadow-sm overflow-hidden rounded-[2px] flex-shrink-0">
+                                <div className="w-8 h-6 shadow-sm overflow-hidden rounded-[4px] flex-shrink-0">
                                     <country.flag title={country.country} className="w-full h-full object-cover" />
                                 </div>
                                 <div className="flex-1">
-                                    <p className="text-sm font-medium text-slate-800">{country.country}</p>
-                                    <p className="text-xs text-slate-500">{country.code}</p>
+                                    <p className="text-base font-bold text-white/90">{country.country}</p>
+                                    <p className="text-xs text-white/40 font-mono tracking-wide">{country.code}</p>
                                 </div>
                                 {selectedCountry.code === country.code && (
-                                    <Check className="text-brand-blue" size={18} />
+                                    <Check className="text-[#ff1493]" size={20} />
                                 )}
                             </button>
                         ))}
                         {filteredCountries.length === 0 && (
-                            <div className="px-4 py-8 text-center text-slate-500 text-sm">
+                            <div className="px-4 py-8 text-center text-white/40 text-sm">
                                 No countries found
                             </div>
                         )}

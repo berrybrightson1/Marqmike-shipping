@@ -16,6 +16,13 @@ export const metadata: Metadata = {
   description: "Global Logistics Partner",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -24,13 +31,15 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${sora.variable} font-sans antialiased text-sm`}>
-          <CurrencyProvider>
-            <CartProvider>
-              {children}
-              <Toaster richColors position="top-center" />
-            </CartProvider>
-          </CurrencyProvider>
+        <body className={`${sora.variable} font-sans antialiased text-sm`} suppressHydrationWarning>
+          <div className="w-full min-h-screen overflow-x-hidden no-scrollbar">
+            <CurrencyProvider>
+              <CartProvider>
+                {children}
+                <Toaster richColors position="top-center" />
+              </CartProvider>
+            </CurrencyProvider>
+          </div>
         </body>
       </html>
     </ClerkProvider>

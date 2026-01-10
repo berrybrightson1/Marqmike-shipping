@@ -1,22 +1,12 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowRight, Loader2, Sparkles, Shield, Zap } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowRight, Loader2, User, Briefcase } from "lucide-react";
 import { motion } from "framer-motion";
 import { signUp } from "@/app/actions/auth";
 import { toast } from "sonner";
 import PhoneInput from "@/components/auth/PhoneInput";
-
-import { useSearchParams } from "next/navigation";
-
-export default function SignupPage() {
-    return (
-        <Suspense>
-            <SignupPageContent />
-        </Suspense>
-    );
-}
 
 function SignupPageContent() {
     const router = useRouter();
@@ -25,60 +15,40 @@ function SignupPageContent() {
     const [businessName, setBusinessName] = useState("");
     const [phone, setPhone] = useState(searchParams.get("phone") || "");
     const [loading, setLoading] = useState(false);
-
-    // Validation State
     const [error, setError] = useState<string | null>(null);
     const [shake, setShake] = useState(false);
 
     const validatePhone = (number: string) => {
-        // Remove spaces and non-digits just in case
         const cleanNum = number.replace(/\D/g, "");
-
-        // Ghana: 233 + 9 digits = 12
         if (cleanNum.startsWith("233")) return cleanNum.length === 12;
-        // Nigeria: 234 + 10 digits = 13
         if (cleanNum.startsWith("234")) return cleanNum.length === 13;
-        // USA: 1 + 10 digits = 11
         if (cleanNum.startsWith("1")) return cleanNum.length === 11;
-        // UK: 44 + 10 digits = 12
         if (cleanNum.startsWith("44")) return cleanNum.length === 12;
-        // Kenya: 254 + 9 digits = 12
         if (cleanNum.startsWith("254")) return cleanNum.length === 12;
-
-        // Default strictness for others: at least 10 digits
         return cleanNum.length >= 10;
     };
 
     const triggerError = (message: string) => {
         setError(message);
-        setShake(true);
-        setTimeout(() => setShake(false), 500); // Shake duration
-
-        // Reset error text after 2 seconds
+        setShake(shake => !shake);
         setTimeout(() => setError(null), 2000);
     };
 
     const handleSignup = async () => {
-        // Strict Name Validation
         if (!name.trim() || name.trim().split(" ").length < 2) {
             triggerError("Enter Full Name");
             return;
         }
-
-        // Business Name Validation
         if (!businessName.trim()) {
             triggerError("Enter Business Name");
             return;
         }
-
-        // Strict Phone Validation
         if (!phone || !validatePhone(phone)) {
             triggerError("Invalid Number");
             return;
         }
 
         setLoading(true);
-
         const formData = new FormData();
         formData.append("name", name);
         formData.append("businessName", businessName);
@@ -90,13 +60,9 @@ function SignupPageContent() {
             toast.success("Welcome to Marqmike! 🎉");
             router.push("/dashboard");
         } else {
-            // Smart Redirect if account exists
-            if (result.error && result.error.includes("Account already exists")) {
+            if (result.error?.includes("Account already exists")) {
                 triggerError("Account Exists");
-                // Brief delay to let user see the error, then redirect
-                setTimeout(() => {
-                    router.push(`/auth/login?phone=${encodeURIComponent(phone)}`);
-                }, 1500);
+                setTimeout(() => router.push(`/auth/login?phone=${encodeURIComponent(phone)}`), 1500);
             } else {
                 triggerError("Failed to Create");
                 setLoading(false);
@@ -105,74 +71,75 @@ function SignupPageContent() {
     };
 
     return (
-        <div className="min-h-screen w-full bg-gradient-to-b from-[#F2F6FC] to-white flex flex-col justify-center items-center px-6 py-8 relative overflow-hidden">
-            {/* Subtle Background Orbs */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-pink/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-72 h-72 bg-brand-blue/10 rounded-full blur-3xl" />
+        <div className="min-h-screen w-full bg-[#074eaf] flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans">
+            {/* Background Decorative Element */}
+            <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#ff1493]/5 rounded-full blur-[150px]" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/5 rounded-full blur-[150px]" />
 
-            {/* Mobile Phone Frame */}
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="relative z-10 w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden"
-                style={{ minHeight: '700px' }}
-            >
-                {/* Pink Header */}
-                <div className="bg-brand-pink pt-12 pb-32 px-8 relative">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl" />
+            <div className="w-full max-w-md flex flex-col items-center relative z-10">
+                {/* Ultra Massive Logo */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="mb-16 md:mb-24"
+                >
+                    <img
+                        src="/logos/marqmike-white-logo.svg"
+                        alt="Marqmike"
+                        className="h-44 md:h-64 w-auto cursor-pointer hover:scale-105 transition-transform"
+                        onClick={() => router.push("/")}
+                    />
+                </motion.div>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center relative z-10"
-                    >
-                        <h2 className="text-3xl font-bold text-white mb-2">Join Marqmike</h2>
-                        <p className="text-white/80 text-base">Start shipping today</p>
-                    </motion.div>
+                <div className="text-center mb-12">
+                    <h2 className="text-4xl font-black text-white mb-3 tracking-tight">Join Marqmike</h2>
+                    <p className="text-white/90 font-bold tracking-tight">Start shipping around the world today</p>
                 </div>
 
-                <div className="bg-white px-8 pb-10 pt-8 -mt-20 relative z-10 rounded-t-3xl">
-                    <motion.div
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="space-y-6"
-                    >
-                        <div className="pt-2">
-                            <label className="text-slate-700 font-bold text-sm mb-3 block">
-                                Full Name
-                            </label>
+                <div className="w-full space-y-6">
+                    <div className="space-y-4">
+                        <label className="text-white font-black text-[10px] uppercase tracking-[0.2em] pl-1">
+                            Full Name
+                        </label>
+                        <div className="relative group">
+                            <div className="absolute left-6 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-white transition-colors">
+                                <User size={20} />
+                            </div>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                onKeyDown={(e) => e.key === "Enter" && handleSignup()}
                                 placeholder="John Doe"
                                 disabled={loading}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-pink/20 focus:border-brand-pink/50 transition-all disabled:opacity-50"
+                                className="w-full bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[28px] h-[60px] pl-16 pr-6 text-white font-bold placeholder:text-white/10 focus:outline-none focus:ring-4 focus:ring-white/5 focus:border-white/20 transition-all text-lg"
                             />
                         </div>
+                    </div>
 
-                        <div>
-                            <label className="text-slate-700 font-bold text-sm mb-3 block">
-                                Business Name
-                            </label>
+                    <div className="space-y-4">
+                        <label className="text-white font-black text-[10px] uppercase tracking-[0.2em] pl-1">
+                            Business / Company Name
+                        </label>
+                        <div className="relative group">
+                            <div className="absolute left-6 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-white transition-colors">
+                                <Briefcase size={20} />
+                            </div>
                             <input
                                 type="text"
                                 value={businessName}
                                 onChange={(e) => setBusinessName(e.target.value)}
-                                onKeyDown={(e) => e.key === "Enter" && handleSignup()}
-                                placeholder="e.g. Berry's Boutique"
+                                placeholder="Logistics Express"
                                 disabled={loading}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-pink/20 focus:border-brand-pink/50 transition-all disabled:opacity-50"
+                                className="w-full bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[28px] h-[60px] pl-16 pr-6 text-white font-bold placeholder:text-white/10 focus:outline-none focus:ring-4 focus:ring-white/5 focus:border-white/20 transition-all text-lg"
                             />
                         </div>
+                    </div>
 
-                        <div>
-                            <label className="text-slate-700 font-bold text-sm mb-3 block">
-                                Phone Number
-                            </label>
+                    <div className="space-y-4">
+                        <label className="text-white font-black text-[10px] uppercase tracking-[0.2em] pl-1">
+                            Phone Number
+                        </label>
+                        <div className="p-1">
                             <PhoneInput
                                 value={phone}
                                 onChange={setPhone}
@@ -180,45 +147,54 @@ function SignupPageContent() {
                                 disabled={loading}
                             />
                         </div>
+                    </div>
 
-                        {/* Shake System Button */}
-                        <motion.button
-                            onClick={handleSignup}
-                            disabled={loading || !!error}
-                            animate={shake ? { x: [0, -10, 10, -10, 10, 0] } : {}}
-                            transition={{ duration: 0.4 }}
-                            className={`
-                                w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all flex items-center justify-center gap-2 group
-                                ${error
-                                    ? "bg-red-500 text-white shadow-red-500/25 cursor-not-allowed"
-                                    : "bg-brand-pink text-white shadow-brand-pink/25 hover:shadow-xl hover:bg-brand-pink/90"
-                                }
-                                ${loading ? "opacity-75 cursor-wait" : ""}
-                            `}
-                        >
-                            {loading ? (
-                                <Loader2 className="animate-spin" />
-                            ) : error ? (
-                                <>
-                                    {error}
-                                </>
-                            ) : (
-                                <>
-                                    Get Started
-                                    <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-                                </>
-                            )}
-                        </motion.button>
-
-                        <div className="text-center text-sm text-slate-600 pt-2">
-                            Already have an account?{" "}
-                            <a href="/auth/login" className="text-brand-pink hover:text-white font-bold transition-colors">
-                                Sign in
-                            </a>
-                        </div>
-                    </motion.div>
+                    <motion.button
+                        onClick={handleSignup}
+                        disabled={loading || !!error}
+                        animate={shake ? { x: [0, -10, 10, -10, 10, 0] } : {}}
+                        className={`
+                            w-full h-18 py-5 rounded-[22px] font-black text-lg transition-all flex items-center justify-center gap-3 shadow-2xl mt-4
+                            ${error
+                                ? "bg-red-500 text-white"
+                                : "bg-[#ff1493] text-white hover:scale-[1.02] active:scale-[0.98] shadow-[#ff1493]/20"
+                            }
+                            ${loading ? "opacity-75 cursor-wait" : ""}
+                        `}
+                    >
+                        {loading ? (
+                            <Loader2 className="animate-spin" />
+                        ) : error ? (
+                            error
+                        ) : (
+                            <>
+                                Create Account
+                                <ArrowRight size={22} strokeWidth={3} />
+                            </>
+                        )}
+                    </motion.button>
                 </div>
-            </motion.div>
+
+                <div className="mt-10 text-center">
+                    <p className="text-white/30 text-sm font-medium">
+                        Already have an account?{" "}
+                        <button
+                            onClick={() => router.push("/auth/login")}
+                            className="text-[#ff1493] font-black hover:underline underline-offset-4"
+                        >
+                            Sign in
+                        </button>
+                    </p>
+                </div>
+            </div>
         </div>
+    );
+}
+
+export default function SignupPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#074eaf]"><Loader2 className="animate-spin text-white" /></div>}>
+            <SignupPageContent />
+        </Suspense>
     );
 }
