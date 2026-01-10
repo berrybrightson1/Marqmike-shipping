@@ -49,7 +49,32 @@ export default function HelpPage() {
             color: "bg-green-100 text-green-600",
             items: [
                 {
-                    title: "Buying from our Stock",
+                    title: "Buying from the Trending Feed (1688 Live)",
+                    content: [
+                        "Our 'Trending Feed' shows live products directly from 1688 and other Chinese marketplaces",
+                        "Scroll horizontally to see hot items currently popular in the market",
+                        "Click on any item that interests you to open the 'Buy For Me' page",
+                        "The system will automatically fill in the product details (Link, Name, Price) for you",
+                        "Simply adjust the quantity you want and click 'Submit Request'",
+                        "This is the fastest way to request a quote for popular items!",
+                        "Note: Prices in the feed are estimates (¥) and final quote will include shipping to Ghana"
+                    ],
+                    tags: ["trending", "1688", "feed", "hot", "buy for me"]
+                },
+                {
+                    title: "Shopping Staff Picks (Verified Inventory)",
+                    content: [
+                        "Staff Picks are items we have physically verified or have in stock",
+                        "These items ship faster because they are already in our warehouse or from trusted partners",
+                        "Click 'Add to Cart' to instantly add them to your shopping bag",
+                        "You can see the price fixed in GHS (Cedis)",
+                        "Checkout is instant via WhatsApp - no waiting for a quote!",
+                        "Look for the 'Shield' icon indicating verified quality"
+                    ],
+                    tags: ["staff picks", "inventory", "stock", "verified", "fast shipping"]
+                },
+                {
+                    title: "Buying from our Store",
                     content: [
                         "Visit the 'Store' page from the dashboard or homepage",
                         "Browse products or use the search bar to find specific items",
@@ -73,12 +98,12 @@ export default function HelpPage() {
                         "Copy the product URL (the link in your browser)",
                         "Go to 'Buy For Me' from your dashboard",
                         "Paste the link in the 'Product Link' field",
-                        "Enter the quantity you need",
-                        "Click 'Request Quote'",
+                        "Enter the Item Name (e.g., 'Blue Sneakers') and Quantity",
+                        "Click 'Submit Request'",
                         "Our team will verify availability and calculate total cost (product + shipping)",
-                        "You'll receive a quote within 24 hours via WhatsApp",
-                        "Once approved, we purchase, ship, and deliver to Ghana!",
-                        "💡 Tip: Send multiple links at once for bulk orders"
+                        "Check 'Your Requests' below the form to see status updates",
+                        "Once approved, you can click 'Notify Admin via WhatsApp' to proceed with payment",
+                        "💡 Tip: You can submit multiple links one by one before checking out!"
                     ],
                     tags: ["buy for me", "procurement", "1688", "taobao", "alibaba", "quote"]
                 }
@@ -89,6 +114,32 @@ export default function HelpPage() {
             icon: MapPin,
             color: "bg-pink-100 text-pink-600",
             items: [
+                {
+                    title: "How to Get a Shipping Quote",
+                    content: [
+                        "Click 'Get Quote' on your dashboard action grid",
+                        "Use the calculator to estimate shipping costs before you buy",
+                        "Select 'Air Shipping' (faster, 7-14 days) or 'Sea Shipping' (cheaper, 40-60 days)",
+                        "Enter the Weight (kg) and Dimensions (Length/Width/Height in cm)",
+                        "The calculator will show you the estimated cost in USD and GHS",
+                        "Note: Sea shipping is charged by CBM (Volume), while Air is usually by Weight (kg)",
+                        "This is just an estimate! Final price is confirmed when we receive the package"
+                    ],
+                    tags: ["quote", "calculator", "estimate", "shipping cost", "air", "sea"]
+                },
+                {
+                    title: "Creating a Delivery/Shipment",
+                    content: [
+                        "If you have items already purchased elsewhere and just need us to ship them:",
+                        "Click 'Delivery' (Package icon) on the dashboard",
+                        "Fill in the 'Shipper Name' (who is sending it?) and 'Recipient Name' (you)",
+                        "Enter Origin (e.g. Guangzhou) and Destination (e.g. Accra)",
+                        "Click 'Create Label' to generate a Tracking ID (e.g. TRK-12345)",
+                        "Send this Tracking ID and our warehouse address to your supplier",
+                        "Once we receive the package with this ID, we will update the status to 'Received'"
+                    ],
+                    tags: ["delivery", "shipment", "create", "warehouse", "send"]
+                },
                 {
                     title: "What is CBM and why does it matter?",
                     content: [

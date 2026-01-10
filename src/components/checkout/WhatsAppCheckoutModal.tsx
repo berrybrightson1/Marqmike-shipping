@@ -5,6 +5,8 @@ import { X, MessageCircle, MapPin, Phone } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 
+import { createOrder } from "@/app/actions/orders";
+
 interface WhatsAppCheckoutModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -24,14 +26,31 @@ export default function WhatsAppCheckoutModal({ isOpen, onClose, product, quanti
 
     if (!isOpen) return null;
 
-    const handleCheckout = () => {
+
+
+    // ... inside component ...
+
+    const handleCheckout = async () => {
         if (!phone || !location) {
             toast.error("Please fill in all fields");
             return;
         }
 
-        // Generate Reference Code
-        const refCode = `MQM-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+        // 1. Create Order in Database
+        const res = await createOrder({
+            customerName: "Guest (Buy Now)", // or prompt name? using user logic inside createOrder will pick up logged in user
+            customerPhone: phone,
+            items: [{
+                itemName: product.name,
+                quantity: quantity,
+                priceAtTime: product.priceRMB,
+                productId: product.id // Pass ID for stock sync
+                // Add url if available in product prop, otherwise null
+            }]
+        });
+
+        // Use backend ref code if successful, else fallback
+        const refCode = res.success && res.refCode ? res.refCode : `MQM-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
 
         // Construct WhatsApp Message
         const message = encodeURIComponent(

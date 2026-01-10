@@ -1,17 +1,19 @@
 "use client";
 
-import { LayoutGrid, Search, Truck, ShoppingBag, Wallet } from "lucide-react";
+import { LayoutGrid, Calculator, Truck, ShoppingBag, Store } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCart } from "@/context/CartContext";
 
 export default function BottomNav() {
     const pathname = usePathname();
+    const { totalItems } = useCart();
 
     const navItems = [
         { label: "Feed", icon: LayoutGrid, href: "/dashboard" },
-        { label: "Search", icon: Search, href: "/dashboard/shipments" },
+        { label: "Rates", icon: Calculator, href: "/dashboard/quote" },
         { label: "Track", icon: Truck, href: "/dashboard/tracking" },
-        { label: "Wallet", icon: Wallet, href: "/dashboard/wallet" },
+        { label: "Shop", icon: Store, href: "/dashboard/shop" },
         { label: "Cart", icon: ShoppingBag, href: "/dashboard/cart" },
     ];
 
@@ -24,10 +26,15 @@ export default function BottomNav() {
                         <Link
                             key={item.label}
                             href={item.href}
-                            className="flex-1 flex flex-col items-center gap-1 py-2"
+                            className="flex-1 flex flex-col items-center gap-1 py-2 relative"
                         >
-                            <div className={`p-1.5 rounded-xl transition-colors ${isActive ? "bg-brand-blue/10 text-brand-blue" : "text-slate-400"}`}>
+                            <div className={`p-1.5 rounded-xl transition-colors ${isActive ? "bg-brand-blue/10 text-brand-blue" : "text-slate-400"} relative`}>
                                 <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                                {item.label === "Cart" && totalItems > 0 && (
+                                    <div className="absolute -top-1 -right-1 bg-brand-pink text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-white">
+                                        {totalItems > 9 ? "9+" : totalItems}
+                                    </div>
+                                )}
                             </div>
                             <span className={`text-[10px] font-medium ${isActive ? "text-brand-blue font-bold" : "text-slate-400"}`}>
                                 {item.label}

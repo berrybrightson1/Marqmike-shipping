@@ -35,7 +35,7 @@ export default function SearchPage() {
             </div>
 
             {/* Results Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6">
                 {/* Mock Results */}
                 {[1, 2, 3].map((i) => (
                     <div key={i} className="bg-white p-6 rounded-[32px] border border-slate-100 hover:shadow-xl hover:shadow-brand-blue/5 transition-all group cursor-pointer">

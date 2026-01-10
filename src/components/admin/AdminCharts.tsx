@@ -2,26 +2,10 @@
 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area, CartesianGrid } from 'recharts';
 
-export default function AdminCharts() {
-    const shipmentData = [
-        { name: 'Jan', shipments: 65 },
-        { name: 'Feb', shipments: 59 },
-        { name: 'Mar', shipments: 80 },
-        { name: 'Apr', shipments: 81 },
-        { name: 'May', shipments: 56 },
-        { name: 'Jun', shipments: 125 },
-        { name: 'Jul', shipments: 100 },
-    ];
-
-    const revenueData = [
-        { name: 'Jan', revenue: 4000 },
-        { name: 'Feb', revenue: 3000 },
-        { name: 'Mar', revenue: 5500 },
-        { name: 'Apr', revenue: 4800 },
-        { name: 'May', revenue: 7000 },
-        { name: 'Jun', revenue: 12000 },
-        { name: 'Jul', revenue: 15000 },
-    ];
+export default function AdminCharts({ data }: { data?: any }) {
+    // Default fallback if no data provided
+    const shipmentData = data?.shipmentData || [];
+    const revenueData = data?.revenueData || [];
 
     return (
         <div className="grid lg:grid-cols-2 gap-6">

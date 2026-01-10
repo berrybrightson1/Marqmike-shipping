@@ -2,7 +2,7 @@
 
 import { Search, Filter, Mail, Phone, MapPin, MoreVertical, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { getCustomersWithStats } from "@/app/actions/admin";
+import { getCustomers } from "@/app/actions/admin";
 
 export default function AdminCustomersPage() {
     // Mock Data
@@ -11,7 +11,7 @@ export default function AdminCustomersPage() {
 
     useEffect(() => {
         const fetchCustomers = async () => {
-            const res = await getCustomersWithStats();
+            const res = await getCustomers();
             if (res.success && res.data) {
                 setCustomers(res.data);
             }

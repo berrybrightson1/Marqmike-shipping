@@ -1,54 +1,40 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-// Public Routes: Home, Store & Products, Tracking, Help, Webhooks
-const isPublicRoute = createRouteMatcher([
-    '/',
-    '/store(.*)',
-    '/track(.*)',
-    '/help(.*)',
-    '/api/upload(.*)',
-    '/login(.*)', // Auth pages must be public
-    '/sign-up(.*)'
-]);
 
-// Protected Routes: Admin, Profile, Services
-const isProtectedRoute = createRouteMatcher([
-    '/admin(.*)',
-    '/profile(.*)',
-    '/services/buy-for-me(.*)'
-]);
+export async function middleware(req: NextRequest) {
+    const sessionToken = req.cookies.get("session")?.value;
+    const pathname = req.nextUrl.pathname;
 
-export default clerkMiddleware(async (auth, req) => {
-    // Check if this is an admin route
-    if (req.nextUrl.pathname.startsWith('/admin')) {
-        // Allow /admin/login to be public
-        if (req.nextUrl.pathname === '/admin/login') {
-            return;
-        }
+    // Public routes (no auth required)
+    const publicRoutes = ["/", "/track", "/help", "/auth/login", "/auth/signup", "/api/upload"];
+    const isPublic = publicRoutes.some(route => pathname.startsWith(route));
 
-        // Check for admin session cookie
-        const adminSession = req.cookies.get('admin-session');
-        if (adminSession?.value === 'authenticated') {
-            // Admin is authenticated via session, allow access
-            return;
-        }
-
-        // No admin session, redirect to admin login
-        return Response.redirect(new URL('/admin/login', req.url));
+    if (isPublic) {
+        return NextResponse.next();
     }
 
-    // For non-admin protected routes, use Clerk
-    if (isProtectedRoute(req)) {
-        const { userId, redirectToSignIn } = await auth();
-        if (!userId) {
-            return redirectToSignIn();
-        }
+    // Check if user has valid session cookie
+    if (!sessionToken) {
+        return NextResponse.redirect(new URL("/auth/login", req.url));
     }
-});
+
+    // Role-based protection:
+    // Ideally we verify role here, but DB access in middleware is unstable.
+    // We will rely on the Layout/Page server components to validate the session and role.
+    // However, we can do a naive check if we encoded role in a non-httpOnly cookie, 
+    // but for now, let's just allow it and let Layout handle the security.
+
+    // For specific admin redirection loop prevention (optional but good):
+    // If we are on /admin and we are NOT an admin, Layout will redirect to /auth/admin-login.
+    // This is fine.
+
+    return NextResponse.next();
+}
 
 export const config = {
     matcher: [
-        // Skip Next.js internals and all static files, unless found in search params
+        // Skip Next.js internals and all static files
         '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
         // Always run for API routes
         '/(api|trpc)(.*)',

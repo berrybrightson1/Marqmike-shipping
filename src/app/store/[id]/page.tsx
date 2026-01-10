@@ -38,9 +38,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         addToCart({
             id: product.id,
             name: product.name,
-            priceRMB: product.priceRMB,
-            cbm: product.specs.cbm
-        }, quantity);
+            price: product.priceRMB,
+            image: "",
+            quantity: quantity,
+            url: ""
+        });
     };
 
     return (

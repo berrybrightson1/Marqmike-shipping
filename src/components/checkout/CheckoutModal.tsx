@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, MessageCircle } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { createOrder } from "@/app/actions/orders";
+import { getUserProfile } from "@/app/actions/auth";
 
 interface CheckoutModalProps {
     isOpen: boolean;
@@ -15,69 +17,96 @@ export default function CheckoutModal({ isOpen, onClose, cartItems }: CheckoutMo
     const [phone, setPhone] = useState("");
     const [loading, setLoading] = useState(false);
 
-    if (!isOpen) return null;
+    useEffect(() => {
+        if (isOpen) {
+            loadUserProfile();
+        }
+    }, [isOpen]);
 
-    const generateRef = () => {
-        const random = Math.floor(1000 + Math.random() * 9000);
-        return `REF-${random}-MQM`;
+    const loadUserProfile = async () => {
+        const profile = await getUserProfile();
+        if (profile) {
+            // Prefer Business Name, fallback to Name
+            setName(profile.businessName || profile.name || "");
+            setPhone(profile.phone || "");
+        }
     };
 
-    const handleCheckout = () => {
-        setLoading(true);
-        const refCode = generateRef();
+    if (!isOpen) return null;
 
-        // Construct Message
+    const handleCheckout = async () => {
+        setLoading(true);
+
+        // 1. Save Order to Database
+        const res = await createOrder({
+            customerName: name,
+            customerPhone: phone,
+            items: cartItems
+        });
+
+        // Use returned refCode or fallback (though it should succeed)
+        const refCode = res.success && res.refCode ? res.refCode : `REF-${Math.floor(1000 + Math.random() * 9000)}-MQM-OFFLINE`;
+
+        if (!res.success) {
+            // Optional: Show error or proceed anyway? proceeding is safer for "checkout" but bad for records.
+            // For now, we proceed so user isn't blocked, but maybe log it?
+            console.error("Order save failed:", res.error);
+        }
+
+        // 2. Construct WhatsApp Message
         let message = `*New Procurement Order*\n`;
         message += `Ref: \`${refCode}\`\n`;
         message += `Customer: ${name} (${phone})\n\n`;
         message += `*Items:*\n`;
 
         cartItems.forEach((item, index) => {
-            message += `${index + 1}. ${item.itemName} (x${item.quantity}) - ${item.url}\n`;
+            message += `${index + 1}. ${item.itemName || item.name} (x${item.quantity}) - ${item.url || item.itemUrl || 'No Link'}\n`;
         });
 
-        // Encode and Redirect
+        // 3. Open WhatsApp
         const encodedMessage = encodeURIComponent(message);
         const waLink = `https://wa.me/233551171353?text=${encodedMessage}`;
 
-        // Simulate a small delay for UX
-        setTimeout(() => {
-            window.open(waLink, '_blank');
-            setLoading(false);
-            onClose();
-        }, 800);
+        window.open(waLink, '_blank');
+        setLoading(false);
+        onClose();
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm" onClick={onClose}>
             <div className="w-full max-w-md animate-in zoom-in-95 duration-200">
-                <GlassCard className="p-6 relative">
-                    <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <div className="bg-white p-8 rounded-[32px] shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+                    <button onClick={onClose} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors p-2 hover:bg-slate-100 rounded-full">
                         <X size={20} />
                     </button>
 
-                    <h2 className="text-xl font-bold text-white mb-2">Final Step</h2>
-                    <p className="text-white/60 text-sm mb-6">Enter your details to generate your order reference.</p>
+                    <div className="mb-6">
+                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4">
+                            <MessageCircle size={24} />
+                        </div>
+                        <h2 className="text-2xl font-bold text-slate-800">Final Step</h2>
+                        <p className="text-slate-500 text-sm mt-1">Enter your details to generate your order reference.</p>
+                    </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-5">
                         <div>
-                            <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Business / Personal Name</label>
+                            <label className="text-[11px] uppercase font-bold text-slate-400 block mb-1.5 tracking-wider">Business / Personal Name</label>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-pink/50 transition-colors"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-900 font-bold focus:outline-none focus:border-brand-blue/50 focus:ring-4 focus:ring-brand-blue/5 transition-all placeholder:text-slate-400"
                                 placeholder="e.g. Ama Stores"
                             />
                         </div>
 
                         <div>
-                            <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">WhatsApp Number</label>
+                            <label className="text-[11px] uppercase font-bold text-slate-400 block mb-1.5 tracking-wider">WhatsApp Number</label>
                             <input
                                 type="tel"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
-                                className="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-pink/50 transition-colors"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-900 font-bold focus:outline-none focus:border-brand-blue/50 focus:ring-4 focus:ring-brand-blue/5 transition-all placeholder:text-slate-400"
                                 placeholder="055..."
                             />
                         </div>
@@ -85,13 +114,13 @@ export default function CheckoutModal({ isOpen, onClose, cartItems }: CheckoutMo
                         <button
                             onClick={handleCheckout}
                             disabled={!name || !phone || loading}
-                            className="w-full bg-[#25D366] hover:bg-[#1dbf57] text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-[#25D366] hover:bg-[#1dbf57] text-white font-bold py-4 rounded-xl shadow-lg shadow-green-500/20 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-not-allowed group"
                         >
-                            <MessageCircle size={20} fill="currentColor" />
+                            <MessageCircle size={20} fill="currentColor" className="group-hover:scale-110 transition-transform" />
                             {loading ? "Generating..." : "Send to WhatsApp"}
                         </button>
                     </div>
-                </GlassCard>
+                </div>
             </div>
         </div>
     );

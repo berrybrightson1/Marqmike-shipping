@@ -9,14 +9,54 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  clerkId   String   @unique
-  email     String
-  name      String?
-  phone     String?
-  role      Role     @default(USER) 
+  id            String    @id @default(cuid())
+  phone         String    @unique
+  
+  // Profile
+  name          String?
+  businessName  String?
+  email         String?   @unique
+  
+  // Auth
+  role          Role      @default(CUSTOMER)
+  
+  clerkId       String?   @unique // Keep this just in case but optional
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  shipments Shipment[] @relation("CustomerShipments")
   orders    Order[]
   procurementRequests ProcurementRequest[]
+  sessions  Session[]
+  notifications Notification[]
+  tickets     Ticket[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([token])
+}
+
+model OTPCode {
+  id        String   @id @default(cuid())
+  phone     String
+  code      String
+  expiresAt DateTime
+  verified  Boolean @default(false)
+  attempts  Int     @default(0)
+  createdAt DateTime @default(now())
+  
+  @@index([phone])
+  @@index([code])
 }
 
 model Product {
@@ -26,10 +66,13 @@ model Product {
   priceRMB    Float
   priceGHS    Float
   stock       Int      @default(0)
-  status      String   @default("In Stock") // "Ready in Ghana", "In China Warehouse"
+  status      String   @default("In Stock")
+  category    String   @default("General")
   imageUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  orderItems  OrderItem[]
 }
 
 model ProcurementRequest {
@@ -38,7 +81,7 @@ model ProcurementRequest {
   user      User     @relation(fields: [userId], references: [id])
   itemName  String
   itemUrl   String
-  status    String   @default("Pending") // "Pending", "In Review", "Approved", "Rejected"
+  status    String   @default("Pending")
   notes     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -47,7 +90,11 @@ model ProcurementRequest {
 model Shipment {
   id            String   @id @default(cuid())
   trackingId    String   @unique
-  status        String   // Renamed from currentStatus for consistency
+  status        String
+  
+  // Customer relationship
+  customerId    String?
+  customer      User?    @relation("CustomerShipments", fields: [customerId], references: [id])
   
   // UI Fields
   shipperName   String   @default("Unknown")
@@ -59,6 +106,8 @@ model Shipment {
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  
+  @@index([customerId])
 }
 
 model ShipmentEvent {
@@ -75,28 +124,111 @@ model CallLog {
   customerName String
   phoneNumber  String
   summary      String   @db.Text 
-  outcome      String   // "Resolved", "Follow-up"
-  topic        String?  // "Inquiry", "Complaint", "Tracking"
+  outcome      String   
+  topic        String?  
   adminId      String   
   createdAt    DateTime @default(now())
 }
 
 model AuditLog {
   id          String   @id @default(cuid())
-  adminName   String
-  action      String
-  details     String
+  actorName   String   @default("System") // Who did it?
+  action      String   // E.g. "CREATE_ORDER", "UPDATE_STATUS"
+  entityType  String   // ORDER, SHIPMENT, PRODUCT, USER
+  entityId    String?  // ID of the object
+  details     String   // Human readable
+  metadata    Json?    // Flexible data (e.g. { oldStatus: "Pending", newStatus: "Shipped" })
   timestamp   DateTime @default(now())
 }
 
-// Minimal Order model to satisfy User relation
 model Order {
-  id     String @id @default(cuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  id            String      @id @default(cuid())
+  userId        String?     // Optional for guest checkout if we support it later, but enforced for now
+  user          User?       @relation(fields: [userId], references: [id])
+  
+  refCode       String      @unique // The "REF-1234-MQM" code
+  customerName  String
+  customerPhone String
+  trackingId    String?
+  
+  status        String      @default("Pending") // Pending, Processing, Completed, Cancelled
+  totalAmount   Float       @default(0)
+  
+  items         OrderItem[]
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  @@index([userId])
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id])
+  
+  productId   String?  // Optional link to actual product inventory
+  product     Product? @relation(fields: [productId], references: [id])
+  
+  itemName    String   // Snapshot of name
+  quantity    Int
+  priceAtTime Float    @default(0) // Snapshot of price
+  
+  itemUrl     String?  // For "Buy For Me" items mixed in cart
+}
+
+
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   @default("system")
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 enum Role {
-  USER
+  CUSTOMER
   ADMIN
+}
+
+model TrendingItem {
+  id          String   @id @default(cuid())
+  title       String
+  image       String
+  price       Float
+  currency    String   @default("CNY")
+  moq         Int      @default(1)
+  sold        Int      @default(0)
+  url         String
+  supplier    String?
+  priority    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Ticket {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  subject   String
+  status    String   @default("OPEN") // OPEN, IN_PROGRESS, CLOSED
+  priority  String   @default("MEDIUM") // LOW, MEDIUM, HIGH
+  messages  TicketMessage[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TicketMessage {
+  id        String   @id @default(cuid())
+  ticketId  String
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  sender    String   // "USER" or "ADMIN"
+  message   String
+  createdAt DateTime @default(now())
 }

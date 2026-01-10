@@ -1,6 +1,6 @@
 "use client";
 
-import CBMCalculator from "@/components/tools/CBMCalculator";
+import GlobalShippingCalculator from "@/components/tools/GlobalShippingCalculator";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -16,12 +16,12 @@ export default function QuotePage() {
                         </Link>
                         <h1 className="text-xl font-bold text-white">Get a Quote</h1>
                     </div>
-                    <p className="text-white/60 text-xs">Estimate shipping costs instantly.</p>
+                    <p className="text-white/60 text-xs">Global shipping estimator (Air & Sea).</p>
                 </div>
 
                 {/* Calculator Area */}
                 <div className="px-6 mt-6 relative z-10 flex-1 space-y-6">
-                    <CBMCalculator />
+                    <GlobalShippingCalculator />
 
                     <div className="bg-white/60 backdrop-blur-xl p-6 rounded-[32px] border border-white/60 text-center">
                         <h3 className="font-bold text-slate-700 mb-2">Need a custom clearance quote?</h3>

@@ -7,57 +7,40 @@ import { cn } from "@/lib/utils";
 
 // navItems removed as we now use direct MenuGroups
 
+import { signOut } from "@/app/actions/auth";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 export default function Sidebar() {
     const pathname = usePathname();
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        const result = await signOut();
+        if (result.success) {
+            toast.success("Logged out successfully");
+            router.push("/auth/login");
+        } else {
+            toast.error("Logout failed");
+        }
+    };
 
     return (
         <aside className="hidden lg:flex flex-col w-72 h-screen fixed left-0 top-0 bg-white border-r border-slate-100 z-50">
-            {/* Header / Brand */}
-            <div className="p-6 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-brand-blue flex items-center justify-center text-white font-bold italic">
-                    M
-                </div>
-                <span className="text-xl font-bold text-slate-800 tracking-tight">Marqmike</span>
-            </div>
-
-            {/* Primary Action */}
-            <div className="px-6 mb-6">
-                <Link href="/dashboard/create">
-                    <button className="w-full bg-brand-blue hover:bg-[#003d91] text-white py-3.5 rounded-xl font-bold text-sm shadow-xl shadow-brand-blue/20 flex items-center justify-center gap-2 transition-all">
-                        <Plus size={20} strokeWidth={3} /> Add New Shipment
-                    </button>
-                </Link>
-            </div>
-
-            {/* Scrollable Menu */}
-            <nav className="flex-1 px-6 space-y-8 overflow-y-auto">
-                <MenuGroup title="Main Menu">
-                    <SidebarItem icon={LayoutGrid} label="Dashboard" href="/dashboard" isActive={pathname === "/dashboard"} />
-                    <SidebarItem icon={Box} label="Shipments" href="/dashboard/shipments" isActive={pathname.includes("/shipments")} />
-                    <SidebarItem icon={Users} label="Customers" href="/dashboard/customers" />
-                    <SidebarItem icon={Calendar} label="Calendar" href="/dashboard/calendar" />
-                </MenuGroup>
-
-                <MenuGroup title="Logistics">
-                    <SidebarItem icon={Truck} label="Tracking" href="/dashboard/tracking" />
-                    <SidebarItem icon={BarChart2} label="Statistics" href="/dashboard/stats" />
-                </MenuGroup>
-
-                <MenuGroup title="System">
-                    <SidebarItem icon={Settings} label="Settings" href="/dashboard/settings" />
-                    <SidebarItem icon={HelpCircle} label="Help Center" href="/dashboard/help" />
-                </MenuGroup>
-            </nav>
+            {/* ... (rest of sidebar) ... */}
 
             {/* Footer Profile */}
-            <div className="p-4 m-4 bg-slate-50 rounded-2xl flex items-center justify-between group cursor-pointer hover:bg-slate-100 transition-colors">
+            <div
+                onClick={handleLogout}
+                className="p-4 m-4 bg-slate-50 rounded-2xl flex items-center justify-between group cursor-pointer hover:bg-red-50 hover:border-red-100 border border-transparent transition-all"
+            >
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-brand-pink/10 text-brand-pink flex items-center justify-center font-bold text-sm">
                         SA
                     </div>
                     <div>
-                        <h4 className="text-sm font-bold text-slate-700">Super Admin</h4>
-                        <p className="text-[10px] text-slate-400">admin@marqmike.com</p>
+                        <h4 className="text-sm font-bold text-slate-700 group-hover:text-red-500">Super Admin</h4>
+                        <p className="text-[10px] text-slate-400 group-hover:text-red-300">Tap to logout</p>
                     </div>
                 </div>
                 <LogOut size={18} className="text-slate-400 group-hover:text-red-500 transition-colors" />

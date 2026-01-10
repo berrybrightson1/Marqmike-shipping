@@ -3,7 +3,7 @@
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Search, Plus, Upload, DollarSign, Package, AlertCircle, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { getInventory } from "@/app/actions/admin";
+import { getInventory } from "@/app/actions/product";
 import Link from "next/link";
 
 export default function InventoryManagerPage() {
@@ -34,15 +34,17 @@ export default function InventoryManagerPage() {
             </header>
 
             {/* Upload Area (Creator Studio) */}
-            <GlassCard className="p-8 mb-8 border-dashed border-2 border-slate-300 bg-slate-50/50 hover:bg-slate-50 transition-colors cursor-pointer group">
-                <div className="flex flex-col items-center justify-center text-center">
-                    <div className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center text-brand-blue mb-4 group-hover:scale-110 transition-transform">
-                        <Upload size={32} />
+            <Link href="/admin/inventory/new">
+                <GlassCard className="p-8 mb-8 border-dashed border-2 border-slate-300 bg-slate-50/50 hover:bg-slate-50 transition-colors cursor-pointer group">
+                    <div className="flex flex-col items-center justify-center text-center">
+                        <div className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center text-brand-blue mb-4 group-hover:scale-110 transition-transform">
+                            <Upload size={32} />
+                        </div>
+                        <h3 className="text-lg font-bold text-slate-700">Drop product images here</h3>
+                        <p className="text-slate-400 text-sm mt-1">or click to upload to Global Store</p>
                     </div>
-                    <h3 className="text-lg font-bold text-slate-700">Drop product images here</h3>
-                    <p className="text-slate-400 text-sm mt-1">or click to upload to Vercel Blob</p>
-                </div>
-            </GlassCard>
+                </GlassCard>
+            </Link>
 
             {/* Inventory List */}
             <div className="bg-white/80 backdrop-blur-xl border border-white/60 rounded-[32px] overflow-hidden shadow-xl shadow-slate-200/50">
@@ -71,7 +73,13 @@ export default function InventoryManagerPage() {
                             <tr key={item.id} className="hover:bg-slate-50 transition-colors">
                                 <td className="p-6">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 bg-slate-200 rounded-lg shrink-0" />
+                                        <div className="w-12 h-12 bg-slate-100 rounded-lg shrink-0 overflow-hidden border border-slate-200">
+                                            <img
+                                                src={item.imageUrl || `https://placehold.co/100x100/e2e8f0/1e293b?text=${encodeURIComponent(item.name.substring(0, 2))}`}
+                                                alt={item.name}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
                                         <span className="font-bold text-slate-700">{item.name}</span>
                                     </div>
                                 </td>

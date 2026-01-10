@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, Command, User, Package, Settings, ArrowRight, X } from "lucide-react";
+import { Search, Command, User, Package, Settings, ArrowRight, X, ShoppingCart, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function GlobalSearchModal() {
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useState("");
     const router = useRouter();
+
+    const [results, setResults] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -21,18 +24,32 @@ export default function GlobalSearchModal() {
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, []);
 
-    const mockResults = [
-        { type: "Page", title: "Dashboard", href: "/admin", icon: Settings },
-        { type: "Page", title: "Shipments", href: "/admin/shipments", icon: Package },
-        { type: "Page", title: "Customers", href: "/admin/customers", icon: User },
-        { type: "Customer", title: "Howard Tamesis", href: "/admin/customers/CUST-001", icon: User, desc: "howard@marqmike.com" },
-        { type: "Shipment", title: "MQM-8821", href: "/admin/shipments/MQM-8821", icon: Package, desc: "In Transit to Ghana" },
-        { type: "Shipment", title: "MQM-9932", href: "/admin/shipments/MQM-9932", icon: Package, desc: "Delivered" },
-    ];
+    useEffect(() => {
+        if (!isOpen) {
+            setQuery("");
+            setResults([]);
+            return;
+        }
+    }, [isOpen]);
 
-    const filtered = query
-        ? mockResults.filter(r => r.title.toLowerCase().includes(query.toLowerCase()) || (r.desc || "").toLowerCase().includes(query.toLowerCase()))
-        : [];
+    useEffect(() => {
+        const timer = setTimeout(async () => {
+            if (query.trim().length >= 2) {
+                setLoading(true);
+                // Dynamic import to avoid server action issues in client component if strictly separated, though usually okay
+                const { globalSearch } = await import("@/app/actions/search");
+                const res = await globalSearch(query);
+                if (res.success) {
+                    setResults(res.results);
+                }
+                setLoading(false);
+            } else {
+                setResults([]);
+            }
+        }, 300); // Debounce
+
+        return () => clearTimeout(timer);
+    }, [query]);
 
     const handleSelect = (href: string) => {
         setIsOpen(false);
@@ -68,32 +85,40 @@ export default function GlobalSearchModal() {
 
                 {/* Results */}
                 <div className="max-h-[60vh] overflow-y-auto p-2">
-                    {query === "" ? (
+                    {loading ? (
+                        <div className="p-8 text-center text-slate-400">
+                            <Loader2 className="mx-auto mb-3 animate-spin" size={24} />
+                            <p className="text-sm font-medium">Searching...</p>
+                        </div>
+                    ) : query === "" ? (
                         <div className="p-8 text-center text-slate-400">
                             <Command className="mx-auto mb-3 opacity-20" size={48} />
                             <p className="text-sm font-medium">Type to search across shipments, customers, and pages.</p>
                         </div>
-                    ) : filtered.length > 0 ? (
+                    ) : results.length > 0 ? (
                         <div className="space-y-1">
-                            {filtered.map((item, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => handleSelect(item.href)}
-                                    className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors text-left group"
-                                >
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${item.type === 'Page' ? 'bg-slate-100 text-slate-500' : item.type === 'Customer' ? 'bg-blue-50 text-brand-blue' : 'bg-orange-50 text-orange-500'}`}>
-                                        <item.icon size={20} />
-                                    </div>
-                                    <div className="flex-1">
-                                        <h4 className="font-bold text-slate-800 text-sm group-hover:text-brand-blue transition-colors flex items-center gap-2">
-                                            {item.title}
-                                            {item.type !== 'Page' && <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-400 font-bold uppercase">{item.type}</span>}
-                                        </h4>
-                                        {item.desc && <p className="text-xs text-slate-400 font-medium">{item.desc}</p>}
-                                    </div>
-                                    <ArrowRight size={16} className="text-slate-300 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
-                                </button>
-                            ))}
+                            {results.map((item, idx) => {
+                                const Icon = item.icon === 'Package' ? Package : item.icon === 'User' ? User : item.icon === 'ShoppingCart' ? ShoppingCart : Settings;
+                                return (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleSelect(item.href)}
+                                        className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors text-left group"
+                                    >
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${item.type === 'Page' ? 'bg-slate-100 text-slate-500' : item.type === 'Customer' ? 'bg-blue-50 text-brand-blue' : item.type === 'Shipment' ? 'bg-orange-50 text-orange-500' : 'bg-purple-50 text-purple-600'}`}>
+                                            <Icon size={20} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="font-bold text-slate-800 text-sm group-hover:text-brand-blue transition-colors flex items-center gap-2">
+                                                {item.title}
+                                                {item.type !== 'Page' && <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-400 font-bold uppercase">{item.type}</span>}
+                                            </h4>
+                                            {item.desc && <p className="text-xs text-slate-400 font-medium">{item.desc}</p>}
+                                        </div>
+                                        <ArrowRight size={16} className="text-slate-300 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                                    </button>
+                                );
+                            })}
                         </div>
                     ) : (
                         <div className="p-8 text-center text-slate-400">

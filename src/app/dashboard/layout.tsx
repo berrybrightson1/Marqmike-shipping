@@ -1,12 +1,20 @@
 import BottomNav from "@/components/layout/BottomNav";
+import { getCurrentUser } from "@/app/actions/auth";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const user = await getCurrentUser();
+
+    if (!user) {
+        redirect("/auth/login");
+    }
+
     return (
         <div className="min-h-screen bg-slate-100 flex justify-center items-start">
             {/* Mobile Shell Global Wrapper */}

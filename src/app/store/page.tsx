@@ -20,7 +20,7 @@ async function getProducts() {
 
 export default function StorePage() {
     const { currency, convertPrice } = useCurrency();
-    const { getTotalItems } = useCart();
+    const { totalItems } = useCart();
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -128,9 +128,9 @@ export default function StorePage() {
                 aria-label="Open cart"
             >
                 <ShoppingCart size={24} />
-                {getTotalItems() > 0 && (
+                {totalItems > 0 && (
                     <div className="absolute -top-2 -right-2 w-7 h-7 bg-brand-pink rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
-                        {getTotalItems()}
+                        {totalItems}
                     </div>
                 )}
             </button>

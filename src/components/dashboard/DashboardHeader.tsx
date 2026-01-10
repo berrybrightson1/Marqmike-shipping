@@ -1,21 +1,72 @@
 "use client";
 
-import { useState } from "react";
-import { Bell, Search, ScanLine, DollarSign } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Bell, Search, ScanLine, DollarSign, LogOut, ArrowLeft } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signOut } from "@/app/actions/auth";
+import { toast } from "sonner";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
-export default function DashboardHeader() {
+interface DashboardHeaderProps {
+    user?: {
+        name: string | null;
+        [key: string]: any;
+    } | null;
+    title?: string;
+    showBack?: boolean;
+    backLink?: string;
+}
+
+export default function DashboardHeader({ user, title = "My Shipments", showBack = false, backLink }: DashboardHeaderProps) {
     const { currency, setCurrency } = useCurrency();
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState("");
     const [showNotifs, setShowNotifs] = useState(false);
+    const [notifications, setNotifications] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (showNotifs) {
+            import("@/app/actions/notification").then(({ getUserNotifications }) => {
+                getUserNotifications().then(res => {
+                    if (res.success) setNotifications(res.data);
+                });
+            });
+        }
+    }, [showNotifs]);
+
+    // Refs for click outside
+    const notifRef = useRef<HTMLDivElement>(null);
+    const searchRef = useRef<HTMLFormElement>(null);
+
+    useClickOutside(notifRef, () => setShowNotifs(false));
+    useClickOutside(searchRef, () => {
+        if (searchTerm) setSearchTerm(""); // Optional: clear search on outside click or just close dropdown
+    });
 
     const toggleCurrency = () => {
         if (currency === 'USD') setCurrency('GHS');
         else if (currency === 'GHS') setCurrency('NGN');
         else setCurrency('USD');
+    };
+
+    const handleLogout = async () => {
+        const result = await signOut();
+        if (result.success) {
+            toast.success("Logged out successfully");
+            router.push("/auth/login");
+        } else {
+            toast.error("Logout failed");
+        }
+    };
+
+    const handleBack = () => {
+        if (backLink) {
+            router.push(backLink);
+        } else {
+            router.back();
+        }
     };
 
     return (
@@ -30,16 +81,29 @@ export default function DashboardHeader() {
                 <div className="relative z-20">
                     {/* Top Row */}
                     <div className="flex justify-between items-center mb-8">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full border-2 border-white/20 p-0.5">
-                                {/* Placeholder Avatar */}
-                                <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=Howard" alt="User" />
+                        {/* Conditional Header Content: Back Button vs Greeting */}
+                        {showBack ? (
+                            <div className="flex items-center gap-4">
+                                <button
+                                    onClick={handleBack}
+                                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                                >
+                                    <ArrowLeft size={20} />
+                                </button>
+                                <h1 className="text-xl text-white font-bold">{title}</h1>
                             </div>
-                            <div>
-                                <p className="text-white/60 text-[10px] font-medium tracking-wide uppercase">Welcome Back</p>
-                                <h2 className="text-white text-lg font-bold">Hi Howard</h2>
+                        ) : (
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full border-2 border-white/20 p-0.5 relative overflow-hidden bg-white">
+                                    {/* Marqmike Logo for all users */}
+                                    <img src="/logos/logo-icon.svg" alt="Marqmike" className="w-full h-full object-cover" />
+                                </div>
+                                <div>
+                                    <p className="text-white/60 text-[10px] font-medium tracking-wide uppercase">Welcome Back</p>
+                                    <h2 className="text-white text-lg font-bold">Hi {user?.name ? user.name.split(" ")[0] : "Guest"}</h2>
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         <div className="flex gap-2">
                             {/* Currency Toggle */}
@@ -51,46 +115,73 @@ export default function DashboardHeader() {
                                 <span className="text-xs font-bold">{currency}</span>
                             </button>
 
-                            <div className="relative">
+                            <div className="relative" ref={notifRef}>
                                 <button
                                     aria-label="Notifications"
                                     onClick={() => setShowNotifs(!showNotifs)}
                                     className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors relative"
                                 >
                                     <Bell size={20} />
-                                    {/* Unread Dot (Mock logic) */}
-                                    <div className="absolute top-2 right-2.5 w-2 h-2 bg-brand-pink rounded-full border border-brand-blue" />
+                                    {/* Unread Dot - Only show if there are unread notifications */}
+                                    {notifications.some(n => !n.read) && (
+                                        <div className="absolute top-2 right-2.5 w-2 h-2 bg-brand-pink rounded-full border border-brand-blue" />
+                                    )}
                                 </button>
 
                                 {/* Notifications Dropdown */}
                                 {showNotifs && (
-                                    <div className="absolute top-full right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl shadow-brand-blue/20 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200">
-                                        <div className="p-3 border-b border-slate-100 flex justify-between items-center">
-                                            <span className="text-xs font-bold text-slate-500 uppercase">Notifications</span>
-                                            <Link href="/dashboard/notifications" onClick={() => setShowNotifs(false)} className="text-xs font-bold text-brand-blue hover:underline">View All</Link>
+                                    <div className="absolute top-full right-0 mt-3 w-80 bg-white rounded-[24px] shadow-2xl shadow-brand-blue/20 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 border border-slate-100 ring-1 ring-slate-100">
+                                        <div className="p-4 border-b border-slate-50 flex justify-between items-center bg-white sticky top-0 z-10">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-brand-pink animate-pulse" />
+                                                <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Notifications</span>
+                                            </div>
+                                            <Link
+                                                href="/dashboard/notifications"
+                                                onClick={() => setShowNotifs(false)}
+                                                className="text-[10px] font-bold text-brand-blue bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-full transition-colors flex items-center gap-1"
+                                            >
+                                                View All <ScanLine size={10} />
+                                            </Link>
                                         </div>
-                                        <div className="max-h-64 overflow-y-auto">
-                                            {[1, 2, 3].map((i) => (
-                                                <div key={i} className="p-3 hover:bg-slate-50 border-b border-slate-50 last:border-0 transition-colors cursor-pointer text-left">
-                                                    <div className="flex justify-between items-start mb-1">
-                                                        <span className="font-bold text-xs text-slate-800">Shipment Update</span>
-                                                        <span className="text-[9px] text-slate-400 font-bold">2m</span>
+
+                                        <div className="max-h-[320px] overflow-y-auto custom-scrollbar">
+                                            {notifications.length === 0 ? (
+                                                <div className="p-8 text-center text-slate-400">
+                                                    <div className="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-2">
+                                                        <Bell size={18} className="text-slate-300" />
                                                     </div>
-                                                    <p className="text-[10px] text-slate-500 leading-tight">Package #MQM-8821 has arrived at the local facility.</p>
+                                                    <p className="text-xs font-medium">No new notifications</p>
                                                 </div>
-                                            ))}
+                                            ) : (
+                                                notifications.slice(0, 5).map((n) => (
+                                                    <NotificationItem key={n.id} notification={n} />
+                                                ))
+                                            )}
                                         </div>
+
+                                        {/* Footer Gradient Hint */}
+                                        <div className="h-4 bg-gradient-to-t from-white to-transparent pointer-events-none absolute bottom-0 left-0 right-0" />
                                     </div>
                                 )}
                             </div>
+
+                            {/* Logout Button */}
+                            <button
+                                aria-label="Logout"
+                                onClick={handleLogout}
+                                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-brand-pink hover:text-white transition-all shadow-sm"
+                            >
+                                <LogOut size={18} strokeWidth={2.5} />
+                            </button>
                         </div>
                     </div>
 
-                    {/* Title */}
-                    <h1 className="text-2xl text-white font-bold mb-6">My Shipments</h1>
+                    {/* Title (Only show here if NOT in back mode) */}
+                    {!showBack && <h1 className="text-2xl text-white font-bold mb-6">{title}</h1>}
 
                     {/* Search Bar */}
-                    <form onSubmit={(e) => {
+                    <form ref={searchRef} onSubmit={(e) => {
                         e.preventDefault();
                         const input = (e.currentTarget.elements.namedItem("search") as HTMLInputElement).value;
                         if (input) {
@@ -144,4 +235,35 @@ export default function DashboardHeader() {
             </div>
         </div>
     );
+}
+
+function NotificationItem({ notification }: { notification: any }) {
+    const [expanded, setExpanded] = useState(false);
+
+    return (
+        <div
+            onClick={() => setExpanded(!expanded)}
+            className={`
+                p-4 border-b border-slate-50 last:border-0 transition-all cursor-pointer text-left group
+                ${expanded ? 'bg-slate-50' : 'hover:bg-slate-50/50'}
+                ${!notification.read ? 'bg-blue-50/50' : ''}
+            `}
+        >
+            <div className="flex justify-between items-start mb-1.5">
+                <div className="flex items-center gap-2">
+                    {!notification.read && <div className="w-1.5 h-1.5 rounded-full bg-brand-pink shrink-0" />}
+                    <span className={`font-bold text-sm text-slate-800 ${expanded ? 'text-brand-blue' : ''}`}>
+                        {notification.title}
+                    </span>
+                </div>
+            </div>
+
+            <p className={`
+                text-xs text-slate-500 leading-relaxed transition-all duration-300
+                ${expanded ? '' : 'line-clamp-1 opacity-80'}
+            `}>
+                {notification.message}
+            </p>
+        </div>
+    )
 }

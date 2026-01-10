@@ -30,8 +30,8 @@ export default async function AuditLogPage() {
                             <div key={log.id} className="flex gap-4 p-4 hover:bg-white/50 rounded-2xl transition-colors border border-transparent hover:border-white/60">
                                 {/* Icon based on action */}
                                 <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${log.action.includes("Delete") ? "bg-red-100 text-red-600" :
-                                        log.action.includes("Update") ? "bg-blue-100 text-blue-600" :
-                                            "bg-slate-100 text-slate-600"
+                                    log.action.includes("Update") ? "bg-blue-100 text-blue-600" :
+                                        "bg-slate-100 text-slate-600"
                                     }`}>
                                     {log.action.includes("Delete") ? <Lock size={20} /> : <Activity size={20} />}
                                 </div>
@@ -46,7 +46,7 @@ export default async function AuditLogPage() {
                                     <p className="text-sm text-slate-600 mt-1">{log.details}</p>
                                     <div className="flex items-center gap-2 mt-2 text-xs text-slate-400">
                                         <User size={12} />
-                                        <span>Performed by <span className="font-bold text-slate-600">{log.adminName}</span></span>
+                                        <span>Performed by <span className="font-bold text-slate-600">{log.actorName}</span></span>
                                     </div>
                                 </div>
                             </div>

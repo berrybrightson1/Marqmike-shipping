@@ -52,20 +52,12 @@ export async function getCustomers() {
 
         let mappedUsers = users.map(u => ({
             id: u.id,
-            name: u.email.split('@')[0],
+            name: u.email ? u.email.split('@')[0] : "Unknown",
             phone: "",
-            email: u.email
+            email: u.email || ""
         }));
 
-        if (mappedUsers.length === 0) {
-            mappedUsers = [
-                { id: "mock-1", name: "Alice Johnson", phone: "+233 20 123 4567", email: "alice@example.com" },
-                { id: "mock-2", name: "Kofi Mensah", phone: "+233 24 987 6543", email: "kofi@example.com" },
-                { id: "mock-3", name: "Sarah Williams", phone: "+233 50 111 2222", email: "sarah@example.com" },
-                { id: "mock-4", name: "David Osei", phone: "+233 27 555 8888", email: "david@example.com" },
-                { id: "mock-5", name: "Ama Boateng", phone: "+233 26 777 9999", email: "ama@example.com" }
-            ];
-        }
+        // Mock data removed. Returns empty array if no real users are found.
 
         return { success: true, data: mappedUsers };
     } catch (error) {
@@ -75,94 +67,119 @@ export async function getCustomers() {
 
 export async function getAdminStats() {
     try {
-        const [activeShipments, totalCustomers, pendingRequests] = await Promise.all([
+        // Parallel fetch for speed
+        const [
+            activeShipments,
+            totalCustomers,
+            pendingRequests,
+            revenueResult,
+            chartsData
+        ] = await Promise.all([
             prisma.shipment.count({ where: { status: { not: "Delivered" } } }),
-            prisma.user.count({ where: { role: "USER" } }),
-            prisma.procurementRequest.count({ where: { status: "Pending" } })
+            prisma.user.count({ where: { role: "CUSTOMER" } }),
+            prisma.procurementRequest.count({ where: { status: "Pending" } }),
+            prisma.order.aggregate({
+                _sum: { totalAmount: true },
+                where: { status: { not: "Cancelled" } }
+            }),
+            getAdminChartData()
         ]);
 
         return {
             success: true,
             data: {
-                revenue: 45231.89, // Mocked for now until Order model has amount
+                revenue: revenueResult._sum.totalAmount || 0,
                 activeShipments,
                 totalCustomers,
-                pendingRequests
+                pendingRequests,
+                charts: chartsData.success ? chartsData.data : null
             }
         };
     } catch (error) {
+        console.error("Stats Error:", error);
         return { success: false, error: "Failed to fetch stats" };
     }
 }
 
-export async function getInventory() {
+export async function getRecentAuditLogs(limit: number = 10) {
     try {
-        const products = await prisma.product.findMany({ orderBy: { createdAt: 'desc' } });
-        return { success: true, data: products };
-    } catch (error) {
-        return { success: false, error: "Failed to fetch inventory" };
-    }
-}
-
-export async function getProcurementRequests() {
-    try {
-        const requests = await prisma.procurementRequest.findMany({
-            include: { user: true },
-            orderBy: { createdAt: 'desc' }
-        });
-        return { success: true, data: requests };
-    } catch (error) {
-        return { success: false, error: "Failed to fetch requests" };
-    }
-}
-
-export async function getCustomersWithStats() {
-    try {
-        const users = await prisma.user.findMany({
-            where: { role: "USER" },
-            include: {
-                _count: {
-                    select: { orders: true }
-                }
-            },
-            take: 100
+        const logs = await prisma.auditLog.findMany({
+            take: limit,
+            orderBy: { timestamp: 'desc' }
         });
 
-        const mapped = (users as any[]).map(u => ({
-            id: u.id,
-            name: u.name || "Unknown",
-            email: u.email,
-            phone: u.phone || "N/A",
-            type: "Standard", // Logic for type can be added later
-            orders: u._count.orders,
-            spent: "$0.00" // Placeholder
-        }));
-
-        return { success: true, data: mapped };
-    } catch (error) {
-        return { success: false, error: "Failed to fetch customers" };
-    }
-}
-
-export async function getRecentAuditLogs() {
-    try {
-        // Fetch recent shipment events as "Audit Logs" for now
-        const events = await prisma.shipmentEvent.findMany({
-            take: 10,
-            orderBy: { timestamp: 'desc' },
-            include: { shipment: true }
-        });
-
-        const activities = events.map(e => ({
-            id: e.id,
-            title: `Shipment ${e.status}`,
-            desc: `Order #${e.shipment.trackingId} - ${e.location}`,
-            time: e.timestamp, // Will format close to UI time
-            type: 'shipment'
+        const activities = logs.map(log => ({
+            id: log.id,
+            title: `${log.actorName} - ${log.action}`, // E.g. "System - ORDER_CREATED"
+            desc: log.details,
+            time: log.timestamp,
+            entityType: log.entityType, // Pass this to UI for icon selection
+            type: 'system'
         }));
 
         return { success: true, data: activities };
     } catch (error) {
+        console.error("Audit Logs Error:", error);
         return { success: false, data: [] };
+    }
+}
+
+export async function getAdminChartData() {
+    try {
+        const currentYear = new Date().getFullYear();
+        const startOfYear = new Date(currentYear, 0, 1);
+        const endOfYear = new Date(currentYear, 11, 31);
+
+        // 1. Fetch Orders and Shipments for the current year
+        const [orders, shipments] = await Promise.all([
+            prisma.order.findMany({
+                where: {
+                    createdAt: {
+                        gte: startOfYear,
+                        lte: endOfYear
+                    },
+                    status: { not: "Cancelled" }
+                },
+                select: { createdAt: true, totalAmount: true }
+            }),
+            prisma.shipment.findMany({
+                where: {
+                    createdAt: {
+                        gte: startOfYear,
+                        lte: endOfYear
+                    }
+                },
+                select: { createdAt: true }
+            })
+        ]);
+
+        // 2. Aggregate Data by Month (JS-side for simplicity)
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        const shipmentData = months.map((month, index) => {
+            const count = shipments.filter(s => s.createdAt.getMonth() === index).length;
+            return { name: month, shipments: count };
+        });
+
+        const revenueData = months.map((month, index) => {
+            const total = orders
+                .filter(o => o.createdAt.getMonth() === index)
+                .reduce((sum, o) => sum + o.totalAmount, 0);
+            return { name: month, revenue: total };
+        });
+
+        // 3. Trim to current month? Optional, but let's show full year for now or up to current month
+        // For visual balance, we'll return all months.
+
+        return {
+            success: true,
+            data: {
+                shipmentData,
+                revenueData
+            }
+        };
+    } catch (error) {
+        console.error("Chart Data Error:", error);
+        return { success: false, error: "Failed to fetch chart data" };
     }
 }

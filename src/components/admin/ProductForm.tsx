@@ -5,12 +5,14 @@ import { useFormStatus } from "react-dom";
 import { Upload, X, Check, Image as ImageIcon, Loader2 } from "lucide-react";
 import imageCompression from "browser-image-compression";
 import { toast } from "sonner";
-// We will implement the server action `createProduct` later or mock it for now
-// import { createProduct } from "@/app/actions/product"; 
+import { createProduct } from "@/app/actions/product";
+import { useRouter } from "next/navigation";
 
 export default function ProductForm() {
+    const router = useRouter();
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [base64Image, setBase64Image] = useState<string>("");
     const [compressionStats, setCompressionStats] = useState<{ original: string; compressed: string; saved: string } | null>(null);
     const [isCompressing, setIsCompressing] = useState(false);
 
@@ -30,10 +32,10 @@ export default function ProductForm() {
             // Compression Config
             const options = {
                 maxSizeMB: 0.1, // Target 100KB
-                maxWidthOrHeight: 1920,
+                maxWidthOrHeight: 1280,
                 useWebWorker: true,
                 fileType: "image/webp",
-                initialQuality: 0.7
+                initialQuality: 0.8
             };
 
             const compressedFile = await imageCompression(file, options);
@@ -41,6 +43,13 @@ export default function ProductForm() {
             // Stats after
             const compressedSize = (compressedFile.size / 1024).toFixed(0) + " KB";
             const savedPercentage = ((1 - compressedFile.size / file.size) * 100).toFixed(0) + "%";
+
+            // Convert to Base64
+            const reader = new FileReader();
+            reader.readAsDataURL(compressedFile);
+            reader.onloadend = () => {
+                setBase64Image(reader.result as string);
+            };
 
             setCompressionStats({
                 original: originalSize,
@@ -65,20 +74,34 @@ export default function ProductForm() {
     const removeImage = () => {
         setImageFile(null);
         setPreviewUrl(null);
+        setBase64Image("");
         setCompressionStats(null);
     };
 
+    const handleSubmit = async (formData: FormData) => {
+        if (!base64Image) {
+            toast.error("Please add a product image");
+            return;
+        }
+
+        // Add base64 image to formData is not standard, but we used hidden input
+        // logic below handles it via the form's natural submission or we append here if we manual call
+        // But since we use action={handleSubmit}, formData contains the hidden input value if it's there.
+
+        const result = await createProduct(formData);
+
+        if (result.success) {
+            toast.success("Product Uploaded Successfully!");
+            router.push("/admin/inventory");
+        } else {
+            toast.error(result.error || "Failed to upload product");
+        }
+    };
+
     return (
-        <form action={async (formData) => {
-            // We'll append the compressed file to formData manually or assume logic handles it if supported
-            // For now just console log
-            if (!imageFile) {
-                toast.error("Please select an image");
-                return;
-            }
-            toast.info("Uploading product... (Mock)");
-            // Here we would call createProduct(formData)
-        }} className="space-y-8">
+        <form action={handleSubmit} className="space-y-8">
+            {/* Hidden input for base64 image */}
+            <input type="hidden" name="imageUrl" value={base64Image} />
 
             {/* Image Upload Area */}
             <div className="space-y-4">
@@ -147,6 +170,7 @@ export default function ProductForm() {
                     <input
                         name="name"
                         type="text"
+                        required
                         placeholder="e.g. iPhone 15 Pro Max Case"
                         className="w-full p-4 bg-slate-50 border-none rounded-xl font-bold text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-brand-blue/20 outline-none"
                     />
@@ -158,6 +182,8 @@ export default function ProductForm() {
                         <option>Fashion</option>
                         <option>Home & Living</option>
                         <option>Beauty</option>
+                        <option>Auto Parts</option>
+                        <option>Other</option>
                     </select>
                 </div>
             </div>
@@ -172,18 +198,24 @@ export default function ProductForm() {
                             name="priceRMB"
                             type="number"
                             step="0.01"
+                            required
                             placeholder="0.00"
                             className="w-full p-4 pl-10 bg-slate-50 border-none rounded-xl font-bold text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-brand-blue/20 outline-none"
                         />
                     </div>
                 </div>
+                {/* 
+                   Note: DB has stock, form had CBM?
+                   Let's stick to CBM/Weight if valid, but for Staff Picks likely need 'Stock' or 'Min Order'
+                   User original code had "cbm".
+                   Let's change label to "Stock Quantity" for Creator Studio
+                */}
                 <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Total CBM</label>
+                    <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Stock Qty</label>
                     <input
-                        name="cbm"
+                        name="stock" // changed from cbm
                         type="number"
-                        step="0.0001"
-                        placeholder="0.005"
+                        placeholder="10"
                         className="w-full p-4 bg-slate-50 border-none rounded-xl font-bold text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-brand-blue/20 outline-none"
                     />
                 </div>
