@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Loader2, Shield, Zap } from "lucide-react";
 import { motion } from "framer-motion";
@@ -10,7 +10,7 @@ import PhoneInput from "@/components/auth/PhoneInput";
 
 import { useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+function LoginPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     // Login Method State
@@ -285,5 +285,13 @@ export default function LoginPage() {
                 </div>
             </motion.div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin" /></div>}>
+            <LoginPageContent />
+        </Suspense>
     );
 }

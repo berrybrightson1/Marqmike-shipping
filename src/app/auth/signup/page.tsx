@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Loader2, Sparkles, Shield, Zap } from "lucide-react";
 import { motion } from "framer-motion";
@@ -11,6 +11,14 @@ import PhoneInput from "@/components/auth/PhoneInput";
 import { useSearchParams } from "next/navigation";
 
 export default function SignupPage() {
+    return (
+        <Suspense>
+            <SignupPageContent />
+        </Suspense>
+    );
+}
+
+function SignupPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [name, setName] = useState("");
