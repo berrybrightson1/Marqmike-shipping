@@ -2,7 +2,7 @@
 
 import { useCart } from "@/context/CartContext";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import { Trash2, ArrowRight, ShoppingBag, MessageCircle } from "lucide-react";
+import { Trash2, ArrowRight, ShoppingBag, MessageCircle, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import CheckoutModal from "@/components/checkout/CheckoutModal";
@@ -83,13 +83,13 @@ export default function CartPage() {
                             </div>
                             <button
                                 onClick={handleCheckoutTrigger}
-                                className="w-full py-4 bg-[#25D366] text-white rounded-xl font-bold text-lg shadow-lg shadow-green-200 flex items-center justify-center gap-2 hover:bg-[#128C7E] transition-colors"
+                                className="w-full py-4 bg-brand-blue/5 text-brand-blue border-2 border-brand-blue rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-brand-blue hover:text-white transition-all"
                             >
-                                <MessageCircle size={20} />
-                                Checkout on WhatsApp
+                                <ShoppingCart size={20} />
+                                Notify Admin via WhatsApp
                             </button>
-                            <p className="text-center text-slate-400 text-[10px] mt-4">
-                                By clicking checkout, you will be redirected to WhatsApp to finalize your order with an agent.
+                            <p className="text-center text-slate-400 text-xs mt-4">
+                                Your items are already saved. Click above if you want to speed up the process.
                             </p>
                         </div>
                     </>

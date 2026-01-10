@@ -33,9 +33,9 @@ function ActionButton({ icon: Icon, label, href, active }: ActionButtonProps) {
 
 export default function ActionGrid() {
     const actions = [
-        { label: "Delivery", icon: Package, href: "/dashboard/create", active: true },
+        { label: "CBM Calc", icon: Calculator, href: "/dashboard/create", active: true },
         { label: "Buy For Me", icon: ShoppingCart, href: "/dashboard/procurement", active: false },
-        { label: "Get Quote", icon: Calculator, href: "/dashboard/quote", active: false },
+        { label: "Get Quote", icon: Package, href: "/dashboard/quote", active: false },
         { label: "Help Center", icon: HelpCircle, href: "/help", active: false },
     ];
 
