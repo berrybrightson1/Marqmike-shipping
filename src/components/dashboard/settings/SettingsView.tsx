@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState } from "react";
 
-import { updateProfile } from "@/app/actions/auth";
+import { updateProfile, signOut } from "@/app/actions/auth";
 
 export default function SettingsView({ user }: { user: any }) {
     const router = useRouter();
 
-    const handleLogout = () => {
-        // In a real app, call a server action or API to clear session
+    const handleLogout = async () => {
+        await signOut();
         toast.success("Logged out successfully");
         router.push("/auth/login");
     };

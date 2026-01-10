@@ -3,7 +3,7 @@
 import { use } from "react";
 import { ChevronLeft, MapPin, Package, CheckCircle2, Clock, Truck } from "lucide-react";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "@/hooks/useSession";
 
 // Mock shipment data
 const mockShipments: Record<string, any> = {
@@ -25,7 +25,7 @@ const mockShipments: Record<string, any> = {
 
 export default function TrackingResultPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
-    const { user } = useUser();
+    const { user, loading } = useSession();
     const shipment = mockShipments[id.toUpperCase()];
 
     // Privacy: Only show full details if user is admin or shipment owner

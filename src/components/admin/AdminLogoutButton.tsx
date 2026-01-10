@@ -3,15 +3,16 @@
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { toast } from "sonner";
+import { signOut } from "@/app/actions/auth";
 
 export default function AdminLogoutButton() {
     const router = useRouter();
 
     const handleLogout = async () => {
         try {
-            await fetch("/api/auth/admin", { method: "DELETE" });
+            await signOut();
             toast.success("Logged out successfully");
-            router.push("/admin/login");
+            router.push("/auth/login"); // Or admin/login if separate
             router.refresh();
         } catch (error) {
             toast.error("Logout failed");

@@ -1,9 +1,9 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import { useRouter, usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { toast } from "sonner";
+import { useSession } from "@/hooks/useSession";
 
 interface AuthGuardProps {
     children: ReactNode;
@@ -17,12 +17,12 @@ interface AuthGuardProps {
  * If user is Guest: Intercepts click, saves intent, redirects to login.
  */
 export default function AuthGuard({ children, fallback, onGuestAction }: AuthGuardProps) {
-    const { isSignedIn, isLoaded } = useUser();
+    const { isSignedIn, loading } = useSession();
     const router = useRouter();
     const pathname = usePathname();
 
     const handleAction = (e: React.MouseEvent) => {
-        if (!isLoaded) return;
+        if (loading) return;
 
         if (!isSignedIn) {
             e.preventDefault();
@@ -37,7 +37,7 @@ export default function AuthGuard({ children, fallback, onGuestAction }: AuthGua
             } else {
                 // Default: Redirect to login with return URL
                 const returnUrl = encodeURIComponent(pathname);
-                router.push(`/sign-in?redirect_url=${returnUrl}`);
+                router.push(`/auth/login?redirect_url=${returnUrl}`);
             }
             return;
         }

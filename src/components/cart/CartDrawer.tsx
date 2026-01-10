@@ -4,7 +4,7 @@ import { X, Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useState } from "react";
-import { useUser } from "@clerk/nextjs";
+// import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 import { createOrder } from "@/app/actions/orders";
@@ -17,7 +17,7 @@ interface CartDrawerProps {
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const { cart, removeFromCart, clearCart, totalItems } = useCart();
     const { currency, convertPrice } = useCurrency();
-    const { user } = useUser();
+    // const { user } = useUser();
     const router = useRouter();
     const [phone, setPhone] = useState("");
     const [location, setLocation] = useState("");
@@ -35,8 +35,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
         // 1. Create Order in Database
         const res = await createOrder({
-            customerName: user?.fullName || "Guest Cart",
-            customerPhone: phone || user?.phoneNumbers?.[0]?.phoneNumber || "Unknown",
+            customerName: "Guest Cart", // user?.fullName || 
+            customerPhone: phone || "Unknown", // user?.phoneNumbers?.[0]?.phoneNumber || 
             items: cart.map(item => ({
                 itemName: item.name,
                 quantity: item.quantity,
@@ -59,7 +59,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             message += `   Qty: ${item.quantity} | Price: ${currency} ${convertedPrice.toFixed(2)}\n`;
         });
         message += `\n💰 *Total*: ${currency} ${convertPrice(getTotalPrice()).toFixed(2)}\n\n`;
-        message += `📱 *Phone*: ${phone || user?.phoneNumbers?.[0]?.phoneNumber || "Not provided"}\n`;
+        message += `📱 *Phone*: ${phone || "Not provided"}\n`;
         message += `📍 *Location*: ${location || "Not provided"}\n\n`;
         message += `🔖 *Ref Code*: ${refCode}`;
 

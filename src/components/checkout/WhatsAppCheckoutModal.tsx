@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { X, MessageCircle, MapPin, Phone } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
+// import { useUser } from "@clerk/nextjs"; 
 import { toast } from "sonner";
 
 import { createOrder } from "@/app/actions/orders";
@@ -20,8 +20,8 @@ interface WhatsAppCheckoutModalProps {
 }
 
 export default function WhatsAppCheckoutModal({ isOpen, onClose, product, quantity, totalCBM }: WhatsAppCheckoutModalProps) {
-    const { user } = useUser();
-    const [phone, setPhone] = useState(user?.phoneNumbers?.[0]?.phoneNumber || "");
+    // const { user } = useUser();
+    const [phone, setPhone] = useState(""); // user?.phoneNumbers?.[0]?.phoneNumber || ""
     const [location, setLocation] = useState("");
 
     if (!isOpen) return null;

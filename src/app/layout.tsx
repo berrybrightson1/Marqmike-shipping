@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Sora } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { ClerkProvider } from "@clerk/nextjs";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import { CartProvider } from "@/context/CartContext";
 
@@ -29,19 +28,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={`${sora.variable} font-sans antialiased text-sm`} suppressHydrationWarning>
-          <div className="w-full min-h-screen overflow-x-hidden no-scrollbar">
-            <CurrencyProvider>
-              <CartProvider>
-                {children}
-                <Toaster richColors position="top-center" />
-              </CartProvider>
-            </CurrencyProvider>
-          </div>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className={`${sora.variable} font-sans antialiased text-sm`} suppressHydrationWarning>
+        <div className="w-full min-h-screen overflow-x-hidden no-scrollbar">
+          <CurrencyProvider>
+            <CartProvider>
+              {children}
+              <Toaster richColors position="top-center" />
+            </CartProvider>
+          </CurrencyProvider>
+        </div>
+      </body>
+    </html>
   );
 }

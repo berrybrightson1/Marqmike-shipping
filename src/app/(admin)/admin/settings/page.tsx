@@ -1,8 +1,12 @@
 "use client";
 
-import { Shield, Bell, Lock, User, LogOut, ChevronRight, MapPin } from "lucide-react";
+import { Shield, Bell, Lock, User, LogOut, ChevronRight, MapPin, Download, Loader2, Send, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { exportData } from "@/app/actions/export";
+import { useState } from "react";
+import { signOut } from "@/app/actions/auth";
+import { broadcastNotification } from "@/app/actions/notification";
 
 export default function AdminSettingsPage() {
     return (
@@ -68,8 +72,13 @@ export default function AdminSettingsPage() {
                     {/* Broadcast System */}
                     <BroadcastSection />
 
+
                     <button
-                        onClick={() => toast.success("Admin session terminated")}
+                        onClick={async () => {
+                            await signOut();
+                            toast.success("Logged out successfully");
+                            window.location.href = "/auth/login";
+                        }}
                         className="w-full bg-red-50 text-red-500 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
                     >
                         <LogOut size={20} />
@@ -98,12 +107,6 @@ function SettingsItem({ icon: Icon, label, value }: { icon: any, label: string, 
     )
 }
 
-import { exportData } from "@/app/actions/export";
-import { Download, Loader2 } from "lucide-react";
-import { useState } from "react";
-
-import { broadcastNotification } from "@/app/actions/notification";
-import { Send, CheckCircle } from "lucide-react";
 
 function BroadcastSection() {
     const [loading, setLoading] = useState(false);

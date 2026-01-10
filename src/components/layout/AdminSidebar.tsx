@@ -3,6 +3,7 @@
 import { LayoutGrid, Users, Box, Phone, Settings, LogOut, Shield, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "@/app/actions/auth";
 
 export default function AdminSidebar() {
     const pathname = usePathname();
@@ -34,7 +35,13 @@ export default function AdminSidebar() {
             </nav>
 
             {/* Footer Profile */}
-            <div className="p-4 m-4 bg-slate-800 rounded-2xl flex items-center justify-between group cursor-pointer hover:bg-slate-700 transition-colors">
+            <div
+                onClick={async () => {
+                    await signOut();
+                    window.location.href = "/auth/login";
+                }}
+                className="p-4 m-4 bg-slate-800 rounded-2xl flex items-center justify-between group cursor-pointer hover:bg-slate-700 transition-colors"
+            >
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-brand-pink/20 text-brand-pink flex items-center justify-center font-bold text-sm border border-brand-pink/30">
                         SA
