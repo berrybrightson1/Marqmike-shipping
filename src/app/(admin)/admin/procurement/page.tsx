@@ -39,16 +39,31 @@ export default function ProcurementAdminPage() {
         }
     };
 
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const handleRefresh = () => {
+        loadRequests();
+    };
+
     const getStatusColor = (status: string) => {
         switch (status) {
             case "Pending": return "bg-amber-100 text-amber-700";
-            case "Purchased": return "bg-blue-100 text-blue-700";
-            case "Shipped": return "bg-purple-100 text-purple-700";
-            case "Arrived": return "bg-green-100 text-green-700";
+            case "Item Available": return "bg-blue-100 text-blue-700";
+            case "Paid": return "bg-green-100 text-green-700";
+            case "Purchased": return "bg-purple-100 text-purple-700";
+            case "Shipped": return "bg-indigo-100 text-indigo-700";
+            case "Arrived": return "bg-teal-100 text-teal-700";
+            case "Out of Stock": return "bg-slate-200 text-slate-600";
             case "Cancelled": return "bg-red-100 text-red-700";
             default: return "bg-slate-100 text-slate-700";
         }
     }
+
+    const filteredRequests = requests.filter(req =>
+        req.user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        req.itemName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        req.status?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="p-6 md:p-10 space-y-8 h-screen overflow-y-auto pb-20">
@@ -57,6 +72,9 @@ export default function ProcurementAdminPage() {
                     <h1 className="text-3xl font-bold text-slate-800">Procurement Manager</h1>
                     <p className="text-slate-500 mt-1">Manage "Buy For Me" requests from customers.</p>
                 </div>
+                <button onClick={handleRefresh} className="p-2 text-slate-400 hover:text-brand-blue hover:bg-brand-blue/5 rounded-xl transition-colors">
+                    <CheckCircle size={20} className={loading ? "animate-spin" : ""} />
+                </button>
             </header>
 
             <div className="bg-white/80 backdrop-blur-xl border border-white/60 rounded-[32px] overflow-hidden shadow-xl shadow-slate-200/50">
@@ -66,6 +84,8 @@ export default function ProcurementAdminPage() {
                         <input
                             type="text"
                             placeholder="Search Requests..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-12 pr-4 py-3 bg-slate-50 rounded-2xl border-none focus:ring-2 ring-brand-blue/20 outline-none"
                         />
                     </div>
@@ -75,7 +95,7 @@ export default function ProcurementAdminPage() {
                     <table className="w-full text-left">
                         <thead className="bg-slate-50/50">
                             <tr className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                <th className="p-6">Date</th>
+                                <th className="p-6">Date & Time</th>
                                 <th className="p-6">Customer</th>
                                 <th className="p-6">Item Requested</th>
                                 <th className="p-6">Link</th>
@@ -84,10 +104,11 @@ export default function ProcurementAdminPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
-                            {requests.map((req) => (
+                            {filteredRequests.map((req) => (
                                 <tr key={req.id} className="hover:bg-slate-50 transition-colors group">
                                     <td className="p-6 text-sm text-slate-500 whitespace-nowrap">
-                                        {new Date(req.createdAt).toLocaleDateString()}
+                                        <div className="font-bold text-slate-700">{new Date(req.createdAt).toLocaleDateString()}</div>
+                                        <div className="text-xs text-slate-400">{new Date(req.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                                     </td>
                                     <td className="p-6">
                                         <div className="flex flex-col">
@@ -113,17 +134,32 @@ export default function ProcurementAdminPage() {
                                     <td className="p-6 text-right">
                                         <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                             {req.status === "Pending" && (
-                                                <button onClick={() => handleStatusUpdate(req.id, "Purchased")} title="Mark Purchased" className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100">
+                                                <>
+                                                    <button onClick={() => handleStatusUpdate(req.id, "Item Available")} title="Item Available" className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100">
+                                                        <CheckCircle size={16} />
+                                                    </button>
+                                                    <button onClick={() => handleStatusUpdate(req.id, "Out of Stock")} title="Out of Stock" className="p-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200">
+                                                        <XCircle size={16} />
+                                                    </button>
+                                                </>
+                                            )}
+                                            {req.status === "Item Available" && (
+                                                <button onClick={() => handleStatusUpdate(req.id, "Paid")} title="Mark Paid" className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100">
+                                                    <DollarSignIcon />
+                                                </button>
+                                            )}
+                                            {req.status === "Paid" && (
+                                                <button onClick={() => handleStatusUpdate(req.id, "Purchased")} title="Mark Purchased" className="p-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100">
                                                     <DollarSignIcon />
                                                 </button>
                                             )}
                                             {req.status === "Purchased" && (
-                                                <button onClick={() => handleStatusUpdate(req.id, "Shipped")} title="Mark Shipped" className="p-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100">
+                                                <button onClick={() => handleStatusUpdate(req.id, "Shipped")} title="Mark Shipped" className="p-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100">
                                                     <Truck size={16} />
                                                 </button>
                                             )}
                                             {(req.status === "Shipped" || req.status === "Purchased") && (
-                                                <button onClick={() => handleStatusUpdate(req.id, "Arrived")} title="Mark Arrived" className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100">
+                                                <button onClick={() => handleStatusUpdate(req.id, "Arrived")} title="Mark Arrived" className="p-2 bg-teal-50 text-teal-600 rounded-lg hover:bg-teal-100">
                                                     <CheckCircle size={16} />
                                                 </button>
                                             )}
@@ -134,10 +170,10 @@ export default function ProcurementAdminPage() {
                                     </td>
                                 </tr>
                             ))}
-                            {requests.length === 0 && !loading && (
+                            {filteredRequests.length === 0 && !loading && (
                                 <tr>
                                     <td colSpan={6} className="p-12 text-center text-slate-400">
-                                        No pending requests found.
+                                        No requests found matching your search.
                                     </td>
                                 </tr>
                             )}

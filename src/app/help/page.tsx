@@ -270,12 +270,42 @@ export default function HelpPage() {
 
             {/* Search Bar with Dropdown */}
             <div className="max-w-3xl mx-auto px-6 -mt-12 relative z-20 mb-8">
+                {/* Quick Actions Grid - NEW */}
+                <div className="max-w-4xl mx-auto px-6 mb-12">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <Link href="/track" className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all border border-slate-100 flex flex-col items-center justify-center gap-3 group">
+                            <div className="w-14 h-14 bg-brand-blue/5 text-brand-blue rounded-full flex items-center justify-center group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                                <Package size={28} />
+                            </div>
+                            <span className="font-bold text-slate-700 text-sm">Track Package</span>
+                        </Link>
+                        <Link href="/dashboard" className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all border border-slate-100 flex flex-col items-center justify-center gap-3 group">
+                            <div className="w-14 h-14 bg-green-50 text-green-600 rounded-full flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition-colors">
+                                <Shield size={28} />
+                            </div>
+                            <span className="font-bold text-slate-700 text-sm">Get Quote</span>
+                        </Link>
+                        <Link href="/store" className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all border border-slate-100 flex flex-col items-center justify-center gap-3 group">
+                            <div className="w-14 h-14 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                                <BookOpen size={28} />
+                            </div>
+                            <span className="font-bold text-slate-700 text-sm">Shop Store</span>
+                        </Link>
+                        <a href="https://wa.me/233551171353" target="_blank" className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all border border-slate-100 flex flex-col items-center justify-center gap-3 group">
+                            <div className="w-14 h-14 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                                <HelpCircle size={28} />
+                            </div>
+                            <span className="font-bold text-slate-700 text-sm">Contact Us</span>
+                        </a>
+                    </div>
+                </div>
+
                 <div className="relative">
-                    <div className="bg-white rounded-2xl shadow-2xl border border-white/60 p-2 flex items-center gap-3">
+                    <div className="bg-white rounded-2xl shadow-xl border border-white/60 p-2 flex items-center gap-3">
                         <Search className="text-slate-400 ml-4" size={24} />
                         <input
                             type="text"
-                            placeholder="Search for help... (e.g., 'how to track', 'CBM calculator', 'buy for me')"
+                            placeholder="Search for help... (e.g., 'how to track', 'CBM calculator')"
                             value={searchQuery}
                             onChange={(e) => {
                                 setSearchQuery(e.target.value);

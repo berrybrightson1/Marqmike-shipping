@@ -166,9 +166,22 @@ export default function AdminOrdersPage() {
                                         </td>
                                         <td className="py-3 px-4 align-top">
                                             {order.trackingId ? (
-                                                <div className="flex items-center gap-1 text-xs font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded border border-slate-200">
-                                                    <Package size={12} className="text-slate-400" />
-                                                    {order.trackingId}
+                                                <div className="flex flex-col gap-1 items-start">
+                                                    <div className="flex items-center gap-1 text-xs font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded border border-slate-200">
+                                                        <Package size={12} className="text-slate-400" />
+                                                        {order.trackingId}
+                                                    </div>
+                                                    <button
+                                                        onClick={() => {
+                                                            const phone = order.customerPhone?.replace(/\D/g, '') || "";
+                                                            const message = `Hello ${order.customerName}, your order *${order.refCode}* has been processed! Your tracking ID is *${order.trackingId}*. You can track it here: https://marqmike.com/track`;
+                                                            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                                                        }}
+                                                        className="flex items-center gap-1 text-[10px] font-bold text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 px-2 py-1 rounded transition-colors"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" /></svg>
+                                                        WhatsApp
+                                                    </button>
                                                 </div>
                                             ) : (
                                                 <button

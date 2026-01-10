@@ -49,19 +49,18 @@ export default function AdminDashboardPage() {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
-                    title="Total Revenue"
-                    value={`GHS ${stats?.revenue?.toLocaleString(undefined, { minimumFractionDigits: 2 }) || '0.00'}`}
-                    change="Real-time"
-                    icon={DollarSign}
-                    color="bg-green-500"
+                    title="Daily Work Load"
+                    value={logs.filter((l: any) => new Date(l.timestamp).toDateString() === new Date().toDateString()).length || 0}
+                    change="Actions Today"
+                    icon={Activity}
+                    color="bg-brand-pink"
                 />
                 <StatCard title="Active Shipments" value={stats?.activeShipments || 0} change="In Transit" icon={Package} color="bg-brand-blue" />
-                <StatCard title="Total Customers" value={stats?.totalCustomers || 0} change="Registered" icon={Users} color="bg-[#ff1493]" />
-                <StatCard title="Pending Requests" value={stats?.pendingRequests || 0} change="Action Needed" icon={Activity} color="bg-orange-500" />
+                <StatCard title="Total Customers" value={stats?.totalCustomers || 0} change="Registered" icon={Users} color="bg-purple-500" />
+                <StatCard title="Pending Requests" value={stats?.pendingRequests || 0} change="Action Needed" icon={ClipboardList} color="bg-orange-500" />
             </div>
 
-            {/* Data Visualization */}
-            <AdminCharts data={stats?.charts} />
+            {/*  Removed Charts as requested - "Transaction features removed" */}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left Column: Quick Actions + Deals */}
@@ -93,8 +92,6 @@ export default function AdminDashboardPage() {
                         </div>
                     </div>
 
-                    {/* Deals Module */}
-                    <DealsPromoCard />
                 </div>
 
                 {/* Right Column: Audit Logs */}

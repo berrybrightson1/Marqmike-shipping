@@ -4,9 +4,11 @@ import { LayoutGrid, Users, Box, Phone, Settings, LogOut, Shield, ShoppingBag } 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "@/app/actions/auth";
+import { useSession } from "@/hooks/useSession";
 
 export default function AdminSidebar() {
     const pathname = usePathname();
+    const { user } = useSession();
 
     return (
         <aside className="hidden lg:flex flex-col w-72 h-screen fixed left-0 top-0 bg-slate-900 border-r border-slate-800 z-50 text-white">
@@ -44,11 +46,11 @@ export default function AdminSidebar() {
             >
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-brand-pink/20 text-brand-pink flex items-center justify-center font-bold text-sm border border-brand-pink/30">
-                        SA
+                        {user?.name?.charAt(0).toUpperCase() || "A"}
                     </div>
                     <div>
-                        <h4 className="text-sm font-bold text-white">Super Admin</h4>
-                        <p className="text-[10px] text-slate-400">admin@marqmike.com</p>
+                        <h4 className="text-sm font-bold text-white max-w-[120px] truncate">{user?.name || "Admin"}</h4>
+                        <p className="text-[10px] text-slate-400">{user?.role || "Administrator"}</p>
                     </div>
                 </div>
                 <LogOut size={18} className="text-slate-500 group-hover:text-red-400 transition-colors" />

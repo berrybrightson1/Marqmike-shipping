@@ -10,10 +10,12 @@ import { cn } from "@/lib/utils";
 import { signOut } from "@/app/actions/auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useSession } from "@/hooks/useSession";
 
 export default function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
+    const { user } = useSession();
 
     const handleLogout = async () => {
         const result = await signOut();
@@ -36,10 +38,10 @@ export default function Sidebar() {
             >
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-brand-pink/10 text-brand-pink flex items-center justify-center font-bold text-sm">
-                        SA
+                        {user?.name?.charAt(0).toUpperCase() || "U"}
                     </div>
                     <div>
-                        <h4 className="text-sm font-bold text-slate-700 group-hover:text-red-500">Super Admin</h4>
+                        <h4 className="text-sm font-bold text-slate-700 group-hover:text-red-500 max-w-[120px] truncate">{user?.name || "User"}</h4>
                         <p className="text-[10px] text-slate-400 group-hover:text-red-300">Tap to logout</p>
                     </div>
                 </div>
