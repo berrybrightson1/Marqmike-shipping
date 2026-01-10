@@ -308,10 +308,10 @@ export default function HelpPage() {
                                 setIsSearching(true);
                                 setShowDropdown(false);
                             }}
-                            className="bg-brand-blue hover:bg-[#003d91] text-white px-6 py-3 rounded-xl font-bold transition-colors flex items-center gap-2"
+                            className="bg-brand-blue hover:bg-[#003d91] text-white px-4 md:px-6 py-3 rounded-xl font-bold transition-colors flex items-center gap-2 shrink-0"
                         >
-                            <Search size={18} />
-                            Search
+                            <Search size={20} />
+                            <span className="hidden md:inline">Search</span>
                         </button>
                     </div>
 
