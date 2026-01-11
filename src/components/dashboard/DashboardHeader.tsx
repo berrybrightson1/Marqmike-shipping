@@ -167,7 +167,7 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
                                     <span className="text-xs font-bold">{currency}</span>
                                 </button>
                                 {showCurrencyDropdown && (
-                                    <div className="absolute top-full right-0 mt-3 w-40 bg-white rounded-2xl shadow-xl shadow-brand-blue/20 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 border border-slate-100">
+                                    <div className="absolute top-full right-0 mt-3 w-40 bg-white rounded-[24px] shadow-xl shadow-brand-blue/20 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 border border-slate-100">
                                         <div className="p-2 space-y-1">
                                             {currencies.map((c) => (
                                                 <button
@@ -267,7 +267,7 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
                         </div>
 
                         {searchTerm && (
-                            <div className="absolute top-full left-0 right-0 mt-2 bg-brand-blue rounded-3xl shadow-2xl overflow-hidden border border-white/10 z-50 animate-in fade-in zoom-in-95 duration-200">
+                            <div className="absolute top-full left-0 right-0 mt-2 bg-brand-blue rounded-[24px] shadow-2xl overflow-hidden border border-white/10 z-50 animate-in fade-in zoom-in-95 duration-200">
                                 <div className="p-2">
                                     <button className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-white/10 transition-colors text-left group">
                                         <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white">
