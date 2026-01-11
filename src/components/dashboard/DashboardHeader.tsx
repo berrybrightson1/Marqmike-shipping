@@ -51,14 +51,21 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
         if (searchTerm) setSearchTerm("");
     });
 
-    const toggleCurrency = () => {
-        if (currency === 'USD') setCurrency('GHS');
-        else if (currency === 'GHS') setCurrency('NGN');
-        else setCurrency('USD');
+    const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
+    const currencyRef = useRef<HTMLDivElement>(null);
+
+    useClickOutside(currencyRef, () => setShowCurrencyDropdown(false));
+
+    const currencies = [
+        { code: 'USD', label: 'US Dollar', symbol: '$' },
+        { code: 'GHS', label: 'Ghana Cedi', symbol: '₵' },
+        { code: 'NGN', label: 'Naira', symbol: '₦' },
+    ];
+
+    const handleCurrencySelect = (code: string) => {
+        setCurrency(code as any);
+        setShowCurrencyDropdown(false);
     };
-
-
-
     const handleBack = () => {
         if (backLink) {
             router.push(backLink);
@@ -122,13 +129,34 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
 
                         {/* Right Side: Actions */}
                         <div className="flex gap-2">
-                            <button
-                                onClick={toggleCurrency}
-                                className="h-10 px-3 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors gap-1.5 backdrop-blur-sm"
-                            >
-                                <DollarSign size={14} className="text-brand-pink" />
-                                <span className="text-xs font-bold">{currency}</span>
-                            </button>
+                            <div className="relative" ref={currencyRef}>
+                                <button
+                                    onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}
+                                    className="h-10 px-3 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors gap-1.5 backdrop-blur-sm"
+                                >
+                                    <DollarSign size={14} className="text-brand-pink" />
+                                    <span className="text-xs font-bold">{currency}</span>
+                                </button>
+                                {showCurrencyDropdown && (
+                                    <div className="absolute top-full right-0 mt-3 w-40 bg-white rounded-2xl shadow-xl shadow-brand-blue/20 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 border border-slate-100">
+                                        <div className="p-2 space-y-1">
+                                            {currencies.map((c) => (
+                                                <button
+                                                    key={c.code}
+                                                    onClick={() => handleCurrencySelect(c.code)}
+                                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold transition-colors ${currency === c.code ? 'bg-brand-blue/10 text-brand-blue' : 'text-slate-600 hover:bg-slate-50'}`}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-[10px]">{c.symbol}</span>
+                                                        {c.code}
+                                                    </div>
+                                                    {currency === c.code && <div className="w-1.5 h-1.5 rounded-full bg-brand-pink" />}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
 
                             <div className="relative" ref={notifRef}>
                                 <button

@@ -1,91 +1,257 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Package, ArrowLeft, Copy, CheckCircle, ExternalLink } from "lucide-react";
+import { Search, Package, ArrowLeft, Copy, CheckCircle, ExternalLink, MapPin, Truck, Ship, Archive, Trash2, Calendar, MoreVertical, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useCart } from "@/context/CartContext";
+import { useCurrency } from "@/context/CurrencyContext";
 
-// Mock Data - In real app, fetch from API similar to procurement requests
+// Mock Data
 const MOCK_SHIPMENTS = [
-    { id: '1', trackingId: 'MQM-8822-192', item: 'iPhone 15 Pro Max', status: 'In Transit', date: '2026-01-10' },
-    { id: '2', trackingId: 'MQM-8822-384', item: 'Nike Air Jordan', status: 'Delivered', date: '2026-01-08' },
-    { id: '3', trackingId: 'MQM-8822-551', item: 'MacBook Pro M3', status: 'Processing', date: '2026-01-11' },
+    {
+        id: '1',
+        trackingId: 'MQM-8822-192',
+        item: 'iPhone 15 Pro Max',
+        status: 'In Transit',
+        type: 'Air',
+        date: '2026-01-10',
+        progress: 65,
+        origin: 'Guangzhou, CN',
+        destination: 'Accra, GH',
+        eta: '3 Days'
+    },
+    {
+        id: '2',
+        trackingId: 'MQM-8822-384',
+        item: 'Nike Air Jordan (x2)',
+        status: 'Delivered',
+        type: 'Air',
+        date: '2026-01-08',
+        progress: 100,
+        origin: 'Shenzhen, CN',
+        destination: 'Kumasi, GH',
+        eta: 'Arrived'
+    },
+    {
+        id: '3',
+        trackingId: 'MQM-S-551',
+        item: 'Living Room Sofa Set',
+        status: 'Processing',
+        type: 'Sea',
+        date: '2026-01-11',
+        progress: 10,
+        origin: 'Ningbo, CN',
+        destination: 'Tema, GH',
+        eta: '45 Days'
+    },
 ];
 
 export default function ShipmentsPage() {
     const router = useRouter();
+    const { currency } = useCurrency();
     const [searchTerm, setSearchTerm] = useState("");
+    const [activeTab, setActiveTab] = useState<'active' | 'history'>('active');
+    const [shipments, setShipments] = useState(MOCK_SHIPMENTS);
+    const [showMapModal, setShowMapModal] = useState(false);
+    const [selectedShipment, setSelectedShipment] = useState<any>(null);
 
     const handleCopy = (text: string) => {
         navigator.clipboard.writeText(text);
         toast.success("Tracking ID copied!");
     };
 
-    const filtered = MOCK_SHIPMENTS.filter(s =>
-        s.trackingId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.item.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const handleDelete = (id: string) => {
+        setShipments(prev => prev.filter(s => s.id !== id));
+        toast.success("Shipment removed from history");
+    };
+
+    const filtered = shipments.filter(s => {
+        const matchesSearch = s.trackingId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            s.item.toLowerCase().includes(searchTerm.toLowerCase());
+
+        if (activeTab === 'active') {
+            return matchesSearch && s.status !== 'Delivered' && s.status !== 'Cancelled';
+        } else {
+            return matchesSearch && (s.status === 'Delivered' || s.status === 'Cancelled');
+        }
+    });
+
+    const openMap = (shipment: any) => {
+        setSelectedShipment(shipment);
+        setShowMapModal(true);
+    };
 
     return (
-        <div className="min-h-screen bg-[#F2F6FC] p-6 pb-24">
-            <header className="mb-6 flex items-center gap-4">
-                <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-slate-500 shadow-sm border border-slate-100 transition-transform active:scale-95">
-                    <ArrowLeft size={20} />
-                </button>
-                <h1 className="text-2xl font-bold text-slate-800">Tracking IDs</h1>
+        <div className="min-h-screen bg-[#F2F6FC] pb-32">
+            {/* Header */}
+            <header className="bg-white pt-12 pb-6 px-6 shadow-sm border-b border-slate-100 sticky top-0 z-10">
+                <div className="flex items-center gap-4 mb-6">
+                    <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors">
+                        <ArrowLeft size={20} />
+                    </button>
+                    <h1 className="text-2xl font-bold text-slate-800">My Shipments</h1>
+                </div>
+
+                {/* Tabs */}
+                <div className="flex p-1 bg-slate-100 rounded-2xl">
+                    <button
+                        onClick={() => setActiveTab('active')}
+                        className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'active' ? 'bg-white text-brand-blue shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                        Active Shipments
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('history')}
+                        className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'history' ? 'bg-white text-brand-blue shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                        History
+                    </button>
+                </div>
             </header>
 
-            {/* Search */}
-            <div className="bg-white p-2 pl-4 rounded-2xl shadow-sm border border-slate-100 flex gap-4 items-center mb-8 focus-within:ring-2 ring-brand-blue/20 transition-all">
-                <Search className="text-slate-400 shrink-0" size={20} />
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search tracking ID or item..."
-                    className="w-full py-3 bg-transparent border-none outline-none text-slate-700 font-bold placeholder:font-medium placeholder:text-slate-400"
-                />
+            <div className="p-6">
+                {/* Search */}
+                <div className="bg-white p-2 pl-4 rounded-2xl shadow-sm border border-slate-100 flex gap-4 items-center mb-6 focus-within:ring-2 ring-brand-blue/20 transition-all">
+                    <Search className="text-slate-400 shrink-0" size={20} />
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Search tracking ID or item..."
+                        className="w-full py-3 bg-transparent border-none outline-none text-slate-700 font-bold placeholder:font-medium placeholder:text-slate-400"
+                    />
+                </div>
+
+                {/* List */}
+                <div className="space-y-4">
+                    {filtered.length === 0 ? (
+                        <div className="text-center py-12">
+                            <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Package size={40} className="text-slate-300" />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-700 mb-1">No shipments found</h3>
+                            <p className="text-slate-400 text-sm">Your active orders will appear here.</p>
+                        </div>
+                    ) : (
+                        filtered.map((shipment) => (
+                            <div key={shipment.id} className="bg-white p-5 rounded-[24px] border border-slate-100 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
+                                {/* Delete Action (Visible on Hover/Swipe concept) */}
+                                {activeTab === 'history' && (
+                                    <button
+                                        onClick={() => handleDelete(shipment.id)}
+                                        className="absolute top-4 right-4 p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors z-20"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                )}
+
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${shipment.type === 'Air' ? 'bg-blue-50 text-blue-600' : 'bg-teal-50 text-teal-600'}`}>
+                                            {shipment.type === 'Air' ? <ExternalLink size={20} className="rotate-45" /> : <Ship size={20} />}
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-slate-800 text-sm leading-tight mb-1">{shipment.item}</h3>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-bold flex items-center gap-1">
+                                                    <Calendar size={10} /> {shipment.date}
+                                                </span>
+                                                <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-bold">
+                                                    {shipment.origin} → {shipment.destination}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Progress Bar */}
+                                <div className="mb-4">
+                                    <div className="flex justify-between text-[10px] font-bold text-slate-500 mb-1.5">
+                                        <span className={shipment.progress >= 100 ? 'text-green-600' : 'text-brand-blue'}>{shipment.status}</span>
+                                        <span>{shipment.progress}%</span>
+                                    </div>
+                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full rounded-full transition-all duration-1000 ${shipment.progress >= 100 ? 'bg-green-500' : 'bg-brand-blue'}`}
+                                            style={{ width: `${shipment.progress}%` }}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="bg-slate-50 rounded-xl p-3 border border-slate-100 relative">
+                                        <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider block mb-0.5">Tracking ID</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-mono font-bold text-slate-700 text-xs truncate">{shipment.trackingId}</span>
+                                            <button
+                                                onClick={() => handleCopy(shipment.trackingId)}
+                                                className="text-slate-400 hover:text-brand-blue"
+                                            >
+                                                <Copy size={12} />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        onClick={() => openMap(shipment)}
+                                        className="bg-brand-blue text-white rounded-xl p-3 font-bold text-xs flex items-center justify-center gap-2 hover:bg-brand-blue/90 transition-colors shadow-lg shadow-brand-blue/20"
+                                    >
+                                        <MapPin size={14} />
+                                        Track Live
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
             </div>
 
-            {/* List */}
-            <div className="space-y-4">
-                {filtered.map((shipment) => (
-                    <div key={shipment.id} className="bg-white p-5 rounded-[24px] border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex justify-between items-start mb-4">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-brand-blue/5 text-brand-blue flex items-center justify-center">
-                                    <Package size={20} />
+            {/* Map Modal (Simulated) */}
+            {showMapModal && selectedShipment && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white w-full max-w-md rounded-[32px] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+                        <div className="h-48 bg-slate-200 relative">
+                            {/* Fake Map Background */}
+                            <div className="absolute inset-0 opacity-50 bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')] bg-cover bg-center" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="relative">
+                                    <div className="w-4 h-4 bg-brand-pink rounded-full animate-ping absolute top-0 left-0" />
+                                    <div className="w-4 h-4 bg-brand-pink rounded-full relative z-10 border-2 border-white shadow-lg" />
                                 </div>
-                                <div>
-                                    <h3 className="font-bold text-slate-800 text-sm">{shipment.item}</h3>
-                                    <span className="text-[10px] text-slate-400 font-bold">{shipment.date}</span>
-                                </div>
-                            </div>
-                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${shipment.status === 'Delivered' ? 'bg-green-50 text-green-600 border-green-100' :
-                                    shipment.status === 'In Transit' ? 'bg-blue-50 text-blue-600 border-blue-100' :
-                                        'bg-orange-50 text-orange-600 border-orange-100'
-                                }`}>
-                                {shipment.status}
-                            </span>
-                        </div>
-
-                        <div className="bg-slate-50 rounded-xl p-3 flex items-center justify-between group border border-slate-100">
-                            <div className="flex flex-col">
-                                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Tracking ID</span>
-                                <span className="font-mono font-bold text-slate-700 select-all">{shipment.trackingId}</span>
                             </div>
                             <button
-                                onClick={() => handleCopy(shipment.trackingId)}
-                                className="p-2 bg-white rounded-lg text-slate-400 hover:text-brand-blue hover:shadow-sm transition-all border border-slate-200"
-                                title="Copy Tracking ID"
+                                onClick={() => setShowMapModal(false)}
+                                className="absolute top-4 right-4 w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-800 shadow-md"
                             >
-                                <Copy size={16} />
+                                <X size={18} />
+                            </button>
+                        </div>
+                        <div className="p-6">
+                            <h3 className="text-lg font-bold text-slate-800 mb-1">Current Location</h3>
+                            <p className="text-slate-500 text-sm mb-6">Package is currently passing through logistics hub near {selectedShipment.origin}.</p>
+
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="flex-1 text-center">
+                                    <div className="text-xs text-slate-400 font-bold uppercase mb-1">Estimated Arrival</div>
+                                    <div className="text-xl font-bold text-brand-blue">{selectedShipment.eta}</div>
+                                </div>
+                                <div className="w-px h-10 bg-slate-100" />
+                                <div className="flex-1 text-center">
+                                    <div className="text-xs text-slate-400 font-bold uppercase mb-1">Carrier</div>
+                                    <div className="text-xl font-bold text-slate-800">DHL Express</div>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={() => setShowMapModal(false)}
+                                className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-colors"
+                            >
+                                Close Map
                             </button>
                         </div>
                     </div>
-                ))}
-            </div>
+                </div>
+            )}
         </div>
     );
 }

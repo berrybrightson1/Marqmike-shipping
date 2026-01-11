@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutGrid, Calculator, Truck, ShoppingBag, Store, User } from "lucide-react";
+import { LayoutGrid, Calculator, Truck, ShoppingBag, Store, User, Package } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/context/CartContext";
@@ -12,7 +12,7 @@ export default function BottomNav() {
     const navItems = [
         { label: "Feed", icon: LayoutGrid, href: "/dashboard" },
         { label: "Track", icon: Truck, href: "/dashboard/tracking" },
-        { label: "Shop", icon: Store, href: "/dashboard/shop" },
+        { label: "My Shipments", icon: Package, href: "/dashboard/shipments" },
         { label: "Cart", icon: ShoppingBag, href: "/dashboard/cart" },
         { label: "Profile", icon: User, href: "/dashboard/profile" },
     ];
