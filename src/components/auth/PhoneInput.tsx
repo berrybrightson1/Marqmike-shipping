@@ -89,7 +89,7 @@ export default function PhoneInput({ value, onChange, onEnter, disabled }: Phone
             {/* Unified Container - Glassmorphic Style */}
             <div
                 className={`
-                    flex items-center w-full bg-[#003d91]/60 backdrop-blur-md border border-white/5 rounded-3xl px-4 py-1 h-16
+                    flex items-center w-full bg-[#003d91]/60 backdrop-blur-md border border-white/5 rounded-2xl px-4 py-1 h-16
                     focus-within:ring-2 focus-within:ring-brand-pink/50 focus-within:border-brand-pink/50
                     transition-all
                     ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
@@ -102,8 +102,8 @@ export default function PhoneInput({ value, onChange, onEnter, disabled }: Phone
                     disabled={disabled}
                     className="flex items-center gap-3 pr-4 py-3 -ml-2 pl-2 rounded-xl transition-colors flex-shrink-0 hover:bg-white/5"
                 >
-                    {/* Circular Flag Container */}
-                    <div className="w-8 h-8 rounded-full bg-white/10 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    {/* Flag Container - Less Round */}
+                    <div className="w-8 h-6 rounded-md bg-white/10 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
                         <selectedCountry.flag title={selectedCountry.country} className="w-full h-full object-cover" />
                     </div>
                     <span className="font-bold text-white text-lg">{selectedCountry.code}</span>

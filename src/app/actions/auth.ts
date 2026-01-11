@@ -59,9 +59,14 @@ export async function signUp(data: FormData) {
         );
 
         return { success: true, userId: user.id, role: user.role };
-    } catch (error) {
-        console.error("Sign Up Error:", error);
-        return { success: false, error: "Failed to create account" };
+    } catch (error: any) {
+        console.error("Sign Up Error Details:", {
+            message: error.message,
+            code: error.code,
+            meta: error.meta,
+            stack: error.stack
+        });
+        return { success: false, error: `SignUp Failed: ${error.message || "Unknown error"}` };
     }
 }
 
@@ -104,9 +109,14 @@ export async function signInAsAdmin(password: string) {
         );
 
         return { success: true, userId: adminUser.id, role: "ADMIN" };
-    } catch (error) {
-        console.error("Admin Sign In Error:", error);
-        return { success: false, error: "Failed to sign in as admin" };
+    } catch (error: any) {
+        console.error("Admin Sign In Error Details:", {
+            message: error.message,
+            code: error.code,
+            meta: error.meta,
+            stack: error.stack
+        });
+        return { success: false, error: `Failed: ${error.message || "Unknown error"}` };
     }
 }
 
@@ -157,9 +167,14 @@ export async function signIn(identifier: string, password?: string) {
         );
 
         return { success: true, userId: user.id, role: user.role };
-    } catch (error) {
-        console.error("Sign In Error:", error);
-        return { success: false, error: "Failed to sign in" };
+    } catch (error: any) {
+        console.error("Sign In Error Details:", {
+            message: error.message,
+            code: error.code,
+            meta: error.meta,
+            stack: error.stack
+        });
+        return { success: false, error: `SignIn Failed: ${error.message || "Unknown error"}` };
     }
 }
 

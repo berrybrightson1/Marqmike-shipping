@@ -38,11 +38,11 @@ export default function BannerSlider() {
             </div>
 
             {/* Indicators */}
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-1.5 mt-2">
                 {BANNERS.map((_, index) => (
                     <div
                         key={index}
-                        className={`h-1.5 rounded-full transition-all duration-300 ${index === currentIndex ? "w-6 bg-white" : "w-1.5 bg-white/30"}`}
+                        className={`h-1 rounded-full transition-all duration-300 ${index === currentIndex ? "w-4 bg-white" : "w-1 bg-white/40"}`}
                     />
                 ))}
             </div>

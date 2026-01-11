@@ -76,16 +76,22 @@ export default function LandingPage() {
             className="fixed inset-0 z-[60] bg-[#074eaf] flex flex-col p-6"
           >
             <div className="flex justify-between items-center mb-12">
-              <span className="text-xl font-bold">Marqmike</span>
-              <button onClick={() => setMobileMenuOpen(false)} className="p-2 bg-white/10 rounded-full"><X size={24} /></button>
+              <div className="w-32 h-8 relative">
+                <img src="/logos/Long logo.svg" alt="Marqmike" className="w-full h-full object-contain object-left" />
+              </div>
+              <button onClick={() => setMobileMenuOpen(false)} className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"><X size={24} /></button>
             </div>
             <div className="flex flex-col gap-6 text-2xl font-bold">
               <Link href="/track" onClick={() => setMobileMenuOpen(false)}>Track Shipment</Link>
               <Link href="/services" onClick={() => setMobileMenuOpen(false)}>Services</Link>
               <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>Support</Link>
               <hr className="border-white/10 my-4" />
-              <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
-              <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="text-brand-pink">Create Account</Link>
+              <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="w-full bg-white/10 py-4 rounded-2xl text-center text-lg hover:bg-white/20 transition-all">
+                Log In
+              </Link>
+              <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="w-full bg-white text-brand-blue py-4 rounded-2xl text-center text-lg hover:bg-brand-pink hover:text-white transition-all shadow-lg">
+                Create Account
+              </Link>
             </div>
           </motion.div>
         )}

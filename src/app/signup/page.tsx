@@ -51,87 +51,84 @@ export default function SignupPage() {
     return (
         <div className="min-h-screen bg-[#074eaf] relative overflow-hidden flex flex-col items-center justify-center p-6 font-sans">
 
-            {/* Back Button */}
-            <Link href="/" className="absolute top-8 left-8 text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full">
-                <ChevronLeft size={32} />
-            </Link>
+            {/* Back Button - Alone on top */}
+            <div className="w-full max-w-sm flex justify-start mb-4">
+                <Link href="/" className="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full">
+                    <ChevronLeft size={32} />
+                </Link>
+            </div>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="w-full max-w-sm flex flex-col items-center"
             >
-                {/* Banner Slider */}
-                <BannerSlider />
+                {/* Banner Slider Container */}
+                <div className="w-full mb-4">
+                    <BannerSlider />
+                </div>
 
                 {/* Header */}
-                <h1 className="text-4xl font-black text-white text-center mb-2">
+                <h1 className="text-3xl font-black text-white text-center mb-1">
                     Join Marqmike
                 </h1>
-                <p className="text-white/80 text-center mb-10 font-bold text-sm">
+                <p className="text-white/80 text-center mb-6 font-bold text-xs">
                     Start shipping around the world today
                 </p>
 
-                <form onSubmit={handleSignup} className="w-full space-y-5">
+                <form onSubmit={handleSignup} className="w-full space-y-4">
 
                     {/* Full Name */}
-                    <div className="space-y-2">
-                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">Full Name</label>
+                    <div className="space-y-0">
                         <input
                             type="text"
                             placeholder="John Doe"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full h-16 bg-[#003d91]/60 rounded-2xl border border-white/5 px-6 text-white placeholder:text-white/30 font-bold focus:outline-none focus:ring-2 focus:ring-brand-pink/50 transition-all"
+                            className="w-full h-16 bg-[#003d91]/60 rounded-2xl border border-white/5 px-6 text-white placeholder:text-white/40 font-bold focus:outline-none focus:ring-2 focus:ring-brand-pink/50 transition-all"
                         />
                     </div>
 
                     {/* Business Name */}
-                    <div className="space-y-2">
-                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">Business / Company Name</label>
+                    <div className="space-y-0">
                         <input
                             type="text"
                             placeholder="Logistics Express"
                             value={formData.businessName}
                             onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-                            className="w-full h-16 bg-[#003d91]/60 rounded-2xl border border-white/5 px-6 text-white placeholder:text-white/30 font-bold focus:outline-none focus:ring-2 focus:ring-brand-pink/50 transition-all"
+                            className="w-full h-16 bg-[#003d91]/60 rounded-2xl border border-white/5 px-6 text-white placeholder:text-white/40 font-bold focus:outline-none focus:ring-2 focus:ring-brand-pink/50 transition-all"
                         />
                     </div>
 
                     {/* Email */}
-                    <div className="space-y-2">
-                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">Email Address</label>
+                    <div className="space-y-0">
                         <input
                             type="email"
                             placeholder="john@example.com"
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            className="w-full h-16 bg-[#003d91]/60 rounded-2xl border border-white/5 px-6 text-white placeholder:text-white/30 font-bold focus:outline-none focus:ring-2 focus:ring-brand-pink/50 transition-all"
+                            className="w-full h-16 bg-[#003d91]/60 rounded-2xl border border-white/5 px-6 text-white placeholder:text-white/40 font-bold focus:outline-none focus:ring-2 focus:ring-brand-pink/50 transition-all"
                         />
                     </div>
 
-                    {/* Phone Number */}
-                    <div className="space-y-2">
-                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">Phone Number</label>
-                        <div className="bg-[#003d91]/60 rounded-2xl overflow-hidden border border-white/5 focus-within:ring-2 focus-within:ring-brand-pink/50 transition-all">
-                            <PhoneInput
-                                value={phone}
-                                onChange={setPhone}
-                                disabled={loading}
-                            />
-                        </div>
+                    {/* Phone Number - Single Container */}
+                    <div className="space-y-0">
+                        <PhoneInput
+                            value={phone}
+                            onChange={setPhone}
+                            disabled={loading}
+                        />
                     </div>
 
                     {/* Password */}
-                    <div className="space-y-2">
-                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">Password</label>
+                    <div className="space-y-0">
                         <div className="relative bg-[#003d91]/60 rounded-2xl border border-white/5 focus-within:ring-2 focus-within:ring-brand-pink/50 transition-all">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 value={formData.password}
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                className="w-full h-16 bg-transparent border-none text-white text-lg font-bold px-6 focus:outline-none placeholder:text-white/20"
-                                placeholder="Create a password"
+                                className="w-full h-16 bg-transparent border-none text-white text-lg font-bold px-6 focus:outline-none placeholder:text-white/40"
+                                placeholder="Create Password"
                                 required
                             />
                             <button

@@ -69,32 +69,39 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen bg-[#074eaf] relative overflow-hidden flex flex-col items-center justify-center p-6 font-sans">
 
-            {/* Back Button */}
-            <Link href="/" className="absolute top-8 left-8 text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full">
-                <ChevronLeft size={32} />
-            </Link>
+
+
+            {/* Back Button - Alone on top */}
+            <div className="w-full max-w-sm flex justify-start mb-4">
+                <Link href="/" className="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full">
+                    <ChevronLeft size={32} />
+                </Link>
+            </div>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="w-full max-w-sm flex flex-col items-center"
             >
-                {/* Banner Slider */}
-                <BannerSlider />
+                {/* Banner Slider Container */}
+                <div className="w-full mb-4">
+                    <BannerSlider />
+                </div>
 
                 {/* Header */}
-                <h1 className="text-4xl font-black text-white text-center mb-2">
+                {/* Header */}
+                <h1 className="text-3xl font-black text-white text-center mb-1">
                     {loginMethod === 'ADMIN' ? "Admin Access" : (requiresSetup ? "Create Password" : "Welcome Back")}
                 </h1>
-                <p className="text-white/80 text-center mb-10 font-bold text-sm">
+                <p className="text-white/80 text-center mb-6 font-bold text-xs">
                     {loginMethod === 'ADMIN' ? "Authorized personnel only" : (requiresSetup ? "Secure your account" : "Global logistics at your fingertips")}
                 </p>
 
                 {/* Toggle Switch */}
-                <div className="bg-[#003d91]/50 p-1 rounded-3xl flex w-full mb-8 relative">
+                <div className="bg-[#003d91]/50 p-1 rounded-3xl flex w-full mb-6 relative">
                     <button
                         onClick={() => { setLoginMethod('PHONE'); setPassword(""); }}
-                        className={`flex-1 font-black py-3 rounded-3xl text-sm transition-all ${loginMethod === 'PHONE' ? 'bg-white text-[#074eaf] shadow-lg' : 'text-white/40 hover:text-white'}`}
+                        className={`flex-1 font-black py-2.5 rounded-3xl text-xs transition-all ${loginMethod === 'PHONE' ? 'bg-white text-[#074eaf] shadow-lg' : 'text-white/40 hover:text-white'}`}
                     >
                         User
                     </button>
@@ -115,37 +122,29 @@ export default function LoginPage() {
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
                                 exit={{ opacity: 0, height: 0 }}
-                                className="space-y-3"
+                                className="space-y-0"
                             >
-                                <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">
-                                    Active Phone Number
-                                </label>
-                                <div className="bg-[#003d91]/60 rounded-3xl overflow-hidden border border-white/5 focus-within:ring-2 focus-within:ring-brand-pink/50 transition-all">
-                                    <PhoneInput
-                                        value={phone}
-                                        onChange={setPhone}
-                                        disabled={loading || requiresSetup}
-                                    />
-                                </div>
+                                <PhoneInput
+                                    value={phone}
+                                    onChange={setPhone}
+                                    disabled={loading || requiresSetup}
+                                />
                             </motion.div>
                         )}
                     </AnimatePresence>
 
                     {/* Password Input (Shared but labeled differently) */}
-                    <div className="space-y-3">
-                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">
-                            {loginMethod === 'ADMIN' ? 'Admin Key' : 'Password'}
-                        </label>
-                        <div className="relative bg-[#003d91]/60 rounded-3xl border border-white/5 focus-within:ring-2 focus-within:ring-brand-pink/50 transition-all">
+                    <div className="space-y-0">
+                        <div className="relative bg-[#003d91]/60 rounded-2xl border border-white/5 focus-within:ring-2 focus-within:ring-brand-pink/50 transition-all">
                             {loginMethod === 'ADMIN' && (
-                                <ShieldCheck className="absolute left-6 top-1/2 -translate-y-1/2 text-white/40" size={20} />
+                                <ShieldCheck className="absolute left-6 top-1/2 -translate-y-1/2 text-white/40" size={18} />
                             )}
                             <input
                                 type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className={`w-full h-16 bg-transparent border-none text-white text-lg font-bold px-6 focus:outline-none placeholder:text-white/20 ${loginMethod === 'ADMIN' ? 'pl-16' : ''}`}
-                                placeholder={loginMethod === 'ADMIN' ? "Enter admin key" : (requiresSetup ? "Create a password" : "Enter your password")}
+                                className={`w-full h-16 bg-transparent border-none text-white text-base font-bold px-6 focus:outline-none placeholder:text-white/40 ${loginMethod === 'ADMIN' ? 'pl-14' : ''}`}
+                                placeholder={loginMethod === 'ADMIN' ? "Enter admin key" : (requiresSetup ? "Create new password" : "Enter your password")}
                                 required
                             />
                             <button
@@ -153,19 +152,18 @@ export default function LoginPage() {
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-white/40 hover:text-white transition-colors"
                             >
-                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
+                        {/* Forgot Password Link (Immediately under input) */}
+                        {loginMethod === 'PHONE' && !requiresSetup && (
+                            <div className="flex justify-end pt-1 pr-1">
+                                <Link href="/forgot-password" className="text-[10px] font-bold text-white/70 hover:text-white transition-colors">
+                                    Forgot Password?
+                                </Link>
+                            </div>
+                        )}
                     </div>
-
-                    {/* Forgot Password Link (Only for User) */}
-                    {loginMethod === 'PHONE' && !requiresSetup && (
-                        <div className="flex justify-end">
-                            <Link href="/forgot-password" className="text-xs font-bold text-white hover:text-white/80 transition-colors">
-                                Forgot Password?
-                            </Link>
-                        </div>
-                    )}
 
                     {/* Submit Button */}
                     <button
@@ -192,6 +190,6 @@ export default function LoginPage() {
                 )}
 
             </motion.div>
-        </div>
+        </div >
     );
 }
