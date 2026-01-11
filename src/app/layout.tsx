@@ -34,7 +34,23 @@ export default function RootLayout({
           <CurrencyProvider>
             <CartProvider>
               {children}
-              <Toaster richColors position="top-center" />
+              <Toaster
+                position="top-center"
+                toastOptions={{
+                  unstyled: true,
+                  classNames: {
+                    toast: "bg-white border border-slate-100 shadow-xl rounded-[20px] p-4 flex items-center gap-3 w-full max-w-sm",
+                    title: "text-slate-800 font-bold text-sm",
+                    description: "text-slate-500 text-xs font-medium",
+                    actionButton: "bg-brand-blue text-white",
+                    cancelButton: "bg-slate-100 text-slate-500",
+                    error: "bg-white border-red-50",
+                    success: "bg-white border-slate-100",
+                    warning: "bg-white border-orange-50",
+                    info: "bg-white border-blue-50",
+                  }
+                }}
+              />
             </CartProvider>
           </CurrencyProvider>
         </div>

@@ -100,8 +100,8 @@ export default function StaffPicks() {
                             snap-start shrink-0 overflow-hidden relative
                         ">
                             {/* Image Section */}
-                            <div className="h-[180px] bg-slate-50 p-4 flex items-center justify-center relative overflow-hidden group-hover:bg-slate-100/50 transition-colors">
-                                <img src={imageSrc} alt={item.name} className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500" />
+                            <div className="h-[180px] bg-slate-50 flex items-center justify-center relative overflow-hidden group-hover:bg-slate-100/50 transition-colors">
+                                <img src={imageSrc} alt={item.name} className="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500" />
                                 {item.moq && (
                                     <div className="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur">
                                         MOQ: {item.moq}
