@@ -37,7 +37,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     };
 
     const formatPrice = (amountInUSD: number) => {
-        const converted = convertPrice(amountInUSD);
+        const converted = convertPrice(amountInUSD, 'USD');
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: currency,

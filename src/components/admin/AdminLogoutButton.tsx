@@ -12,8 +12,7 @@ export default function AdminLogoutButton() {
         try {
             await signOut();
             toast.success("Logged out successfully");
-            router.push("/login"); // Or admin/login if separate
-            router.refresh();
+            window.location.href = "/login";
         } catch (error) {
             toast.error("Logout failed");
         }
@@ -22,7 +21,7 @@ export default function AdminLogoutButton() {
     return (
         <button
             onClick={handleLogout}
-            className="flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-red-500 transition-colors px-4 py-2 rounded-xl hover:bg-slate-50"
+            className="flex items-center gap-2 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 transition-colors px-4 py-2 rounded-xl"
         >
             <LogOut size={16} />
             Logout

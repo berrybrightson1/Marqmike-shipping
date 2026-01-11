@@ -32,76 +32,77 @@ export default function AdminDashboardPage() {
     }
 
     return (
-        <div className="p-6 md:p-10 space-y-8">
-            <header className="flex justify-between items-center mb-8">
+        <div className="p-6 md:p-10 space-y-8 max-w-[1600px] mx-auto">
+            <header className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-brand-blue">System Overview</h1>
-                    <p className="text-slate-500 mt-1">Welcome back, Super Admin.</p>
+                    <h1 className="text-3xl font-bold text-slate-800">Overview</h1>
+                    <p className="text-slate-500 font-medium">System Performance & Activities</p>
                 </div>
                 <div className="flex gap-3">
-                    <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2">
-                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                        System Online
+                    <span className="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 border border-emerald-100 shadow-sm">
+                        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                        System Operational
                     </span>
                 </div>
             </header>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard
-                    title="Daily Work Load"
-                    value={logs.filter((l: any) => new Date(l.timestamp).toDateString() === new Date().toDateString()).length || 0}
-                    change="Actions Today"
-                    icon={Activity}
-                    color="bg-brand-pink"
-                />
-                <StatCard title="Active Shipments" value={stats?.activeShipments || 0} change="In Transit" icon={Package} color="bg-brand-blue" />
-                <StatCard title="Total Customers" value={stats?.totalCustomers || 0} change="Registered" icon={Users} color="bg-purple-500" />
-                <StatCard title="Pending Requests" value={stats?.pendingRequests || 0} change="Action Needed" icon={ClipboardList} color="bg-orange-500" />
-            </div>
+            <div className="grid grid-cols-12 gap-8">
+                {/* LEFT COLUMN (Stats + Actions) */}
+                <div className="col-span-12 lg:col-span-8 xl:col-span-9 space-y-8">
 
-            {/*  Removed Charts as requested - "Transaction features removed" */}
+                    {/* 1. Stats Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                        <StatCard
+                            title="Daily Work Load"
+                            value={logs.filter((l: any) => new Date(l.timestamp).toDateString() === new Date().toDateString()).length || 0}
+                            change="Actions Today"
+                            icon={Activity}
+                            color="bg-brand-pink"
+                        />
+                        <StatCard title="Active Shipments" value={stats?.activeShipments || 0} change="In Transit" icon={Package} color="bg-brand-blue" />
+                        <StatCard title="Total Customers" value={stats?.totalCustomers || 0} change="Registered" icon={Users} color="bg-purple-500" />
+                        <StatCard title="Pending Requests" value={stats?.pendingRequests || 0} change="Action Needed" icon={ClipboardList} color="bg-orange-500" />
+                    </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left Column: Quick Actions + Deals */}
-                <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Quick Actions */}
-                    <div className="bg-white rounded-[32px] p-8 shadow-xl shadow-brand-blue/5 border border-white/50 h-full">
+                    {/* 2. Quick Actions */}
+                    <div className="bg-white rounded-[32px] p-8 shadow-xl shadow-brand-blue/5 border border-slate-100">
                         <div className="flex justify-between items-center mb-6">
                             <h3 className="text-xl font-bold text-slate-800">Quick Actions</h3>
                         </div>
-                        <div className="grid grid-cols-1 gap-4">
-                            <button className="h-24 rounded-3xl bg-brand-blue/5 border border-brand-blue/10 flex items-center justify-center gap-4 hover:bg-brand-blue/10 transition-colors group px-6">
-                                <div className="w-10 h-10 rounded-full bg-brand-blue text-white flex items-center justify-center shadow-lg shadow-brand-blue/20 group-hover:scale-110 transition-transform">
-                                    <Package size={20} />
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <button className="h-32 rounded-[24px] bg-brand-blue/5 border border-brand-blue/10 flex flex-col items-center justify-center gap-3 hover:bg-brand-blue/10 transition-colors group">
+                                <div className="w-12 h-12 rounded-full bg-brand-blue text-white flex items-center justify-center shadow-lg shadow-brand-blue/20 group-hover:scale-110 transition-transform">
+                                    <Package size={22} />
                                 </div>
-                                <span className="font-bold text-brand-blue">Add New Shipment</span>
+                                <span className="font-bold text-brand-blue text-sm">New Shipment</span>
                             </button>
-                            <button className="h-24 rounded-3xl bg-orange-50 border border-orange-100 flex items-center justify-center gap-4 hover:bg-orange-100 transition-colors group px-6">
-                                <div className="w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
-                                    <Activity size={20} />
+                            <button className="h-32 rounded-[24px] bg-orange-50 border border-orange-100 flex flex-col items-center justify-center gap-3 hover:bg-orange-100 transition-colors group">
+                                <div className="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                                    <Activity size={22} />
                                 </div>
-                                <span className="font-bold text-orange-600">View Pending Issues</span>
+                                <span className="font-bold text-orange-600 text-sm">Pending Issues</span>
                             </button>
-                            <a href="/admin/inventory/trending" className="h-24 rounded-3xl bg-purple-50 border border-purple-100 flex items-center justify-center gap-4 hover:bg-purple-100 transition-colors group px-6">
-                                <div className="w-10 h-10 rounded-full bg-purple-500 text-white flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
-                                    <ArrowUpRight size={20} />
+                            <a href="/admin/inventory/trending" className="h-32 rounded-[24px] bg-purple-50 border border-purple-100 flex flex-col items-center justify-center gap-3 hover:bg-purple-100 transition-colors group">
+                                <div className="w-12 h-12 rounded-full bg-purple-500 text-white flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+                                    <ArrowUpRight size={22} />
                                 </div>
-                                <span className="font-bold text-purple-600">Manage Trending</span>
+                                <span className="font-bold text-purple-600 text-sm">Trending Inventory</span>
                             </a>
                         </div>
                     </div>
-
                 </div>
 
-                {/* Right Column: Audit Logs */}
-                <div className="space-y-6">
-                    <div className="flex justify-between items-center">
-                        <h3 className="text-lg font-bold text-slate-700">Audit Logs</h3>
-                        <a href="/admin/audit" className="text-xs font-bold text-brand-blue hover:underline">View All</a>
-                    </div>
-                    <div className="bg-white/60 backdrop-blur-xl border border-white/60 rounded-[32px] p-6 shadow-xl shadow-brand-blue/5 h-[400px] overflow-y-auto custom-scrollbar">
-                        <div className="space-y-4">
+                {/* RIGHT COLUMN (Audit Logs) */}
+                <div className="col-span-12 lg:col-span-4 xl:col-span-3">
+                    <div className="bg-white rounded-[32px] p-6 shadow-xl shadow-brand-blue/5 border border-slate-100 h-full flex flex-col">
+                        <div className="flex justify-between items-center mb-6">
+                            <div className="flex items-center gap-2">
+                                <ShieldAlert size={20} className="text-slate-400" />
+                                <h3 className="text-lg font-bold text-slate-800">Audit Log</h3>
+                            </div>
+                            <a href="/admin/audit" className="text-xs font-bold text-brand-blue bg-blue-50 px-2 py-1 rounded-lg hover:bg-blue-100 transition-colors">View All</a>
+                        </div>
+                        <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3 max-h-[600px] lg:max-h-none">
                             {logs.length > 0 ? logs.map((log: any) => {
                                 let Icon = Activity;
                                 if (log.entityType === 'ORDER') Icon = ShoppingCart;
@@ -121,7 +122,10 @@ export default function AdminDashboardPage() {
                                     />
                                 );
                             }) : (
-                                <div className="p-4 text-center text-slate-400 text-sm">No recent activity</div>
+                                <div className="flex flex-col items-center justify-center h-48 text-slate-400">
+                                    <ClipboardList size={32} className="mb-2 opacity-50" />
+                                    <span className="text-sm font-medium">No recent activity</span>
+                                </div>
                             )}
                         </div>
                     </div>
