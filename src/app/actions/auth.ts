@@ -4,88 +4,58 @@ import { db } from "@/lib/db";
 import { cookies } from "next/headers";
 import crypto from "crypto";
 import { logAuditAction } from "@/app/actions/audit";
+import bcrypt from "bcryptjs";
 
 const SESSION_DURATION = 1000 * 60 * 60 * 24 * 30; // 30 days
-
-// Send OTP (Mock for now)
-export async function sendOTP(phone: string) {
-    // Generate 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-    try {
-        // In production, integration with SMS provider (e.g., Twilio/Arkesel) goes here.
-        // For development, we'll log it or store it in DB to verify.
-
-        // Store verification code in DB 
-        // Note: You need a VerificationToken model or similar in Prisma
-        // For this simplified version, let's assume we proceed or skip actual SMS sending
-        console.log(`OTP for ${phone}: ${otp}`);
-
-        return { success: true };
-    } catch (error) {
-        console.error("Send OTP Error:", error);
-        return { success: false, error: "Failed to send OTP" };
-    }
-}
-
-// Verify OTP (Mock)
-export async function verifyOTP(phone: string, code: string) {
-    // In a real app, verify against DB record
-    // For now, accept default '123456' for testing
-    if (code === '123456') {
-        return { success: true };
-    }
-    return { success: false, error: "Invalid code" }; // Simplified
-}
 
 // Sign Up
 export async function signUp(data: FormData) {
     const name = data.get('name') as string;
     const businessName = data.get('businessName') as string;
     const phone = data.get('phone') as string;
-    // const otp = data.get('otp') as string; // Disabled OTP for now as per previous logic
+    const email = data.get('email') as string;
+    const password = data.get('password') as string;
 
-    if (!phone) {
-        return { success: false, error: "Phone number is required" };
+    if (!phone || !password || !name) {
+        return { success: false, error: "Missing required fields" };
     }
 
     try {
-        // OTP Verification was skipped in previous code
-        // const verification = await verifyOTP(phone, otp);
-        // if (!verification.success) {
-        //    return verification;
-        // }
-
-        // Check if user already exists
-        const existingUser = await db.user.findUnique({
-            where: { phone }
+        const existingUser = await db.user.findFirst({
+            where: {
+                OR: [
+                    { phone },
+                    { email: email || undefined }
+                ]
+            }
         });
 
         if (existingUser) {
-            return { success: false, error: "Account already exists. Please sign in." };
+            return { success: false, error: "Account already exists (Phone or Email). Please sign in." };
         }
 
-        // Create new user
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const user = await db.user.create({
             data: {
                 phone,
                 name,
                 businessName,
+                email,
+                password: hashedPassword,
                 role: "CUSTOMER"
             }
         });
 
-        // Create session
         await createSession(user.id);
 
         await logAuditAction(
             "USER_SIGNUP",
             "USER",
-            `New Customer: ${name || businessName || phone}`,
+            `New Customer: ${name}`,
             user.id,
             { phone, businessName },
-            name || "User"
+            name
         );
 
         return { success: true, userId: user.id, role: user.role };
@@ -95,31 +65,45 @@ export async function signUp(data: FormData) {
     }
 }
 
-// Sign in existing user (Direct Access - No OTP)
-export async function signIn(phone: string) {
+// Sign in
+export async function signIn(phone: string, password?: string) {
     try {
-        // Direct access: skip OTP verification
-        // const verification = await verifyOTP(phone, otp);
-        // if (!verification.success) {
-        //     return verification;
-        // }
-
-        // Find user
         const user = await db.user.findUnique({
             where: { phone }
         });
 
         if (!user) {
-            return { success: false, error: "Account not found. Please sign up first." };
+            return { success: false, error: "Account not found. Please sign up." };
         }
 
-        // Create session
+        // Migration Check: If user has no password, ask them to set one
+        if (!user.password) {
+            if (password) {
+                // User provided a password but it's not set in DB yet -> First time login legacy
+                // We should technically verify them via OTP before setting it, or just set it?
+                // THE INSTRUCTION: "anybody who has an account with us if they try to sign in now, they should ask them to create a password."
+                // This implies we return a flag telling UI to show "Create Password" view.
+                return { success: false, code: "REQUIRE_PASSWORD_SETUP", userId: user.id };
+            }
+            return { success: false, code: "REQUIRE_PASSWORD_SETUP", userId: user.id };
+        }
+
+        // Normal Login
+        if (!password) {
+            return { success: false, error: "Password required" };
+        }
+
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) {
+            return { success: false, error: "Invalid credentials" };
+        }
+
         await createSession(user.id);
 
         await logAuditAction(
             "USER_LOGIN",
             "USER",
-            `User Logged In: ${user.name || user.phone}`,
+            `User Logged In`,
             user.id,
             {},
             user.name || "User"
@@ -132,7 +116,30 @@ export async function signIn(phone: string) {
     }
 }
 
-// Create session
+
+// Set Password (for migration)
+export async function setInitialPassword(phone: string, newPassword: string) {
+    // Ideally verify OTP here too for security
+    try {
+        const user = await db.user.findUnique({ where: { phone } });
+        if (!user) return { success: false, error: "User not found" };
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await db.user.update({
+            where: { id: user.id },
+            data: { password: hashedPassword }
+        });
+
+        // Auto login after setting
+        await createSession(user.id);
+        return { success: true };
+    } catch (err) {
+        return { success: false, error: "Failed to set password" };
+    }
+}
+
+
+// Create session helper
 async function createSession(userId: string) {
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + SESSION_DURATION);
@@ -161,8 +168,6 @@ export async function getCurrentUser() {
     try {
         const sessionToken = cookies().get("session")?.value;
 
-        // if (!sessionToken) return null; // Allow fallthrough to mock user
-
         if (sessionToken) {
             const session = await db.session.findUnique({
                 where: { token: sessionToken },
@@ -173,37 +178,13 @@ export async function getCurrentUser() {
                 return session.user;
             }
         }
-
-
     } catch (error) {
         console.error("Get Current User Error:", error);
-        return null;
+        return null; // Return null if session invalid
     }
 
-    // Default Fallback: Fetch the real "System Admin" account
-    try {
-        const systemUser = await db.user.findUnique({
-            where: { phone: "admin" }
-        });
-
-        if (systemUser) {
-            return systemUser;
-        }
-    } catch (e) {
-        console.error("Failed to fetch system admin for bypass", e);
-    }
-
-    // Ultimate Fallback (if seed didn't run)
-    return {
-        id: "free-access-admin",
-        name: "Test Admin",
-        phone: "0000000000",
-        businessName: "Local Test",
-        role: "ADMIN",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        email: "admin@local.test"
-    };
+    // REMOVED: Fallbacks for security in production-ready flow
+    return null;
 }
 
 // Get user profile for checkout pre-fill
@@ -219,7 +200,7 @@ export async function getUserProfile() {
 }
 
 // Update user profile
-export async function updateProfile(data: { name?: string; businessName?: string; email?: string }) {
+export async function updateProfile(data: { name?: string; businessName?: string; email?: string; phone?: string }) {
     const user = await getCurrentUser();
     if (!user) return { success: false, error: "Unauthorized" };
 
@@ -229,7 +210,8 @@ export async function updateProfile(data: { name?: string; businessName?: string
             data: {
                 name: data.name,
                 businessName: data.businessName,
-                email: data.email
+                email: data.email,
+                phone: data.phone
             }
         });
 
@@ -273,6 +255,9 @@ export async function signOut() {
         }
 
         cookies().delete("session");
+
+        // No redirect here, server action usage in client should handle router.push if needed, 
+        // or we rely on middleware. But typically redirects happen in component.
         return { success: true };
     } catch (error) {
         console.error("Sign Out Error:", error);

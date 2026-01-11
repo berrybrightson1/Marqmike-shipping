@@ -21,6 +21,7 @@ model User {
   role          Role      @default(CUSTOMER)
   
   clerkId       String?   @unique // Keep this just in case but optional
+  password      String?
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
