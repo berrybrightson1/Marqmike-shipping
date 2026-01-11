@@ -37,7 +37,7 @@ export default function AuthGuard({ children, fallback, onGuestAction }: AuthGua
             } else {
                 // Default: Redirect to login with return URL
                 const returnUrl = encodeURIComponent(pathname);
-                router.push(`/auth/login?redirect_url=${returnUrl}`);
+                router.push(`/login?redirect_url=${returnUrl}`);
             }
             return;
         }

@@ -12,7 +12,7 @@ export default function AdminLogoutButton() {
         try {
             await signOut();
             toast.success("Logged out successfully");
-            router.push("/auth/login"); // Or admin/login if separate
+            router.push("/login"); // Or admin/login if separate
             router.refresh();
         } catch (error) {
             toast.error("Logout failed");

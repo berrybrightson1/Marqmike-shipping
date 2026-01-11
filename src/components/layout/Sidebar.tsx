@@ -21,7 +21,7 @@ export default function Sidebar() {
         const result = await signOut();
         if (result.success) {
             toast.success("Logged out successfully");
-            router.push("/auth/login");
+            router.push("/login");
         } else {
             toast.error("Logout failed");
         }

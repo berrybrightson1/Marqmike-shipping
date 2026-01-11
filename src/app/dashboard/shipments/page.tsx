@@ -86,7 +86,7 @@ export default function ShipmentsPage() {
             {/* Header */}
             <header className="bg-white pt-12 pb-6 px-6 shadow-sm border-b border-slate-100 sticky top-0 z-10">
                 <div className="flex items-center gap-4 mb-6">
-                    <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors">
+                    <button onClick={() => router.back()} aria-label="Go back" className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors">
                         <ArrowLeft size={20} />
                     </button>
                     <h1 className="text-2xl font-bold text-slate-800">My Shipments</h1>
@@ -186,6 +186,7 @@ export default function ShipmentsPage() {
                                             <button
                                                 onClick={() => handleCopy(shipment.trackingId)}
                                                 className="text-slate-400 hover:text-brand-blue"
+                                                aria-label="Copy Tracking ID"
                                             >
                                                 <Copy size={12} />
                                             </button>
@@ -195,6 +196,7 @@ export default function ShipmentsPage() {
                                     <button
                                         onClick={() => openMap(shipment)}
                                         className="bg-brand-blue text-white rounded-xl p-3 font-bold text-xs flex items-center justify-center gap-2 hover:bg-brand-blue/90 transition-colors shadow-lg shadow-brand-blue/20"
+                                        aria-label="Track Live Shipment"
                                     >
                                         <MapPin size={14} />
                                         Track Live
@@ -222,6 +224,7 @@ export default function ShipmentsPage() {
                             <button
                                 onClick={() => setShowMapModal(false)}
                                 className="absolute top-4 right-4 w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-800 shadow-md"
+                                aria-label="Close Map"
                             >
                                 <X size={18} />
                             </button>

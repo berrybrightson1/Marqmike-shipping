@@ -85,7 +85,7 @@ export default function AdminSettingsPage() {
                         onClick={async () => {
                             await signOut();
                             toast.success("Logged out successfully");
-                            window.location.href = "/auth/login";
+                            window.location.href = "/login";
                         }}
                         className="w-full bg-red-50 text-red-500 p-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
                     >

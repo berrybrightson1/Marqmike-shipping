@@ -10,7 +10,7 @@ export default async function DashboardPage() {
     const user = await getCurrentUser();
 
     if (!user) {
-        redirect("/auth/login");
+        redirect("/login");
     }
 
     const { shipments } = await getDashboardData();
