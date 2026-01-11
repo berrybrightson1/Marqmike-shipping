@@ -37,6 +37,21 @@ export async function markAllNotificationsRead() {
     }
 }
 
+export async function clearAllNotifications() {
+    const user = await getCurrentUser();
+    if (!user) return { error: "Unauthorized" };
+
+    try {
+        await db.notification.deleteMany({
+            where: { userId: user.id }
+        });
+        revalidatePath("/dashboard/notifications");
+        return { success: true };
+    } catch (error) {
+        return { error: "Failed to delete" };
+    }
+}
+
 export async function sendSystemNotification(userId: string, title: string, message: string) {
     try {
         await db.notification.create({

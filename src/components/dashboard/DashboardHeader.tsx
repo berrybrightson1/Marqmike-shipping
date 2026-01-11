@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Bell, Search, ScanLine, DollarSign, LogOut, ArrowLeft } from "lucide-react";
+import { Bell, Search, ScanLine, DollarSign, LogOut, ArrowLeft, Trash2 } from "lucide-react";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -225,14 +225,30 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
                                                         const { markAllNotificationsRead } = await import("@/app/actions/notification");
                                                         await markAllNotificationsRead();
                                                         setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-                                                        toast.success("All marked as read");
+                                                        toast.success("Read all");
                                                     }}
-                                                    className="text-[10px] font-bold text-slate-400 hover:text-brand-blue transition-colors"
+                                                    className="p-1.5 hover:bg-slate-50 rounded-full text-slate-400 hover:text-brand-blue transition-colors relative group"
+                                                    title="Mark all as read"
                                                 >
-                                                    Mark all read
+                                                    <div className="w-3 h-3 border border-current rounded-full flex items-center justify-center">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-current opacity-50 group-hover:opacity-100" />
+                                                    </div>
                                                 </button>
-                                                <Link href="/dashboard/notifications" onClick={() => setShowNotifs(false)} className="text-[10px] font-bold text-brand-blue bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-full transition-colors flex items-center gap-1">
-                                                    View All <ScanLine size={10} />
+                                                <button
+                                                    onClick={async () => {
+                                                        const { clearAllNotifications } = await import("@/app/actions/notification");
+                                                        await clearAllNotifications();
+                                                        setNotifications([]);
+                                                        toast.success("Cleared all");
+                                                    }}
+                                                    className="p-1.5 hover:bg-red-50 rounded-full text-slate-400 hover:text-red-500 transition-colors group"
+                                                    title="Clear all"
+                                                >
+                                                    <Trash2 size={12} />
+                                                </button>
+                                                <div className="h-3 w-px bg-slate-100 mx-1" />
+                                                <Link href="/dashboard/notifications" onClick={() => setShowNotifs(false)} className="text-[10px] font-bold text-brand-blue hover:text-brand-blue/80 transition-colors flex items-center gap-1">
+                                                    View All
                                                 </Link>
                                             </div>
                                         </div>
