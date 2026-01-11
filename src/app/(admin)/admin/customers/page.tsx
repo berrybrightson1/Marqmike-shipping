@@ -135,7 +135,7 @@ export default function AdminCustomersPage() {
                                                 className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-brand-blue hover:bg-blue-50 transition-all border border-transparent hover:border-slate-100">
                                                 <Bell size={16} />
                                             </button>
-                                            <button className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-800 hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100">
+                                            <button aria-label="More options" className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-800 hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100">
                                                 <MoreVertical size={16} />
                                             </button>
                                         </div>

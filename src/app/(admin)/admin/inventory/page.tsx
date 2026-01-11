@@ -1,6 +1,7 @@
 "use client";
 
 import { GlassCard } from "@/components/ui/GlassCard";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 import { Search, Plus, Upload, DollarSign, Package, AlertCircle, Loader2, Trash2, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getInventory, updateProduct, deleteProduct } from "@/app/actions/product";
@@ -86,6 +87,7 @@ function InventoryRow({ item }: { item: any }) {
     const [status, setStatus] = useState(item.status);
     const [saving, setSaving] = useState(false);
     const [deleted, setDeleted] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     const handleUpdate = async () => {
         setSaving(true);
@@ -101,7 +103,7 @@ function InventoryRow({ item }: { item: any }) {
     };
 
     const handleDelete = async () => {
-        if (!confirm("Are you sure?")) return;
+        // if (!confirm("Are you sure?")) return; // Replaced by Modal
         setSaving(true);
         const res = await deleteProduct(item.id);
         if (res.success) {
@@ -110,70 +112,83 @@ function InventoryRow({ item }: { item: any }) {
         }
         else toast.error("Failed");
         setSaving(false);
+        setConfirmOpen(false);
     };
 
     if (deleted) return null;
 
     return (
-        <tr className="hover:bg-slate-50 transition-colors group">
-            <td className="p-6">
-                <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-slate-100 rounded-lg shrink-0 overflow-hidden border border-slate-200">
-                        <img
-                            src={item.imageUrl || `https://placehold.co/100x100/e2e8f0/1e293b?text=${encodeURIComponent(item.name.substring(0, 2))}`}
-                            alt={item.name}
-                            className="w-full h-full object-cover"
-                        />
+        <>
+            <tr className="hover:bg-slate-50 transition-colors group">
+                <td className="p-6">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-slate-100 rounded-lg shrink-0 overflow-hidden border border-slate-200">
+                            <img
+                                src={item.imageUrl || `https://placehold.co/100x100/e2e8f0/1e293b?text=${encodeURIComponent(item.name.substring(0, 2))}`}
+                                alt={item.name}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                        <span className="font-bold text-slate-900">{item.name}</span>
                     </div>
-                    <span className="font-bold text-slate-900">{item.name}</span>
-                </div>
-            </td>
-            <td className="p-6">
-                <div className="flex flex-col">
-                    <span className="text-sm font-bold text-slate-900">¥{item.priceRMB}</span>
-                    <span className="text-xs font-bold text-slate-600">₵{item.priceGHS}</span>
-                </div>
-            </td>
-            <td className="p-6">
-                <select
-                    aria-label="Product Status"
-                    value={status}
-                    onChange={(e) => {
-                        setStatus(e.target.value);
-                        // Optional: Trigger update immediately or show save button
-                    }}
-                    className={`px-3 py-1 rounded-full text-xs font-bold border-none outline-none appearance-none cursor-pointer ${status === "In Stock" || status === "Ready in Ghana"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-blue-100 text-blue-800"
-                        }`}
-                >
-                    <option value="In Stock">In Stock</option>
-                    <option value="Out of Stock">Out of Stock</option>
-                    <option value="Ready in Ghana">Ready in Ghana</option>
-                    <option value="Pre-Order">Pre-Order</option>
-                </select>
-            </td>
-            <td className="p-6 text-right">
-                <input
-                    type="number"
-                    aria-label="Stock Quantity"
-                    value={stock}
-                    onChange={(e) => setStock(parseInt(e.target.value) || 0)}
-                    className="w-16 bg-transparent text-right font-mono font-bold text-slate-900 border-b border-transparent focus:border-brand-blue outline-none transition-colors"
-                />
-            </td>
-            <td className="p-6 text-right">
-                <div className="flex justify-end gap-2">
-                    {(stock !== item.stock || status !== item.status) && (
-                        <button onClick={handleUpdate} disabled={saving} aria-label="Save changes" className="bg-brand-blue text-white p-2 rounded-lg hover:scale-110 transition-transform">
-                            {saving ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
+                </td>
+                <td className="p-6">
+                    <div className="flex flex-col">
+                        <span className="text-sm font-bold text-slate-900">¥{item.priceRMB}</span>
+                        <span className="text-xs font-bold text-slate-600">₵{item.priceGHS}</span>
+                    </div>
+                </td>
+                <td className="p-6">
+                    <select
+                        aria-label="Product Status"
+                        value={status}
+                        onChange={(e) => {
+                            setStatus(e.target.value);
+                            // Optional: Trigger update immediately or show save button
+                        }}
+                        className={`px-3 py-1 rounded-full text-xs font-bold border-none outline-none appearance-none cursor-pointer ${status === "In Stock" || status === "Ready in Ghana"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-blue-100 text-blue-800"
+                            }`}
+                    >
+                        <option value="In Stock">In Stock</option>
+                        <option value="Out of Stock">Out of Stock</option>
+                        <option value="Ready in Ghana">Ready in Ghana</option>
+                        <option value="Pre-Order">Pre-Order</option>
+                    </select>
+                </td>
+                <td className="p-6 text-right">
+                    <input
+                        type="number"
+                        aria-label="Stock Quantity"
+                        value={stock}
+                        onChange={(e) => setStock(parseInt(e.target.value) || 0)}
+                        className="w-16 bg-transparent text-right font-mono font-bold text-slate-900 border-b border-transparent focus:border-brand-blue outline-none transition-colors"
+                    />
+                </td>
+                <td className="p-6 text-right">
+                    <div className="flex justify-end gap-2">
+                        {(stock !== item.stock || status !== item.status) && (
+                            <button onClick={handleUpdate} disabled={saving} aria-label="Save changes" className="bg-brand-blue text-white p-2 rounded-lg hover:scale-110 transition-transform">
+                                {saving ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
+                            </button>
+                        )}
+                        <button onClick={() => setConfirmOpen(true)} disabled={saving} aria-label="Delete product" className="bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-100 transition-colors">
+                            <Trash2 size={16} />
                         </button>
-                    )}
-                    <button onClick={handleDelete} disabled={saving} aria-label="Delete product" className="bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-100 transition-colors">
-                        <Trash2 size={16} />
-                    </button>
-                </div>
-            </td>
-        </tr>
+                    </div>
+                </td>
+            </tr>
+            <ConfirmModal
+                isOpen={confirmOpen}
+                onClose={() => setConfirmOpen(false)}
+                onConfirm={handleDelete}
+                title="Delete Product?"
+                message={`Are you sure you want to delete "${item.name}"? This action cannot be undone.`}
+                confirmText="Delete"
+                isDestructive={true}
+                loading={saving}
+            />
+        </>
     );
 }

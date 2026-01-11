@@ -84,52 +84,62 @@ export default function StaffPicks() {
                 ref={scrollRef}
                 onScroll={handleScroll}
                 className="
-                flex gap-5
+                flex gap-4
                 overflow-x-auto pb-4 px-1
                 no-scrollbar snap-x
-            " style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                touch-pan-x
+            ">
                 {products.map((item) => {
                     const count = getItemCount(item.id);
                     const imageSrc = item.imageUrl || `https://placehold.co/400x400/e2e8f0/1e293b?text=${encodeURIComponent(item.name)}`;
 
                     return (
                         <div key={item.id} className="
-                            w-48 bg-white rounded-[20px] shadow-sm border border-slate-100
-                            hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col 
-                            snap-start shrink-0 overflow-hidden
+                            w-[180px] bg-white rounded-[24px] shadow-sm border border-slate-100
+                            hover:shadow-xl hover:scale-[1.02] transition-all duration-300 group flex flex-col 
+                            snap-start shrink-0 overflow-hidden relative
                         ">
                             {/* Image Section */}
-                            <div className="h-40 bg-[#F4F5F7] p-4 flex items-center justify-center relative">
-                                <img src={imageSrc} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
+                            <div className="h-[180px] bg-slate-50 p-4 flex items-center justify-center relative overflow-hidden group-hover:bg-slate-100/50 transition-colors">
+                                <img src={imageSrc} alt={item.name} className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500" />
+                                {item.moq && (
+                                    <div className="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur">
+                                        MOQ: {item.moq}
+                                    </div>
+                                )}
                             </div>
 
                             {/* Content Section */}
-                            <div className="p-3 flex flex-col flex-1">
-                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                                    {item.category || "General"}
-                                </div>
-                                <h3 className="text-sm font-bold text-slate-800 leading-tight mb-1 line-clamp-2 min-h-[2.5em]" title={item.name}>
+                            <div className="p-4 flex flex-col flex-1">
+                                <h3 className="text-sm font-bold text-slate-800 leading-tight mb-2 line-clamp-2 h-10" title={item.name}>
                                     {item.name}
                                 </h3>
-                                <div className="mb-2">
-                                    <span className="text-sm font-bold text-slate-900">₵{item.priceGHS?.toFixed(2)}</span>
-                                    {item.priceRMB && <span className="text-[10px] text-slate-400 ml-1">(¥{item.priceRMB})</span>}
-                                </div>
 
                                 <div className="mt-auto">
+                                    <div className="flex items-baseline gap-1 mb-3">
+                                        <span className="text-sm text-brand-blue font-black">₵{item.priceGHS?.toFixed(2)}</span>
+                                        {item.priceRMB && <span className="text-[10px] text-slate-400 font-medium">¥{item.priceRMB}</span>}
+                                    </div>
+
                                     <button
                                         onClick={(e) => handleAddToCart(e, item)}
                                         className={`
-                                            w-full py-2.5 rounded-xl flex items-center justify-between px-4 transition-all duration-300 active:scale-95
-                                            ${count > 0 ? 'bg-green-500 text-white' : 'bg-[#EA580C] text-white hover:bg-[#d94e06]'}
+                                            w-full h-9 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 active:scale-95 shadow-sm
+                                            ${count > 0
+                                                ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
+                                                : 'bg-slate-900 text-white hover:bg-[#FF6600] border border-transparent'}
                                         `}
                                     >
-                                        <span className="text-[10px] font-bold">
-                                            {count > 0 ? `${count} Added` : 'Add to Cart'}
+                                        <span className="text-xs font-bold">
+                                            {count > 0 ? 'Added' : 'Add to Cart'}
                                         </span>
-                                        <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center">
-                                            {count > 0 ? <span className="text-[8px]">✓</span> : <Plus size={10} />}
-                                        </div>
+                                        {count > 0 ? (
+                                            <div className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center">
+                                                <span className="text-[10px]">✓</span>
+                                            </div>
+                                        ) : (
+                                            <Plus size={14} strokeWidth={3} />
+                                        )}
                                     </button>
                                 </div>
                             </div>

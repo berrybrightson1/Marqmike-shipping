@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { getTrendingItems, addTrendingItem, deleteTrendingItem } from "@/app/actions/trending";
 import { toast } from "sonner";
 import { Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function TrendingManager() {
     const [items, setItems] = useState<any[]>([]);
@@ -51,16 +52,18 @@ export default function TrendingManager() {
         setSubmitting(false);
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure?")) return;
+    const [deleteId, setDeleteId] = useState<string | null>(null);
 
-        const res = await deleteTrendingItem(id);
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        const res = await deleteTrendingItem(deleteId);
         if (res.success) {
             toast.success("Item removed");
             loadItems();
         } else {
             toast.error("Failed to delete item");
         }
+        setDeleteId(null);
     };
 
     return (
@@ -187,7 +190,7 @@ export default function TrendingManager() {
                                                 <ExternalLink size={14} />
                                             </a>
                                             <button
-                                                onClick={() => handleDelete(item.id)}
+                                                onClick={() => setDeleteId(item.id)}
                                                 className="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-100 transition-colors ml-auto"
                                             >
                                                 <Trash2 size={14} />
@@ -200,6 +203,15 @@ export default function TrendingManager() {
                     )}
                 </div>
             </div>
+            <ConfirmModal
+                isOpen={!!deleteId}
+                onClose={() => setDeleteId(null)}
+                onConfirm={handleDelete}
+                title="Delete Trending Item?"
+                message="Are you sure you want to remove this item from the feed?"
+                confirmText="Delete"
+                isDestructive={true}
+            />
         </div>
     );
 }
