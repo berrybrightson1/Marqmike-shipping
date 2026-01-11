@@ -31,7 +31,7 @@ export default function LoginPage() {
                 const res = await signInAsAdmin(password);
                 if (res.success) {
                     toast.success("Admin Access Granted");
-                    router.push("/admin/dashboard"); // Redirect to Admin Dashboard
+                    router.push("/admin"); // Redirect to Admin Dashboard
                 } else {
                     toast.error(res.error || "Access Denied");
                 }
