@@ -100,9 +100,9 @@ export default function PhoneInput({ value, onChange, onEnter, disabled }: Phone
                     type="button"
                     onClick={() => setIsOpen(!isOpen)}
                     disabled={disabled}
-                    className="flex items-center gap-3 pr-4 border-r border-white/10 hover:bg-white/5 py-3 -ml-2 pl-2 rounded-xl transition-colors flex-shrink-0"
+                    className="flex items-center gap-3 pr-4 py-3 -ml-2 pl-2 rounded-xl transition-colors flex-shrink-0 hover:bg-white/5"
                 >
-                    {/* Circular Flag Container - Slightly larger */}
+                    {/* Circular Flag Container */}
                     <div className="w-8 h-8 rounded-full bg-white/10 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
                         <selectedCountry.flag title={selectedCountry.country} className="w-full h-full object-cover" />
                     </div>

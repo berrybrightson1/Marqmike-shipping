@@ -32,12 +32,14 @@ export default function LandingPage() {
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-[#074eaf]/80 backdrop-blur-md border-b border-white/5 py-4" : "py-6 bg-transparent"}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
-            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
-              {/* Simple Icon Logo Representation */}
-              <svg viewBox="0 0 24 24" className="w-6 h-6 text-brand-blue fill-current"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z" /></svg>
-            </div>
-            <span className="text-xl font-bold tracking-tight hidden md:block">Marqmike</span>
+          <div className="relative w-40 h-10 cursor-pointer" onClick={() => router.push('/')}>
+            {/* Using img tag for SVG to ensure it renders correctly if Image component has issues with some SVGs, 
+                or better, import Image. Since I am in a Replace block, I'll use standard img for safety or just standard Next Image if I added import.
+                I haven't added Next Image import yet. I'll stick to img or just add it to top?  
+                Actually, the file has `import Link...` no `Image`. I will use `img` for simplicity or add import.
+                Let's use `img` as it works reliably for assets in public.
+            */}
+            <img src="/logos/Long logo.svg" alt="Marqmike" className="w-full h-full object-contain object-left" />
           </div>
 
           {/* Desktop Links */}
@@ -190,7 +192,7 @@ function FeatureCard({ icon: Icon, title, desc, delay }: { icon: any, title: str
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay }}
-      className="p-8 rounded-[32px] bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-left group"
+      className="p-8 rounded-[32px] bg-gradient-to-br from-[#1a5fb4]/40 to-[#003d91]/40 border border-white/10 hover:border-white/20 hover:from-[#1a5fb4]/60 hover:to-[#003d91]/60 transition-all text-left group backdrop-blur-md shadow-xl"
     >
       <div className="w-12 h-12 bg-brand-blue rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform shadow-lg shadow-brand-blue/20">
         <Icon size={24} />
