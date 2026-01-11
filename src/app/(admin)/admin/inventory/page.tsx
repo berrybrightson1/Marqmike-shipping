@@ -62,7 +62,7 @@ export default function InventoryManagerPage() {
 
                 <table className="w-full text-left">
                     <thead className="bg-slate-50/50">
-                        <tr className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        <tr className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                             <th className="p-6">Product</th>
                             <th className="p-6">Pricing (RMB / GHS)</th>
                             <th className="p-6">Status</th>

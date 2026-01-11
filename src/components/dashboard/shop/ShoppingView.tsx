@@ -96,7 +96,7 @@ export default function ShoppingView({ user }: ShoppingViewProps) {
                         <span className="text-[10px] font-bold text-brand-blue">Weekly Picks</span>
                     </div>
 
-                    <div className="grid gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {trendingStores.slice(0, 4).map((store) => (
                             <div key={store.id} className="bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 flex items-center gap-4 group hover:shadow-md transition-all">
                                 <div className="w-16 h-16 rounded-xl bg-slate-100 overflow-hidden shrink-0">
