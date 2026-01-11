@@ -96,8 +96,8 @@ export default function ShoppingView({ user }: ShoppingViewProps) {
                         <span className="text-[10px] font-bold text-brand-blue">Weekly Picks</span>
                     </div>
 
-                    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide flex-nowrap touch-pan-x">
-                        {trendingStores.map((store) => (
+                    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide flex-nowrap">
+                        {trendingStores.slice(0, 5).map((store) => (
                             <div key={store.id} className="min-w-[280px] w-[280px] shrink-0 bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 flex items-center gap-4 group hover:shadow-md transition-all">
                                 <div className="w-16 h-16 rounded-xl bg-slate-100 overflow-hidden shrink-0">
                                     <img src={store.image} alt={store.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
