@@ -26,6 +26,10 @@ export default function ShipmentsPage() {
             setLoading(false);
         };
         fetchOrders();
+
+        // Real-time polling for new orders (every 5 seconds)
+        const interval = setInterval(fetchOrders, 5000);
+        return () => clearInterval(interval);
     }, []);
     const [showMapModal, setShowMapModal] = useState(false);
     const [selectedShipment, setSelectedShipment] = useState<any>(null);

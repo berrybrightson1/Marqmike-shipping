@@ -4,11 +4,13 @@ import { ShieldCheck, Plus, Star, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useCart } from "@/context/CartContext";
+import { useCurrency } from "@/context/CurrencyContext";
 import { toast } from "sonner";
 import { getInventory } from "@/app/actions/product";
 
 export default function StaffPicks() {
     const { addToCart, cart } = useCart();
+    const { formatPrice } = useCurrency();
     const scrollRef = React.useRef<HTMLDivElement>(null);
     const [scrollProgress, setScrollProgress] = React.useState(0);
     const [products, setProducts] = useState<any[]>([]);
@@ -117,8 +119,9 @@ export default function StaffPicks() {
 
                                 <div className="mt-auto flex flex-col gap-2">
                                     <div className="flex items-baseline gap-1">
-                                        <span className="text-[10px] text-slate-400 font-bold">GHS</span>
-                                        <span className="text-lg font-bold text-slate-900 tracking-tight">{item.priceGHS?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                        <span className="text-lg font-bold text-slate-900 tracking-tight">
+                                            {formatPrice(item.priceRMB || 0, 'RMB')}
+                                        </span>
                                     </div>
 
                                     <button

@@ -213,15 +213,28 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
                                 )}
 
                                 {showNotifs && (
-                                    <div className="absolute top-full right-0 mt-3 w-80 bg-white rounded-[24px] shadow-2xl shadow-brand-blue/20 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 border border-slate-100 ring-1 ring-slate-100">
+                                    <div className="absolute top-full right-0 mt-3 w-[400px] bg-white rounded-[24px] shadow-2xl shadow-brand-blue/20 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 border border-slate-100 ring-1 ring-slate-100">
                                         <div className="p-4 border-b border-slate-50 flex justify-between items-center bg-white sticky top-0 z-10">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-brand-pink animate-pulse" />
                                                 <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Notifications</span>
                                             </div>
-                                            <Link href="/dashboard/notifications" onClick={() => setShowNotifs(false)} className="text-[10px] font-bold text-brand-blue bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-full transition-colors flex items-center gap-1">
-                                                View All <ScanLine size={10} />
-                                            </Link>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={async () => {
+                                                        const { markAllNotificationsRead } = await import("@/app/actions/notification");
+                                                        await markAllNotificationsRead();
+                                                        setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+                                                        toast.success("All marked as read");
+                                                    }}
+                                                    className="text-[10px] font-bold text-slate-400 hover:text-brand-blue transition-colors"
+                                                >
+                                                    Mark all read
+                                                </button>
+                                                <Link href="/dashboard/notifications" onClick={() => setShowNotifs(false)} className="text-[10px] font-bold text-brand-blue bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-full transition-colors flex items-center gap-1">
+                                                    View All <ScanLine size={10} />
+                                                </Link>
+                                            </div>
                                         </div>
                                         <div className="max-h-[320px] overflow-y-auto custom-scrollbar">
                                             {notifications.length === 0 ? (

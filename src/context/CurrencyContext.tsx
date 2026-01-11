@@ -9,7 +9,7 @@ interface CurrencyContextType {
     setCurrency: (currency: Currency) => void;
     exchangeRates: Record<Currency, number>;
     convertPrice: (amountInRMB: number, baseCurrency?: 'RMB' | 'USD') => number;
-    formatPrice: (amountInRMB: number) => string;
+    formatPrice: (amount: number, baseCurrency?: 'RMB' | 'USD') => string;
 }
 
 const defaultRates: Record<Currency, number> = {
@@ -36,8 +36,8 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         return inRMB * exchangeRates[currency];
     };
 
-    const formatPrice = (amountInUSD: number) => {
-        const converted = convertPrice(amountInUSD, 'USD');
+    const formatPrice = (amount: number, baseCurrency: 'RMB' | 'USD' = 'USD') => {
+        const converted = convertPrice(amount, baseCurrency);
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: currency,

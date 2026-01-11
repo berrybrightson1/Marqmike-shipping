@@ -4,9 +4,11 @@ import { Zap, ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
 import { useState, useRef } from "react";
 import { useCart } from "@/context/CartContext";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export default function TrendingFeed() {
     const { addToCart } = useCart();
+    const { formatPrice } = useCurrency();
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -71,7 +73,7 @@ export default function TrendingFeed() {
                             <div className="flex items-end justify-between mb-3">
                                 <div>
                                     <div className="text-[10px] text-slate-400 font-medium">Wholesale Price</div>
-                                    <div className="text-lg font-extrabold text-[#FF6600]">${product.price}</div>
+                                    <div className="text-lg font-extrabold text-[#FF6600]">{formatPrice(parseFloat(product.price), 'USD')}</div>
                                 </div>
                                 <div className="text-right">
                                     <div className="text-[10px] text-slate-400 font-medium">MOQ</div>
