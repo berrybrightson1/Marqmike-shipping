@@ -13,7 +13,7 @@ export async function getCustomerDetails(userId: string) {
                     select: {
                         shipments: true,
                         notifications: true,
-                        procurement: true
+                        procurementRequests: true
                     }
                 }
             }

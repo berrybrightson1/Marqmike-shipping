@@ -58,10 +58,7 @@ export default async function CustomerDetailPage({ params }: { params: { id: str
                                 <Phone size={16} className="text-slate-400" />
                                 <span className="font-bold text-slate-700">{user.phone || "No phone"}</span>
                             </div>
-                            <div className="flex items-center gap-3 text-sm p-4 bg-slate-50 rounded-2xl">
-                                <MapPin size={16} className="text-slate-400" />
-                                <span className="font-bold text-slate-700">{user.address || "No address provided"}</span>
-                            </div>
+
                             <div className="flex items-center gap-3 text-sm p-4 bg-slate-50 rounded-2xl">
                                 <Calendar size={16} className="text-slate-400" />
                                 <span className="font-bold text-slate-700">Joined {new Date(user.createdAt).toLocaleDateString()}</span>
@@ -81,7 +78,7 @@ export default async function CustomerDetailPage({ params }: { params: { id: str
                         </div>
                         <div className="bg-white p-6 rounded-[24px] shadow-sm border border-slate-100">
                             <div className="text-slate-400 text-xs font-bold uppercase mb-2">Requests</div>
-                            <div className="text-3xl font-black text-brand-pink">{user._count?.procurement || 0}</div>
+                            <div className="text-3xl font-black text-brand-pink">{user._count?.procurementRequests || 0}</div>
                         </div>
                         <div className="bg-white p-6 rounded-[24px] shadow-sm border border-slate-100">
                             <div className="text-slate-400 text-xs font-bold uppercase mb-2">Activity Score</div>
