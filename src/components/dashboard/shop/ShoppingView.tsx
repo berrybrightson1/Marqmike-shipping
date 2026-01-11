@@ -11,6 +11,16 @@ interface ShoppingViewProps {
 }
 
 export default function ShoppingView({ user }: ShoppingViewProps) {
+    const { addToCart } = useCart();
+
+    // Categories Data
+    const categories = [
+        { id: "fashion", name: "Fashion", icon: Shirt, color: "bg-pink-500", url: "https://www.taobao.com/list/product/fashion.htm" },
+        { id: "tech", name: "Electronics", icon: Smartphone, color: "bg-blue-500", url: "https://s.taobao.com/search?q=electronics" },
+        { id: "home", name: "Home & Living", icon: HomeIcon, color: "bg-orange-500", url: "https://s.taobao.com/search?q=home+decor" },
+        { id: "more", name: "All Categories", icon: ShoppingBag, color: "bg-purple-500", url: "https://www.1688.com/" },
+    ];
+
     // Alibaba Mock Data
     const alibabaProducts = [
         { id: 1, name: "TWS Earbuds 5.3 Noise Cancelling", image: "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?auto=format&fit=crop&q=80&w=500", price: "2.50", moq: 50, supplier: "Shenzhen Audio Co.", verified: true, rating: "4.8", years: 5 },
