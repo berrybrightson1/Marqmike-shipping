@@ -28,7 +28,6 @@ export default function ConfirmModal({
     if (!isOpen) return null;
 
     return (
-    return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent pointer-events-none">
             <div className="bg-white rounded-[20px] shadow-2xl w-full max-w-sm p-6 transform scale-100 animate-in zoom-in-95 duration-200 border border-slate-100 pointer-events-auto shadow-slate-300/50">
                 <div className="flex flex-col items-center text-center">
