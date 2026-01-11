@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, User, Bell, Shield, LogOut } from "lucide-react";
+import { ArrowLeft, User, Bell, Shield, LogOut, FileText, Truck } from "lucide-react";
 import BottomNav from "@/components/layout/BottomNav";
 
 export default function ProfilePage() {
@@ -27,9 +27,12 @@ export default function ProfilePage() {
 
                 {/* Menu */}
                 <div className="px-6 space-y-3">
-                    <MenuItem icon={User} label="Edit Profile" />
-                    <MenuItem icon={Bell} label="Notifications" />
-                    <MenuItem icon={Shield} label="Privacy & Security" />
+                    <MenuItem icon={User} label="General Account Settings" href="/dashboard/settings" />
+                    <MenuItem icon={Shield} label="Change Password" href="/dashboard/settings/security" />
+                    <MenuItem icon={Truck} label="Tracking IDs" href="/dashboard/shipments" />
+                    <div className="h-px bg-slate-100 my-4" />
+                    <MenuItem icon={FileText} label="Privacy Policy" href="/privacy" />
+                    <MenuItem icon={FileText} label="Terms and Conditions" href="/terms" />
 
                     <Link href="/">
                         <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center justify-between mt-8 group cursor-pointer hover:border-red-100 transition-all">
@@ -49,8 +52,8 @@ export default function ProfilePage() {
     )
 }
 
-function MenuItem({ icon: Icon, label }: { icon: any, label: string }) {
-    return (
+function MenuItem({ icon: Icon, label, href }: { icon: any, label: string, href?: string }) {
+    const Content = (
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex items-center justify-between cursor-pointer hover:border-brand-blue/30 transition-all">
             <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
@@ -60,5 +63,7 @@ function MenuItem({ icon: Icon, label }: { icon: any, label: string }) {
             </div>
             <ArrowLeft size={16} className="rotate-180 text-slate-300" />
         </div>
-    )
+    );
+
+    return href ? <Link href={href}>{Content}</Link> : Content;
 }

@@ -10,9 +10,10 @@ interface CheckoutModalProps {
     isOpen: boolean;
     onClose: () => void;
     cartItems: any[];
+    onCheckoutComplete?: () => void;
 }
 
-export default function CheckoutModal({ isOpen, onClose, cartItems }: CheckoutModalProps) {
+export default function CheckoutModal({ isOpen, onClose, cartItems, onCheckoutComplete }: CheckoutModalProps) {
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [loading, setLoading] = useState(false);
@@ -69,6 +70,9 @@ export default function CheckoutModal({ isOpen, onClose, cartItems }: CheckoutMo
 
         window.open(waLink, '_blank');
         setLoading(false);
+        if (onCheckoutComplete) {
+            onCheckoutComplete();
+        }
         onClose();
     };
 

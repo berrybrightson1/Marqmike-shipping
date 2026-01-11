@@ -100,7 +100,7 @@ export default async function AuditLogPage() {
                                         </td>
                                         <td className="py-4 px-6 text-right">
                                             <span className="text-xs font-mono font-medium text-slate-400 bg-slate-50 px-2 py-1 rounded-md">
-                                                {formatDistanceToNow(log.timestamp, { addSuffix: true })}
+                                                {new Date(log.timestamp).toLocaleString()}
                                             </span>
                                         </td>
                                     </tr>

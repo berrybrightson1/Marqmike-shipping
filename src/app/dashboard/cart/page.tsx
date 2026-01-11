@@ -2,7 +2,7 @@
 
 import { useCart } from "@/context/CartContext";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import { Trash2, ArrowRight, ShoppingBag, MessageCircle, ShoppingCart } from "lucide-react";
+import { Trash2, ArrowRight, ShoppingBag, MessageCircle, ShoppingCart, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import CheckoutModal from "@/components/checkout/CheckoutModal";
@@ -19,6 +19,7 @@ export default function CartPage() {
     };
 
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+    const [checkoutSuccess, setCheckoutSuccess] = useState(false);
 
     const handleCheckoutTrigger = () => {
         if (cart.length === 0) {
@@ -27,6 +28,36 @@ export default function CartPage() {
         }
         setIsCheckoutOpen(true);
     };
+
+    const handleCheckoutComplete = () => {
+        setCheckoutSuccess(true);
+        clearCart();
+    };
+
+    if (checkoutSuccess) {
+        return (
+            <div className="min-h-screen bg-[#F2F6FC] pb-24 flex flex-col items-center justify-center px-6 text-center">
+                <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6 animate-in zoom-in duration-300">
+                    <CheckCircle size={48} className="text-green-600" />
+                </div>
+                <h1 className="text-2xl font-bold text-slate-800 mb-2">Order Submitted!</h1>
+                <p className="text-slate-500 mb-8 max-w-xs mx-auto">
+                    We've opened WhatsApp for you to send the order details. An admin will confirm shortly.
+                </p>
+                <div className="space-y-3 w-full max-w-xs">
+                    <Link href="/dashboard/procurement" className="block w-full py-3.5 bg-brand-blue text-white rounded-xl font-bold shadow-lg shadow-brand-blue/20">
+                        View My Requests
+                    </Link>
+                    <Link href="/dashboard/shop" className="block w-full py-3.5 bg-white text-slate-600 rounded-xl font-bold border border-slate-200">
+                        Continue Shopping
+                    </Link>
+                    <button onClick={() => setCheckoutSuccess(false)} className="text-sm text-slate-400 font-bold mt-4">
+                        Back to Cart
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-[#F2F6FC] pb-24">
@@ -104,6 +135,7 @@ export default function CartPage() {
                     itemName: item.name, // Map for API
                     itemUrl: item.url
                 }))}
+                onCheckoutComplete={handleCheckoutComplete}
             />
         </div>
     );

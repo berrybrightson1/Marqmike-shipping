@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, ShoppingCart, Trash2, ArrowLeft, Link2, ExternalLink } from "lucide-react";
+import { Plus, ShoppingCart, Trash2, ArrowLeft, Link2, ExternalLink, CheckCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import CBMCalculator from "@/components/tools/CBMCalculator";
@@ -145,22 +145,43 @@ export default function ProcurementPage() {
                         ) : (
                             <div className="space-y-3">
                                 {requests.map((item) => (
-                                    <div key={item.id} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center group">
-                                        <div className="overflow-hidden mr-4">
-                                            <h4 className="font-bold text-brand-blue text-sm truncate">{item.itemName}</h4>
-                                            <a href={item.itemUrl} target="_blank" className="text-[10px] text-brand-blue/60 truncate hover:underline flex items-center gap-1">
-                                                View Link <ExternalLink size={10} />
-                                            </a>
+                                    <div key={item.id} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-3 group">
+                                        <div className="flex justify-between items-center">
+                                            <div className="overflow-hidden mr-4">
+                                                <h4 className="font-bold text-brand-blue text-sm truncate">{item.itemName}</h4>
+                                                <a href={item.itemUrl} target="_blank" className="text-[10px] text-brand-blue/60 truncate hover:underline flex items-center gap-1">
+                                                    View Link <ExternalLink size={10} />
+                                                </a>
+                                            </div>
+                                            <div className="flex flex-col items-end gap-1">
+                                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${item.status === 'Pending' ? 'bg-orange-50 text-orange-600 border-orange-100' :
+                                                    item.status === 'Approved' ? 'bg-green-50 text-green-600 border-green-100' :
+                                                        item.status === 'Purchased' || item.status === 'Shipped' || item.status === 'Arrived' ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20' :
+                                                            'bg-slate-50 text-slate-600 border-slate-100'
+                                                    }`}>
+                                                    {item.status}
+                                                </span>
+                                                <span className="text-[10px] text-slate-400">{new Date(item.createdAt).toLocaleDateString()}</span>
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col items-end gap-1">
-                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${item.status === 'Pending' ? 'bg-orange-50 text-orange-600 border-orange-100' :
-                                                item.status === 'Approved' ? 'bg-green-50 text-green-600 border-green-100' :
-                                                    'bg-slate-50 text-slate-600 border-slate-100'
-                                                }`}>
-                                                {item.status}
-                                            </span>
-                                            <span className="text-[10px] text-slate-400">{new Date(item.createdAt).toLocaleDateString()}</span>
-                                        </div>
+
+                                        {/* Proof / Success Indicator */}
+                                        {(item.status === 'Purchased' || item.status === 'Shipped' || item.status === 'Arrived') && (
+                                            <div className="bg-green-50 rounded-xl p-3 flex items-start gap-3 mt-1 border border-green-100">
+                                                <div className="bg-green-100 rounded-full p-1 text-green-600 shrink-0 mt-0.5">
+                                                    <CheckCircle size={12} strokeWidth={3} />
+                                                </div>
+                                                <div>
+                                                    <h5 className="font-bold text-green-800 text-xs">Order Successfully Completed</h5>
+                                                    <p className="text-[10px] text-green-700 leading-tight mt-0.5">
+                                                        Your item has been processed.
+                                                        {item.status === 'Purchased' && " Procurement is complete."}
+                                                        {item.status === 'Shipped' && " It is currently on its way to you."}
+                                                        {item.status === 'Arrived' && " It has arrived at the destination."}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
