@@ -126,6 +126,7 @@ model CallLog {
   summary      String   @db.Text 
   outcome      String   
   topic        String?  
+  type         String   @default("Outbound") // Incoming or Outgoing
   adminId      String   
   createdAt    DateTime @default(now())
 }

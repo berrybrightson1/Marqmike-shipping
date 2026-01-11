@@ -17,6 +17,7 @@ export default function LogCallModal({ isOpen, onClose, onSuccess }: LogCallModa
     const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
     const [summary, setSummary] = useState("");
     const [outcome, setOutcome] = useState("Pending");
+    const [callType, setCallType] = useState("Outgoing");
     const [loading, setLoading] = useState(false);
     const [searching, setSearching] = useState(false);
 
@@ -67,7 +68,7 @@ export default function LogCallModal({ isOpen, onClose, onSuccess }: LogCallModa
                 summary,
                 outcome,
                 duration: "0", // Default
-                type: "Outbound" // Default or selectable
+                type: callType // Passed from state
             });
 
             if (res.success) {
@@ -166,27 +167,49 @@ export default function LogCallModal({ isOpen, onClose, onSuccess }: LogCallModa
                     />
                 </div>
 
-                {/* Outcome */}
-                <div className="mb-8">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Outcome</label>
-                    <div className="grid grid-cols-2 gap-3">
-                        {outcomes.map((o) => (
+                {/* Call Type & Outcome Grid */}
+                <div className="mb-8 grid grid-cols-2 gap-4">
+                    {/* Call Type */}
+                    <div>
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Call Type</label>
+                        <div className="flex bg-slate-100 rounded-xl p-1">
                             <button
-                                key={o}
-                                onClick={() => setOutcome(o)}
-                                className={`
-                                    py-3 rounded-xl text-sm font-bold transition-all
-                                    ${outcome === o
-                                        ? o === "Pending"
-                                            ? "bg-pink-50 text-pink-600 border-2 border-pink-500 shadow-sm" // Special style for Pending as per image? Or just selected state.
-                                            : "bg-slate-800 text-white shadow-lg"
-                                        : "bg-slate-50 text-slate-500 hover:bg-slate-100"
-                                    }
-                                `}
+                                onClick={() => setCallType("Incoming")}
+                                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${callType === "Incoming" ? "bg-white text-brand-blue shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
                             >
-                                {o}
+                                Incoming
                             </button>
-                        ))}
+                            <button
+                                onClick={() => setCallType("Outgoing")}
+                                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${callType === "Outgoing" ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                            >
+                                Outgoing
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Outcome */}
+                    <div>
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Outcome</label>
+                        <div className="grid grid-cols-2 gap-2">
+                            {outcomes.map((o) => (
+                                <button
+                                    key={o}
+                                    onClick={() => setOutcome(o)}
+                                    className={`
+                                        py-2 rounded-lg text-xs font-bold transition-all
+                                        ${outcome === o
+                                            ? o === "Pending"
+                                                ? "bg-pink-50 text-pink-600 border border-pink-200"
+                                                : "bg-slate-800 text-white shadow-md"
+                                            : "bg-slate-50 text-slate-500 hover:bg-slate-100"
+                                        }
+                                    `}
+                                >
+                                    {o}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
