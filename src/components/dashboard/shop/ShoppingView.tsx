@@ -97,7 +97,7 @@ export default function ShoppingView({ user }: ShoppingViewProps) {
                     </div>
 
                     <div className="grid gap-4">
-                        {trendingStores.map((store) => (
+                        {trendingStores.slice(0, 4).map((store) => (
                             <div key={store.id} className="bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 flex items-center gap-4 group hover:shadow-md transition-all">
                                 <div className="w-16 h-16 rounded-xl bg-slate-100 overflow-hidden shrink-0">
                                     <img src={store.image} alt={store.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />

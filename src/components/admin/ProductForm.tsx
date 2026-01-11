@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
-import { Upload, X, Check, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Upload, X, Check, Image as ImageIcon, Loader2, ChevronDown } from "lucide-react";
 import imageCompression from "browser-image-compression";
 import { toast } from "sonner";
 import { createProduct } from "@/app/actions/product";
@@ -177,30 +177,42 @@ export default function ProductForm() {
                 </div>
                 <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Category</label>
-                    <select name="category" className="w-full p-4 bg-slate-50 border-none rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-brand-blue/20 outline-none">
-                        <option>Electronics</option>
-                        <option>Fashion</option>
-                        <option>Home & Living</option>
-                        <option>Beauty</option>
-                        <option>Auto Parts</option>
-                        <option>Other</option>
-                    </select>
+                    <div className="relative">
+                        <select name="category" className="w-full p-4 bg-slate-50 border-none rounded-[20px] font-bold text-slate-800 focus:ring-2 focus:ring-brand-blue/20 outline-none appearance-none cursor-pointer">
+                            <option>General</option>
+                            <option>Electronics & Gadgets</option>
+                            <option>Fashion & Apparel</option>
+                            <option>Beauty & Personal Care</option>
+                            <option>Home & Living</option>
+                            <option>Auto Parts & Accessories</option>
+                            <option>Kids & Babies</option>
+                            <option>bags & Shoes</option>
+                            <option>Office & Stationery</option>
+                            <option>Industrial & Tools</option>
+                        </select>
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20} />
+                    </div>
                 </div>
             </div>
 
             {/* Pricing */}
             <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Price (RMB)</label>
-                    <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">¥</span>
+                    <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Price</label>
+                    <div className="relative flex gap-2">
+                        <div className="relative w-1/3">
+                            <select name="currency" className="w-full h-full p-4 bg-slate-50 border-none rounded-[20px] font-bold text-slate-800 focus:ring-2 focus:ring-brand-blue/20 outline-none appearance-none cursor-pointer text-center">
+                                <option value="GHS">GHS</option>
+                                <option value="RMB">RMB</option>
+                            </select>
+                        </div>
                         <input
-                            name="priceRMB"
+                            name="priceValue" // Changed name to handle logic manually
                             type="number"
                             step="0.01"
                             required
                             placeholder="0.00"
-                            className="w-full p-4 pl-10 bg-slate-50 border-none rounded-xl font-bold text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-brand-blue/20 outline-none"
+                            className="w-2/3 p-4 bg-slate-50 border-none rounded-[20px] font-bold text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-brand-blue/20 outline-none"
                         />
                     </div>
                 </div>

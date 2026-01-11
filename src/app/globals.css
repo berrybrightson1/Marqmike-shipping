@@ -81,4 +81,10 @@ body {
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #cbd5e1;
   }
+
+  /* Select Dropdown Styling */
+  select {
+    background-image: none;
+    /* Remove default arrow */
+  }
 }

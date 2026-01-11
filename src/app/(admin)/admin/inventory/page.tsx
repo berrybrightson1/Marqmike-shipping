@@ -1,9 +1,10 @@
 "use client";
 
 import { GlassCard } from "@/components/ui/GlassCard";
-import { Search, Plus, Upload, DollarSign, Package, AlertCircle, Loader2 } from "lucide-react";
+import { Search, Plus, Upload, DollarSign, Package, AlertCircle, Loader2, Trash2, Check } from "lucide-react";
 import { useState, useEffect } from "react";
-import { getInventory } from "@/app/actions/product";
+import { getInventory, updateProduct, deleteProduct } from "@/app/actions/product";
+import { toast } from "sonner";
 import Link from "next/link";
 
 export default function InventoryManagerPage() {
@@ -66,46 +67,111 @@ export default function InventoryManagerPage() {
                             <th className="p-6">Pricing (RMB / GHS)</th>
                             <th className="p-6">Status</th>
                             <th className="p-6 text-right">Stock</th>
+                            <th className="p-6 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
                         {inventory.map((item) => (
-                            <tr key={item.id} className="hover:bg-slate-50 transition-colors">
-                                <td className="p-6">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 bg-slate-100 rounded-lg shrink-0 overflow-hidden border border-slate-200">
-                                            <img
-                                                src={item.imageUrl || `https://placehold.co/100x100/e2e8f0/1e293b?text=${encodeURIComponent(item.name.substring(0, 2))}`}
-                                                alt={item.name}
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                        <span className="font-bold text-slate-700">{item.name}</span>
-                                    </div>
-                                </td>
-                                <td className="p-6">
-                                    <div className="flex flex-col">
-                                        <span className="text-sm font-bold text-slate-800">¥{item.priceRMB}</span>
-                                        <span className="text-xs text-slate-400">₵{item.priceGHS}</span>
-                                    </div>
-                                </td>
-                                <td className="p-6">
-                                    <span className={`px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5 ${item.status === "Ready in Ghana"
-                                        ? "bg-green-100 text-green-700"
-                                        : "bg-blue-100 text-blue-700"
-                                        }`}>
-                                        <Package size={12} />
-                                        {item.status}
-                                    </span>
-                                </td>
-                                <td className="p-6 text-right font-mono font-bold text-slate-600">
-                                    {item.stock}
-                                </td>
-                            </tr>
+                            <InventoryRow key={item.id} item={item} />
                         ))}
                     </tbody>
                 </table>
             </div>
         </div>
+    );
+}
+
+function InventoryRow({ item }: { item: any }) {
+    const [stock, setStock] = useState(item.stock);
+    const [status, setStatus] = useState(item.status);
+    const [saving, setSaving] = useState(false);
+    const [deleted, setDeleted] = useState(false);
+
+    const handleUpdate = async () => {
+        setSaving(true);
+        const formData = new FormData();
+        formData.append("id", item.id);
+        formData.append("stock", stock.toString());
+        formData.append("status", status);
+
+        const res = await updateProduct(formData);
+        if (res.success) toast.success("Updated!");
+        else toast.error("Failed");
+        setSaving(false);
+    };
+
+    const handleDelete = async () => {
+        if (!confirm("Are you sure?")) return;
+        setSaving(true);
+        const res = await deleteProduct(item.id);
+        if (res.success) {
+            toast.success("Deleted!");
+            setDeleted(true);
+        }
+        else toast.error("Failed");
+        setSaving(false);
+    };
+
+    if (deleted) return null;
+
+    return (
+        <tr className="hover:bg-slate-50 transition-colors group">
+            <td className="p-6">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-slate-100 rounded-lg shrink-0 overflow-hidden border border-slate-200">
+                        <img
+                            src={item.imageUrl || `https://placehold.co/100x100/e2e8f0/1e293b?text=${encodeURIComponent(item.name.substring(0, 2))}`}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <span className="font-bold text-slate-700">{item.name}</span>
+                </div>
+            </td>
+            <td className="p-6">
+                <div className="flex flex-col">
+                    <span className="text-sm font-bold text-slate-800">¥{item.priceRMB}</span>
+                    <span className="text-xs text-slate-400">₵{item.priceGHS}</span>
+                </div>
+            </td>
+            <td className="p-6">
+                <select
+                    value={status}
+                    onChange={(e) => {
+                        setStatus(e.target.value);
+                        // Optional: Trigger update immediately or show save button
+                    }}
+                    className={`px-3 py-1 rounded-full text-xs font-bold border-none outline-none appearance-none cursor-pointer ${status === "In Stock" || status === "Ready in Ghana"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-blue-100 text-blue-700"
+                        }`}
+                >
+                    <option value="In Stock">In Stock</option>
+                    <option value="Out of Stock">Out of Stock</option>
+                    <option value="Ready in Ghana">Ready in Ghana</option>
+                    <option value="Pre-Order">Pre-Order</option>
+                </select>
+            </td>
+            <td className="p-6 text-right">
+                <input
+                    type="number"
+                    value={stock}
+                    onChange={(e) => setStock(parseInt(e.target.value) || 0)}
+                    className="w-16 bg-transparent text-right font-mono font-bold text-slate-600 border-b border-transparent focus:border-brand-blue outline-none transition-colors"
+                />
+            </td>
+            <td className="p-6 text-right">
+                <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {(stock !== item.stock || status !== item.status) && (
+                        <button onClick={handleUpdate} disabled={saving} className="bg-brand-blue text-white p-2 rounded-lg hover:scale-110 transition-transform">
+                            {saving ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
+                        </button>
+                    )}
+                    <button onClick={handleDelete} disabled={saving} className="bg-red-50 text-red-500 p-2 rounded-lg hover:bg-red-100 transition-colors">
+                        <Trash2 size={16} />
+                    </button>
+                </div>
+            </td>
+        </tr>
     );
 }

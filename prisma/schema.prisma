@@ -232,3 +232,10 @@ model TicketMessage {
   message   String
   createdAt DateTime @default(now())
 }
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique // e.g., "CBM_RATE", "EXCHANGE_RATE"
+  value     String   // Store as string, parse as needed
+  updatedAt DateTime @updatedAt
+}

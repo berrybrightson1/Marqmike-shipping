@@ -7,6 +7,8 @@ import { exportData } from "@/app/actions/export";
 import { useState } from "react";
 import { signOut } from "@/app/actions/auth";
 import { broadcastNotification } from "@/app/actions/notification";
+import { getSystemSetting, updateSystemSetting, sendPromoNotification } from "@/app/actions/settings";
+import { useEffect } from "react";
 
 export default function AdminSettingsPage() {
     return (
@@ -56,7 +58,13 @@ export default function AdminSettingsPage() {
                         <div className="divide-y divide-slate-50">
                             <SettingsItem icon={User} label="Manage Admins" value="3 Active" />
                         </div>
+                        <div className="divide-y divide-slate-50">
+                            <SettingsItem icon={User} label="Manage Admins" value="3 Active" />
+                        </div>
                     </div>
+
+                    {/* Freight Settings */}
+                    <FreightSettings />
 
                     {/* Data Export Section */}
                     <div className="bg-white/80 backdrop-blur-xl border border-white/60 rounded-[32px] overflow-hidden shadow-lg shadow-slate-200/50">
@@ -83,6 +91,65 @@ export default function AdminSettingsPage() {
                     >
                         <LogOut size={20} />
                         Log Out Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function FreightSettings() {
+    const [rate, setRate] = useState("380"); // Default mock
+    const [loading, setLoading] = useState(false);
+
+    // Initial Fetch
+    useEffect(() => {
+        getSystemSetting("CBM_RATE").then(res => {
+            if (res.success && res.value) setRate(res.value);
+        });
+    }, []);
+
+    const handleUpdate = async () => {
+        setLoading(true);
+        await updateSystemSetting("CBM_RATE", rate);
+        toast.success("Rate updated successfully!");
+        setLoading(false);
+    };
+
+    const handlePromo = async () => {
+        if (!confirm(`Notify all users about the new $${rate}/CBM rate?`)) return;
+        setLoading(true);
+        const res = await sendPromoNotification(rate);
+        if (res.success) toast.success("Promo sent to all users!");
+        else toast.error("Failed to send promo");
+        setLoading(false);
+    };
+
+    return (
+        <div className="bg-white/80 backdrop-blur-xl border border-white/60 rounded-[32px] overflow-hidden shadow-lg shadow-slate-200/50">
+            <div className="px-6 py-4 border-b border-slate-50 bg-slate-50/50 flex justify-between items-center">
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Freight Configuration</h3>
+                <button onClick={handlePromo} disabled={loading} title="Notify users of new rate" className="flex items-center gap-2 text-[10px] font-bold bg-brand-pink/10 text-brand-pink px-3 py-1.5 rounded-full hover:bg-brand-pink hover:text-white transition-colors">
+                    <Send size={12} />
+                    Notify Promo
+                </button>
+            </div>
+            <div className="p-6">
+                <div className="flex items-end gap-4">
+                    <div className="space-y-2 flex-1">
+                        <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Sea Freight Rate ($/CBM)</label>
+                        <div className="relative">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                            <input
+                                value={rate}
+                                onChange={(e) => setRate(e.target.value)}
+                                type="number"
+                                className="w-full p-4 pl-8 bg-slate-50 border-none rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-brand-blue/20 outline-none"
+                            />
+                        </div>
+                    </div>
+                    <button onClick={handleUpdate} disabled={loading} className="bg-brand-blue text-white h-[56px] px-6 rounded-xl font-bold shadow-lg shadow-brand-blue/20 hover:bg-[#003d91] transition-colors flex items-center justify-center">
+                        {loading ? <Loader2 className="animate-spin" /> : <CheckCircle size={20} />}
                     </button>
                 </div>
             </div>
