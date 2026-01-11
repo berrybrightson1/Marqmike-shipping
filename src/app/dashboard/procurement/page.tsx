@@ -153,11 +153,12 @@ export default function ProcurementPage() {
                                                     View Link <ExternalLink size={10} />
                                                 </a>
                                             </div>
-                                            <div className="flex flex-col items-end gap-1">
-                                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${item.status === 'Pending' ? 'bg-orange-50 text-orange-600 border-orange-100' :
+                                            <div className="flex flex-col items-end gap-1 shrink-0">
+                                                <span className={`px-3 py-1 rounded-full text-[10px] font-bold border whitespace-nowrap ${item.status === 'Pending' ? 'bg-orange-50 text-orange-600 border-orange-100' :
                                                     item.status === 'Approved' ? 'bg-green-50 text-green-600 border-green-100' :
-                                                        item.status === 'Purchased' || item.status === 'Shipped' || item.status === 'Arrived' ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20' :
-                                                            'bg-slate-50 text-slate-600 border-slate-100'
+                                                        item.status === 'Item Available' ? 'bg-cyan-50 text-cyan-600 border-cyan-100' :
+                                                            (item.status === 'Purchased' || item.status === 'Shipped' || item.status === 'Arrived') ? 'bg-brand-blue text-white border-brand-blue shadow-md shadow-brand-blue/20' :
+                                                                'bg-slate-50 text-slate-600 border-slate-100'
                                                     }`}>
                                                     {item.status}
                                                 </span>

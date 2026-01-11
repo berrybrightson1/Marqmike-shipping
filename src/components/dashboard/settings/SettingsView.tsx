@@ -61,7 +61,7 @@ export default function SettingsView({ user }: { user: any }) {
                 <div className="space-y-6">
                     <SettingsGroup title="Account">
                         <SettingsItem icon={User} label="Edit Profile" onClick={() => setIsEditOpen(true)} />
-                        <SettingsItem icon={Lock} label="Change Password" />
+                        <SettingsItem icon={Lock} label="Change Password" onClick={() => router.push("/dashboard/settings/security")} />
                         <SettingsItem icon={Bell} label="Notifications" />
                     </SettingsGroup>
 // ... rest of code

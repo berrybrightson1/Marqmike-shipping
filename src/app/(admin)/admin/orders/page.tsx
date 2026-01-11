@@ -141,6 +141,9 @@ export default function AdminOrdersPage() {
                                             </div>
                                             <div className="text-[10px] text-slate-400 mt-1">
                                                 {new Date(order.createdAt).toLocaleDateString()}
+                                                <span className="block text-[9px] text-slate-300 font-medium">
+                                                    {new Date(order.createdAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })}
+                                                </span>
                                             </div>
                                         </td>
                                         <td className="py-3 px-4 align-top">

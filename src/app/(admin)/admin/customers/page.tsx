@@ -2,6 +2,7 @@
 
 import { Search, Filter, Mail, Phone, MapPin, MoreVertical, Loader2, Bell } from "lucide-react";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { getCustomers } from "@/app/actions/admin";
 
 export default function AdminCustomersPage() {
@@ -95,15 +96,15 @@ export default function AdminCustomersPage() {
                             ) : customers.map((c) => (
                                 <tr key={c.id} className="hover:bg-blue-50/50 transition-colors group">
                                     <td className="p-6">
-                                        <div className="flex items-center gap-3">
+                                        <Link href={`/admin/customers/${c.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity group-hover:translate-x-1 duration-200">
                                             <div className="w-10 h-10 rounded-full bg-brand-pink/10 text-brand-pink flex items-center justify-center font-bold text-sm shrink-0">
                                                 {c.name.charAt(0).toUpperCase()}
                                             </div>
                                             <div>
-                                                <div className="font-bold text-slate-800">{c.name}</div>
+                                                <div className="font-bold text-slate-800 underline decoration-slate-200 underline-offset-4 group-hover:decoration-brand-pink/50 transition-all">{c.name}</div>
                                                 <div className="text-[10px] text-slate-400 font-bold uppercase hidden md:block">ID: #{c.id.substring(0, 8)}</div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     </td>
                                     <td className="p-6">
                                         <div className="flex flex-col gap-1">

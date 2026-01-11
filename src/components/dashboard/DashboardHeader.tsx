@@ -57,15 +57,7 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
         else setCurrency('USD');
     };
 
-    const handleLogout = async () => {
-        const result = await signOut();
-        if (result.success) {
-            toast.success("Logged out successfully");
-            router.push("/auth/login");
-        } else {
-            toast.error("Logout failed");
-        }
-    };
+
 
     const handleBack = () => {
         if (backLink) {
@@ -175,13 +167,6 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
                                 )}
                             </div>
 
-                            <button
-                                aria-label="Logout"
-                                onClick={handleLogout}
-                                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-brand-pink hover:text-white transition-all shadow-sm backdrop-blur-sm"
-                            >
-                                <LogOut size={18} strokeWidth={2.5} />
-                            </button>
                         </div>
                     </div>
 

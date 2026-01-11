@@ -35,19 +35,19 @@ export default function RootLayout({
             <CartProvider>
               {children}
               <Toaster
-                position="top-center"
+                position="bottom-center"
                 toastOptions={{
                   unstyled: true,
                   classNames: {
-                    toast: "bg-white border border-slate-100 shadow-xl rounded-[20px] p-4 flex items-center gap-3 w-full max-w-sm",
-                    title: "text-slate-800 font-bold text-sm",
-                    description: "text-slate-500 text-xs font-medium",
-                    actionButton: "bg-brand-blue text-white",
-                    cancelButton: "bg-slate-100 text-slate-500",
-                    error: "bg-white border-red-50",
-                    success: "bg-white border-slate-100",
-                    warning: "bg-white border-orange-50",
-                    info: "bg-white border-blue-50",
+                    toast: "bg-black/90 backdrop-blur-md border border-white/10 shadow-2xl rounded-full px-6 py-3 flex items-center gap-3 w-fit min-w-[300px] mx-auto mb-6",
+                    title: "text-white font-bold text-sm",
+                    description: "text-white/60 text-xs font-medium",
+                    actionButton: "bg-white text-black hover:bg-slate-200",
+                    cancelButton: "bg-white/10 text-white hover:bg-white/20",
+                    error: "bg-red-950/90 border-red-500/20 text-red-200",
+                    success: "bg-black/90 border-white/10 text-white",
+                    warning: "bg-orange-950/90 border-orange-500/20 text-orange-200",
+                    info: "bg-blue-950/90 border-blue-500/20 text-blue-200",
                   }
                 }}
               />

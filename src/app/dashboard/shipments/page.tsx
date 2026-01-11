@@ -1,59 +1,86 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Loader2, Package, ArrowRight, Filter } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Search, Package, ArrowLeft, Copy, CheckCircle, ExternalLink } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useCart } from "@/context/CartContext";
 
-export default function SearchPage() {
-    const searchParams = useSearchParams();
-    const query = searchParams.get("search") || "";
-    const [searchTerm, setSearchTerm] = useState(query);
-    const [loading, setLoading] = useState(false); // Mock loading for now
+// Mock Data - In real app, fetch from API similar to procurement requests
+const MOCK_SHIPMENTS = [
+    { id: '1', trackingId: 'MQM-8822-192', item: 'iPhone 15 Pro Max', status: 'In Transit', date: '2026-01-10' },
+    { id: '2', trackingId: 'MQM-8822-384', item: 'Nike Air Jordan', status: 'Delivered', date: '2026-01-08' },
+    { id: '3', trackingId: 'MQM-8822-551', item: 'MacBook Pro M3', status: 'Processing', date: '2026-01-11' },
+];
+
+export default function ShipmentsPage() {
+    const router = useRouter();
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const handleCopy = (text: string) => {
+        navigator.clipboard.writeText(text);
+        toast.success("Tracking ID copied!");
+    };
+
+    const filtered = MOCK_SHIPMENTS.filter(s =>
+        s.trackingId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.item.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
-        <div className="p-6 md:p-10 space-y-8">
-            <header className="mb-8">
-                <h1 className="text-3xl font-bold text-slate-800">Search Results</h1>
-                <p className="text-slate-500 mt-1">Found 12 results for "{query}"</p>
+        <div className="min-h-screen bg-[#F2F6FC] p-6 pb-24">
+            <header className="mb-6 flex items-center gap-4">
+                <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-slate-500 shadow-sm border border-slate-100 transition-transform active:scale-95">
+                    <ArrowLeft size={20} />
+                </button>
+                <h1 className="text-2xl font-bold text-slate-800">Tracking IDs</h1>
             </header>
 
-            {/* Search Input In-Page */}
-            <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex gap-4 items-center mb-8">
-                <div className="flex-1 relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search again..."
-                        className="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-blue/20 text-slate-700 font-medium"
-                    />
-                </div>
-                <button className="h-12 w-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50">
-                    <Filter size={20} />
-                </button>
+            {/* Search */}
+            <div className="bg-white p-2 pl-4 rounded-2xl shadow-sm border border-slate-100 flex gap-4 items-center mb-8 focus-within:ring-2 ring-brand-blue/20 transition-all">
+                <Search className="text-slate-400 shrink-0" size={20} />
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search tracking ID or item..."
+                    className="w-full py-3 bg-transparent border-none outline-none text-slate-700 font-bold placeholder:font-medium placeholder:text-slate-400"
+                />
             </div>
 
-            {/* Results Grid */}
-            <div className="grid grid-cols-1 gap-6">
-                {/* Mock Results */}
-                {[1, 2, 3].map((i) => (
-                    <div key={i} className="bg-white p-6 rounded-[32px] border border-slate-100 hover:shadow-xl hover:shadow-brand-blue/5 transition-all group cursor-pointer">
-                        <div className="flex justify-between items-start mb-6">
-                            <div className="w-12 h-12 rounded-2xl bg-brand-pink/10 flex items-center justify-center text-brand-pink group-hover:bg-brand-pink group-hover:text-white transition-colors">
-                                <Package size={24} />
+            {/* List */}
+            <div className="space-y-4">
+                {filtered.map((shipment) => (
+                    <div key={shipment.id} className="bg-white p-5 rounded-[24px] border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-brand-blue/5 text-brand-blue flex items-center justify-center">
+                                    <Package size={20} />
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-slate-800 text-sm">{shipment.item}</h3>
+                                    <span className="text-[10px] text-slate-400 font-bold">{shipment.date}</span>
+                                </div>
                             </div>
-                            <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold">
-                                Delivered
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${shipment.status === 'Delivered' ? 'bg-green-50 text-green-600 border-green-100' :
+                                    shipment.status === 'In Transit' ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                                        'bg-orange-50 text-orange-600 border-orange-100'
+                                }`}>
+                                {shipment.status}
                             </span>
                         </div>
-                        <h3 className="text-lg font-bold text-slate-800 mb-1">iPhone 15 Pro Max</h3>
-                        <p className="text-slate-500 text-sm mb-4">Tracking: MQM-8822-{i}</p>
 
-                        <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-                            <span className="text-sm font-bold text-slate-400">2 days ago</span>
-                            <button className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-brand-blue group-hover:text-white transition-colors">
-                                <ArrowRight size={16} />
+                        <div className="bg-slate-50 rounded-xl p-3 flex items-center justify-between group border border-slate-100">
+                            <div className="flex flex-col">
+                                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Tracking ID</span>
+                                <span className="font-mono font-bold text-slate-700 select-all">{shipment.trackingId}</span>
+                            </div>
+                            <button
+                                onClick={() => handleCopy(shipment.trackingId)}
+                                className="p-2 bg-white rounded-lg text-slate-400 hover:text-brand-blue hover:shadow-sm transition-all border border-slate-200"
+                                title="Copy Tracking ID"
+                            >
+                                <Copy size={16} />
                             </button>
                         </div>
                     </div>
