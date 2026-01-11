@@ -7,51 +7,26 @@ import { toast } from "sonner";
 import { useCurrency } from "@/context/CurrencyContext";
 
 // Mock Data
-const MOCK_SHIPMENTS = [
-    {
-        id: '1',
-        trackingId: 'MQM-8822-192',
-        item: 'iPhone 15 Pro Max',
-        status: 'In Transit',
-        type: 'Air',
-        date: '2026-01-10',
-        progress: 65,
-        origin: 'Guangzhou, CN',
-        destination: 'Accra, GH',
-        eta: '3 Days'
-    },
-    {
-        id: '2',
-        trackingId: 'MQM-8822-384',
-        item: 'Nike Air Jordan (x2)',
-        status: 'Delivered',
-        type: 'Air',
-        date: '2026-01-08',
-        progress: 100,
-        origin: 'Shenzhen, CN',
-        destination: 'Kumasi, GH',
-        eta: 'Arrived'
-    },
-    {
-        id: '3',
-        trackingId: 'MQM-S-551',
-        item: 'Living Room Sofa Set',
-        status: 'Processing',
-        type: 'Sea',
-        date: '2026-01-11',
-        progress: 10,
-        origin: 'Ningbo, CN',
-        destination: 'Tema, GH',
-        eta: '45 Days'
-    },
-];
+// Mock Data Removed - Using Real Data
+import { getUserOrders } from "@/app/actions/shipment";
+import { useEffect } from "react";
 
 export default function ShipmentsPage() {
     const router = useRouter();
     const { currency } = useCurrency();
     const [searchTerm, setSearchTerm] = useState("");
     const [activeTab, setActiveTab] = useState<'active' | 'history'>('active');
-    const [shipments, setShipments] = useState(MOCK_SHIPMENTS);
+    const [shipments, setShipments] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            const res = await getUserOrders();
+            if (res.success) setShipments(res.data);
+            setLoading(false);
+        };
+        fetchOrders();
+    }, []);
     const [showMapModal, setShowMapModal] = useState(false);
     const [selectedShipment, setSelectedShipment] = useState<any>(null);
 
@@ -89,7 +64,7 @@ export default function ShipmentsPage() {
                     <button onClick={() => router.back()} aria-label="Go back" className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors">
                         <ArrowLeft size={20} />
                     </button>
-                    <h1 className="text-2xl font-bold text-slate-800">My Shipments</h1>
+                    <h1 className="text-2xl font-bold text-slate-800">Orders</h1>
                 </div>
 
                 {/* Tabs */}

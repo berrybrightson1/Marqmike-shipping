@@ -12,7 +12,7 @@ export default function BottomNav() {
     const navItems = [
         { label: "Feed", icon: LayoutGrid, href: "/dashboard" },
         { label: "Track", icon: Truck, href: "/dashboard/tracking" },
-        { label: "My Shipments", icon: Package, href: "/dashboard/shipments" },
+        { label: "Orders", icon: Package, href: "/dashboard/shipments" },
         { label: "Cart", icon: ShoppingBag, href: "/dashboard/cart" },
         { label: "Profile", icon: User, href: "/dashboard/profile" },
     ];

@@ -153,3 +153,48 @@ export async function updateShipmentStatus(trackingId: string, newStatus: string
         return { success: false, error: "Failed to update status" };
     }
 }
+// ... existing code ...
+
+export async function getUserOrders() {
+    try {
+        const user = await getCurrentUser();
+        if (!user) return { success: false, data: [] };
+
+        const orders = await db.shipment.findMany({
+            where: { customerId: user.id },
+            orderBy: { createdAt: 'desc' },
+            include: {
+                events: {
+                    orderBy: { timestamp: 'desc' },
+                    take: 1
+                }
+            }
+        });
+
+        // calculate progress based on status (simple mock logic for now or deriving from status)
+        const enriched = orders.map(order => {
+            let progress = 0;
+            if (order.status === 'Pending') progress = 10;
+            else if (order.status === 'Processing') progress = 30;
+            else if (order.status === 'In Transit') progress = 60;
+            else if (order.status === 'Arrived') progress = 90;
+            else if (order.status === 'Delivered') progress = 100;
+
+            return {
+                ...order,
+                progress,
+                // Map database fields to UI expectations if needed
+                item: order.shipperName || "Package", // Fallback if item name isn't in DB, though creating shipment should have it.
+                // Actually, Shipment model structure might not match my Mock Data perfectly.
+                // let's assume we map standard fields.
+                date: order.createdAt.toLocaleDateString(),
+                type: 'Air' // Default or db field
+            };
+        });
+
+        return { success: true, data: enriched };
+    } catch (error) {
+        console.error("Get User Orders Error:", error);
+        return { success: false, data: [] };
+    }
+}

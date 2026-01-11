@@ -27,20 +27,49 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
     const [notifications, setNotifications] = useState<any[]>([]);
     const [greeting, setGreeting] = useState("Good Day");
 
+    const [newNotification, setNewNotification] = useState<any>(null);
+
     useEffect(() => {
         const hour = new Date().getHours();
         if (hour < 12) setGreeting("Good Morning");
         else if (hour < 18) setGreeting("Good Afternoon");
         else setGreeting("Good Evening");
 
-        if (showNotifs) {
-            import("@/app/actions/notification").then(({ getUserNotifications }) => {
-                getUserNotifications().then(res => {
-                    if (res.success) setNotifications(res.data);
+        // Initial fetch
+        const fetchNotifs = async () => {
+            const { getUserNotifications } = await import("@/app/actions/notification");
+            const res = await getUserNotifications();
+            if (res.success && res.data) {
+                setNotifications(res.data);
+            }
+        };
+        fetchNotifs();
+
+        // Polling for notifications (every 5 seconds)
+        const interval = setInterval(async () => {
+            const { getUserNotifications } = await import("@/app/actions/notification");
+            const res = await getUserNotifications();
+            if (res.success && res.data) {
+                setNotifications(prev => {
+                    // Check for new notifications
+                    const latestId = res.data[0]?.id;
+                    const currentLatestId = prev[0]?.id;
+
+                    if (latestId && latestId !== currentLatestId && res.data.some((n: any) => !n.read)) {
+                        // Found a new one!
+                        const newItem = res.data[0];
+                        setNewNotification(newItem);
+
+                        // Clear popup after 3.7s
+                        setTimeout(() => setNewNotification(null), 3700);
+                    }
+                    return res.data;
                 });
-            });
-        }
-    }, [showNotifs]);
+            }
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     // Refs for click outside
     const notifRef = useRef<HTMLDivElement>(null);
@@ -164,11 +193,25 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
                                     onClick={() => setShowNotifs(!showNotifs)}
                                     className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors relative backdrop-blur-sm"
                                 >
-                                    <Bell size={20} />
+                                    <Bell size={20} className={newNotification ? "animate-swing" : ""} />
                                     {notifications.some(n => !n.read) && (
                                         <div className="absolute top-2 right-2.5 w-2 h-2 bg-brand-pink rounded-full border border-brand-blue" />
                                     )}
                                 </button>
+
+                                {/* New Notification Popup */}
+                                {newNotification && !showNotifs && (
+                                    <div className="absolute top-0 right-12 w-64 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl shadow-brand-blue/20 p-3 border border-white/50 animate-in slide-in-from-right-4 duration-500 fade-in flex items-start gap-3 z-50 pointer-events-none">
+                                        <div className="w-8 h-8 rounded-full bg-brand-pink/10 flex items-center justify-center shrink-0">
+                                            <Bell size={14} className="text-brand-pink" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] uppercase font-bold text-slate-400 mb-0.5">New Notification</p>
+                                            <p className="text-xs font-bold text-slate-800 line-clamp-2 leading-tight">{newNotification.title}</p>
+                                        </div>
+                                    </div>
+                                )}
+
                                 {showNotifs && (
                                     <div className="absolute top-full right-0 mt-3 w-80 bg-white rounded-[24px] shadow-2xl shadow-brand-blue/20 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 border border-slate-100 ring-1 ring-slate-100">
                                         <div className="p-4 border-b border-slate-50 flex justify-between items-center bg-white sticky top-0 z-10">

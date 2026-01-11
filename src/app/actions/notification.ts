@@ -83,7 +83,7 @@ export async function broadcastNotification(title: string, message: string) {
         await db.notification.createMany({
             data: users.map(user => ({
                 userId: user.id,
-                title,
+                title: `Marqmike Shipping: ${title}`,
                 message,
                 type: 'system' as const,
                 read: false
