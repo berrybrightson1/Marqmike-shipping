@@ -291,7 +291,7 @@ export default function HelpPage() {
                             </div>
                             <span className="font-bold text-slate-700 text-sm">Shop Store</span>
                         </Link>
-                        <a href="https://wa.me/233551171353" target="_blank" className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all border border-slate-100 flex flex-col items-center justify-center gap-3 group">
+                        <a href="https://wa.me/233551171353" target="_blank" rel="noopener noreferrer" className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all border border-slate-100 flex flex-col items-center justify-center gap-3 group">
                             <div className="w-14 h-14 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-colors">
                                 <HelpCircle size={28} />
                             </div>

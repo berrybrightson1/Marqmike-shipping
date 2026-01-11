@@ -178,7 +178,7 @@ export default function ProductForm() {
                 <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Category</label>
                     <div className="relative">
-                        <select name="category" className="w-full p-4 bg-slate-50 border-none rounded-[20px] font-bold text-slate-800 focus:ring-2 focus:ring-brand-blue/20 outline-none appearance-none cursor-pointer">
+                        <select name="category" aria-label="Product Category" className="w-full p-4 bg-slate-50 border-none rounded-[20px] font-bold text-slate-800 focus:ring-2 focus:ring-brand-blue/20 outline-none appearance-none cursor-pointer">
                             <option>General</option>
                             <option>Electronics & Gadgets</option>
                             <option>Fashion & Apparel</option>

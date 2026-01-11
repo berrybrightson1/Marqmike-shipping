@@ -206,6 +206,7 @@ export default function AdminOrdersPage() {
                                         </td>
                                         <td className="py-3 px-4 align-top">
                                             <select
+                                                aria-label="Order Status"
                                                 value={order.status}
                                                 onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
                                                 className={`

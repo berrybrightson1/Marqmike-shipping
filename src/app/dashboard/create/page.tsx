@@ -31,6 +31,7 @@ export default function CBMPage() {
                         <a
                             href="https://wa.me/233551171353"
                             target="_blank"
+                            rel="noopener noreferrer"
                             className="inline-flex items-center justify-center bg-white border border-slate-200 text-slate-700 font-bold py-3 px-6 rounded-xl text-xs hover:bg-slate-50 transition-colors shadow-sm"
                         >
                             Contact Support

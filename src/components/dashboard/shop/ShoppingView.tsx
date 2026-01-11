@@ -96,15 +96,15 @@ export default function ShoppingView({ user }: ShoppingViewProps) {
                         <span className="text-[10px] font-bold text-brand-blue">Weekly Picks</span>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
                         {trendingStores.slice(0, 4).map((store) => (
-                            <div key={store.id} className="bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 flex items-center gap-4 group hover:shadow-md transition-all">
+                            <div key={store.id} className="min-w-[280px] bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 flex items-center gap-4 group hover:shadow-md transition-all">
                                 <div className="w-16 h-16 rounded-xl bg-slate-100 overflow-hidden shrink-0">
                                     <img src={store.image} alt={store.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                 </div>
                                 <div className="flex-1">
                                     <span className="text-[10px] font-bold text-brand-pink bg-brand-pink/5 px-2 py-1 rounded-md mb-1 inline-block">{store.type}</span>
-                                    <h4 className="font-bold text-slate-800 line-clamp-1">{store.name}</h4>
+                                    <h4 className="font-bold text-slate-800 line-clamp-1 text-sm whitespace-normal">{store.name}</h4>
                                     <div className="flex gap-1 text-[10px] text-slate-400 mt-1">
                                         Import from China • Est. ${store.price}
                                     </div>
@@ -118,7 +118,7 @@ export default function ShoppingView({ user }: ShoppingViewProps) {
                                         quantity: 1,
                                         url: store.url
                                     })}
-                                    className="w-10 h-10 rounded-full bg-brand-blue flex items-center justify-center text-white shadow-lg shadow-brand-blue/20 hover:scale-110 transition-transform active:scale-90"
+                                    className="w-10 h-10 rounded-full bg-brand-blue flex items-center justify-center text-white shadow-lg shadow-brand-blue/20 hover:scale-110 transition-transform active:scale-90 shrink-0"
                                     aria-label="Add to cart"
                                 >
                                     <Plus size={20} strokeWidth={3} />
@@ -129,10 +129,10 @@ export default function ShoppingView({ user }: ShoppingViewProps) {
                 </div>
 
                 {/* Guide Card */}
-                <div className="bg-slate-900 rounded-[24px] p-6 text-white relative overflow-hidden">
+                <div className="bg-slate-900 rounded-[24px] p-6 text-white relative overflow-hidden h-[180px] flex flex-col justify-center">
                     <div className="relative z-10">
                         <h3 className="font-bold text-lg mb-2">How to Buy?</h3>
-                        <ol className="text-xs text-slate-400 space-y-2 mb-4 list-decimal pl-4">
+                        <ol className="text-xs text-slate-400 space-y-1 mb-4 list-decimal pl-4">
                             <li>Find an item you love on Taobao/1688</li>
                             <li>Copy the link of the product</li>
                             <li>Go to <b>Procurement</b> and paste the link</li>

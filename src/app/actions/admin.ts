@@ -43,24 +43,63 @@ export async function getRecentLogs() {
     }
 }
 
-export async function getCustomers() {
+export async function getCustomers(query?: string, filter?: string) {
     try {
+        const where: any = { role: "CUSTOMER" };
+
+        if (query) {
+            where.OR = [
+                { name: { contains: query, mode: "insensitive" } },
+                { email: { contains: query, mode: "insensitive" } },
+                { phone: { contains: query, mode: "insensitive" } },
+            ];
+        }
+
         const users = await prisma.user.findMany({
+            where,
+            orderBy: { createdAt: "desc" },
             take: 50,
-            select: { id: true, email: true }
+            include: {
+                _count: {
+                    select: { orders: true }
+                },
+                orders: {
+                    where: { status: { not: "Cancelled" } },
+                    select: { totalAmount: true }
+                }
+            }
         });
 
-        let mappedUsers = users.map(u => ({
-            id: u.id,
-            name: u.email ? u.email.split('@')[0] : "Unknown",
-            phone: "",
-            email: u.email || ""
-        }));
+        const mappedUsers = users.map(u => {
+            const totalSpent = u.orders.reduce((sum, order) => sum + order.totalAmount, 0);
 
-        // Mock data removed. Returns empty array if no real users are found.
+            // Determine type dynamically if not set
+            let type = "Regular";
+            if (totalSpent > 5000) type = "Premium";
+            if (u.businessName) type = "Business";
+
+            // Apply filter logic in memory if complex, or ideally in DB query if possible.
+            // Since "type" is derived, we filter here for now.
+            if (filter && filter !== "All") {
+                if (filter === "Business" && type !== "Business") return null;
+                if (filter === "Premium" && type !== "Premium") return null;
+            }
+
+            return {
+                id: u.id,
+                name: u.name || u.email?.split("@")[0] || "Unknown",
+                email: u.email || "No Email",
+                phone: u.phone || "No Phone",
+                type,
+                orders: u._count.orders,
+                spent: `₵${totalSpent.toLocaleString()}`,
+                rawSpent: totalSpent
+            };
+        }).filter(Boolean); // Remove nulls from filtering
 
         return { success: true, data: mappedUsers };
     } catch (error) {
+        console.error("Get Customers Error:", error);
         return { success: false, data: [] };
     }
 }

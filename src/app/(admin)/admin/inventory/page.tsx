@@ -26,8 +26,8 @@ export default function InventoryManagerPage() {
         <div className="p-6 md:p-10 space-y-8 h-screen overflow-y-auto pb-20">
             <header className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-800">Inventory Manager</h1>
-                    <p className="text-slate-500 mt-1">Creator Studio: Upload and manage products.</p>
+                    <h1 className="text-3xl font-bold text-slate-900">Inventory Manager</h1>
+                    <p className="text-slate-600 mt-1">Creator Studio: Upload and manage products.</p>
                 </div>
                 <Link href="/admin/inventory/new" className="bg-brand-blue text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-brand-blue/20 hover:bg-[#003d91] transition-colors flex items-center gap-2">
                     <Plus size={18} /> Add New Product
@@ -41,8 +41,8 @@ export default function InventoryManagerPage() {
                         <div className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center text-brand-blue mb-4 group-hover:scale-110 transition-transform">
                             <Upload size={32} />
                         </div>
-                        <h3 className="text-lg font-bold text-slate-700">Drop product images here</h3>
-                        <p className="text-slate-400 text-sm mt-1">or click to upload to Global Store</p>
+                        <h3 className="text-lg font-bold text-slate-800">Drop product images here</h3>
+                        <p className="text-slate-500 text-sm mt-1">or click to upload to Global Store</p>
                     </div>
                 </GlassCard>
             </Link>
@@ -55,7 +55,7 @@ export default function InventoryManagerPage() {
                         <input
                             type="text"
                             placeholder="Search Inventory..."
-                            className="w-full pl-12 pr-4 py-3 bg-slate-50 rounded-2xl border-none focus:ring-2 ring-brand-blue/20 outline-none"
+                            className="w-full pl-12 pr-4 py-3 bg-slate-50 rounded-2xl border-none focus:ring-2 ring-brand-blue/20 outline-none text-slate-800 placeholder:text-slate-500 font-medium"
                         />
                     </div>
                 </div>
@@ -125,25 +125,26 @@ function InventoryRow({ item }: { item: any }) {
                             className="w-full h-full object-cover"
                         />
                     </div>
-                    <span className="font-bold text-slate-700">{item.name}</span>
+                    <span className="font-bold text-slate-900">{item.name}</span>
                 </div>
             </td>
             <td className="p-6">
                 <div className="flex flex-col">
-                    <span className="text-sm font-bold text-slate-800">¥{item.priceRMB}</span>
-                    <span className="text-xs text-slate-400">₵{item.priceGHS}</span>
+                    <span className="text-sm font-bold text-slate-900">¥{item.priceRMB}</span>
+                    <span className="text-xs font-bold text-slate-600">₵{item.priceGHS}</span>
                 </div>
             </td>
             <td className="p-6">
                 <select
+                    aria-label="Product Status"
                     value={status}
                     onChange={(e) => {
                         setStatus(e.target.value);
                         // Optional: Trigger update immediately or show save button
                     }}
                     className={`px-3 py-1 rounded-full text-xs font-bold border-none outline-none appearance-none cursor-pointer ${status === "In Stock" || status === "Ready in Ghana"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-blue-100 text-blue-700"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-blue-100 text-blue-800"
                         }`}
                 >
                     <option value="In Stock">In Stock</option>
@@ -155,19 +156,20 @@ function InventoryRow({ item }: { item: any }) {
             <td className="p-6 text-right">
                 <input
                     type="number"
+                    aria-label="Stock Quantity"
                     value={stock}
                     onChange={(e) => setStock(parseInt(e.target.value) || 0)}
-                    className="w-16 bg-transparent text-right font-mono font-bold text-slate-600 border-b border-transparent focus:border-brand-blue outline-none transition-colors"
+                    className="w-16 bg-transparent text-right font-mono font-bold text-slate-900 border-b border-transparent focus:border-brand-blue outline-none transition-colors"
                 />
             </td>
             <td className="p-6 text-right">
-                <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex justify-end gap-2">
                     {(stock !== item.stock || status !== item.status) && (
-                        <button onClick={handleUpdate} disabled={saving} className="bg-brand-blue text-white p-2 rounded-lg hover:scale-110 transition-transform">
+                        <button onClick={handleUpdate} disabled={saving} aria-label="Save changes" className="bg-brand-blue text-white p-2 rounded-lg hover:scale-110 transition-transform">
                             {saving ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
                         </button>
                     )}
-                    <button onClick={handleDelete} disabled={saving} className="bg-red-50 text-red-500 p-2 rounded-lg hover:bg-red-100 transition-colors">
+                    <button onClick={handleDelete} disabled={saving} aria-label="Delete product" className="bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-100 transition-colors">
                         <Trash2 size={16} />
                     </button>
                 </div>
