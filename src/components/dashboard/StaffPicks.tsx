@@ -95,58 +95,45 @@ export default function StaffPicks() {
 
                     return (
                         <div key={item.id} className="
-                            w-[180px] bg-white rounded-[24px] shadow-sm border border-slate-100
-                            hover:shadow-xl hover:scale-[1.02] transition-all duration-300 group flex flex-col 
+                            w-[180px] bg-white rounded-[16px] border border-slate-100/80 shadow-[0_2px_8px_rgba(0,0,0,0.04)]
+                            hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 group flex flex-col 
                             snap-start shrink-0 overflow-hidden relative
                         ">
-                            {/* Image Section */}
-                            <div className="h-[180px] bg-slate-50 flex items-center justify-center relative overflow-hidden group-hover:bg-slate-100/50 transition-colors">
-                                <img src={imageSrc} alt={item.name} className="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500" />
+                            {/* Image Section - Full Bleed */}
+                            <div className="h-[180px] w-full bg-white relative overflow-hidden">
+                                <img src={imageSrc} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                 {item.moq && (
-                                    <div className="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur">
+                                    <div className="absolute top-2 left-2 bg-slate-900/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded backdrop-blur-md">
                                         MOQ: {item.moq}
                                     </div>
                                 )}
                             </div>
 
                             {/* Content Section */}
-                            <div className="p-3 flex flex-col flex-1">
-                                <div className="mb-2">
-                                    <h3 className="text-xs font-bold text-slate-700 leading-snug line-clamp-2 min-h-[2.5rem]" title={item.name}>
-                                        {item.name}
-                                    </h3>
-                                </div>
+                            <div className="p-3 flex flex-col flex-1 bg-white">
+                                <h3 className="text-[13px] font-medium text-slate-700 leading-snug line-clamp-2 min-h-[2.5rem] mb-2 group-hover:text-brand-blue transition-colors" title={item.name}>
+                                    {item.name}
+                                </h3>
 
                                 <div className="mt-auto flex flex-col gap-2">
-                                    <div className="flex flex-col">
-                                        <div className="flex items-baseline gap-1">
-                                            <span className="text-[10px] text-slate-400 font-bold">GHS</span>
-                                            <span className="text-lg font-black text-slate-900 tracking-tight">{item.priceGHS?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                                        </div>
-                                        {item.priceRMB && (
-                                            <span className="text-[10px] text-slate-400 font-medium">¥{item.priceRMB}</span>
-                                        )}
+                                    <div className="flex items-baseline gap-1">
+                                        <span className="text-[10px] text-slate-400 font-bold">GHS</span>
+                                        <span className="text-lg font-bold text-slate-900 tracking-tight">{item.priceGHS?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                     </div>
 
                                     <button
                                         onClick={(e) => handleAddToCart(e, item)}
                                         className={`
-                                            w-full h-8 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95 shadow-sm border
+                                            w-full h-8 rounded-full flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95
                                             ${count > 0
-                                                ? 'bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100'
-                                                : 'bg-white text-slate-900 border-slate-200 hover:border-brand-blue hover:text-brand-blue'}
+                                                ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
+                                                : 'bg-slate-900 text-white hover:bg-brand-blue shadow-md shadow-slate-200'}
                                         `}
                                     >
-                                        <span className="text-[10px] font-bold uppercase tracking-wide">
-                                            {count > 0 ? 'Added' : 'Add'}
+                                        <span className="text-[11px] font-bold">
+                                            {count > 0 ? 'Added' : 'Add to Cart'}
                                         </span>
-                                        {count > 0 ? (
-                                            <div className="w-3.5 h-3.5 rounded-full bg-emerald-100 flex items-center justify-center">
-                                                <span className="text-[8px]">✓</span>
-                                            </div>
-                                        ) : (
-                                            <Plus size={12} strokeWidth={3} />
-                                        )}
+                                        {count > 0 && <span className="text-[10px]">✓</span>}
                                     </button>
                                 </div>
                             </div>

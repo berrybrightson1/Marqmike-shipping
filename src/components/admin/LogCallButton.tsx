@@ -17,7 +17,7 @@ export default function LogCallButton() {
                     <Plus size={28} strokeWidth={3} />
                 </button>
             </div>
-            <LogCallModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <LogCallModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={() => window.location.reload()} />
         </>
     )
 }

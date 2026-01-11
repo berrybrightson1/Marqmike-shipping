@@ -271,31 +271,32 @@ export default function HelpPage() {
             {/* Search Bar with Dropdown */}
             <div className="max-w-3xl mx-auto px-6 -mt-12 relative z-20 mb-8">
                 {/* Quick Actions Grid - NEW */}
-                <div className="max-w-4xl mx-auto px-6 mb-12">
+                {/* Quick Actions Grid - Matches Admin Style */}
+                <div className="max-w-4xl mx-auto px-6 mb-10">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <Link href="/track" className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all border border-slate-100 flex flex-col items-center justify-center gap-3 group">
-                            <div className="w-14 h-14 bg-brand-blue/5 text-brand-blue rounded-full flex items-center justify-center group-hover:bg-brand-blue group-hover:text-white transition-colors">
-                                <Package size={28} />
+                        <Link href="/track" className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all group">
+                            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <Package size={20} />
                             </div>
-                            <span className="font-bold text-slate-700 text-sm">Track Package</span>
+                            <span className="text-sm font-bold text-slate-700">Track Package</span>
                         </Link>
-                        <Link href="/dashboard" className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all border border-slate-100 flex flex-col items-center justify-center gap-3 group">
-                            <div className="w-14 h-14 bg-green-50 text-green-600 rounded-full flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition-colors">
-                                <Shield size={28} />
+                        <Link href="/dashboard" className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all group">
+                            <div className="w-12 h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <Shield size={20} />
                             </div>
-                            <span className="font-bold text-slate-700 text-sm">Get Quote</span>
+                            <span className="text-sm font-bold text-slate-700">Get Quote</span>
                         </Link>
-                        <Link href="/store" className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all border border-slate-100 flex flex-col items-center justify-center gap-3 group">
-                            <div className="w-14 h-14 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                                <BookOpen size={28} />
+                        <Link href="/store" className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all group">
+                            <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <BookOpen size={20} />
                             </div>
-                            <span className="font-bold text-slate-700 text-sm">Shop Store</span>
+                            <span className="text-sm font-bold text-slate-700">Shop Store</span>
                         </Link>
-                        <a href="https://wa.me/233551171353" target="_blank" rel="noopener noreferrer" className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all border border-slate-100 flex flex-col items-center justify-center gap-3 group">
-                            <div className="w-14 h-14 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                                <HelpCircle size={28} />
+                        <a href="https://wa.me/233551171353" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all group">
+                            <div className="w-12 h-12 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <HelpCircle size={20} />
                             </div>
-                            <span className="font-bold text-slate-700 text-sm">Contact Us</span>
+                            <span className="text-sm font-bold text-slate-700">Contact Us</span>
                         </a>
                     </div>
                 </div>

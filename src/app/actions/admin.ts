@@ -3,12 +3,14 @@
 import { db as prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
-export async function logCall(data: {
+export async function logCustomerCall(data: {
+    customerId?: string; // Optional if we search by name
     customerName: string;
-    phoneNumber: string;
+    phoneNumber?: string; // Made optional
     summary: string;
     outcome: string;
-    topic: string;
+    duration?: string;
+    type?: string;
 }) {
     // For now we assume a static admin ID or we would get it from auth
     const adminId = "clk_admin_123";
@@ -17,6 +19,7 @@ export async function logCall(data: {
         await prisma.callLog.create({
             data: {
                 ...data,
+                phoneNumber: data.phoneNumber || "N/A", // Schema requires string
                 adminId,
             }
         });
