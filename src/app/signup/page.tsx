@@ -6,7 +6,8 @@ import { signUp } from "@/app/actions/auth";
 import { toast } from "sonner";
 import Link from "next/link";
 import PhoneInput from "@/components/auth/PhoneInput";
-import { Lock, Eye, EyeOff, ArrowRight, User, Mail, Briefcase } from "lucide-react";
+import BannerSlider from "@/components/auth/BannerSlider";
+import { Lock, Eye, EyeOff, ArrowRight, ChevronLeft } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function SignupPage() {
@@ -48,124 +49,120 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#074eaf] relative overflow-hidden flex flex-col items-center justify-center p-6">
+        <div className="min-h-screen bg-[#074eaf] relative overflow-hidden flex flex-col items-center justify-center p-6 font-sans">
 
-            {/* Background Accents */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-                <div className="absolute top-[-20%] left-[-20%] w-[600px] h-[600px] bg-[#ff1493]/20 rounded-full blur-[120px]" />
-                <div className="absolute bottom-[-20%] right-[-20%] w-[600px] h-[600px] bg-cyan-500/20 rounded-full blur-[120px]" />
-            </div>
+            {/* Back Button */}
+            <Link href="/" className="absolute top-8 left-8 text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full">
+                <ChevronLeft size={32} />
+            </Link>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-md relative z-10"
+                className="w-full max-w-sm flex flex-col items-center"
             >
+                {/* Banner Slider */}
+                <BannerSlider />
+
                 {/* Header */}
-                <div className="text-center mb-8 text-white">
-                    <h1 className="text-3xl font-black mb-2">Create Account</h1>
-                    <p className="opacity-60 font-medium">Join Marqmike Shipping today</p>
-                </div>
+                <h1 className="text-4xl font-black text-white text-center mb-2">
+                    Join Marqmike
+                </h1>
+                <p className="text-white/80 text-center mb-10 font-bold text-sm">
+                    Start shipping around the world today
+                </p>
 
-                <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[40px] p-8 shadow-2xl">
-                    <form onSubmit={handleSignup} className="space-y-5">
+                <form onSubmit={handleSignup} className="w-full space-y-5">
 
-                        {/* Name */}
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-white/80 uppercase tracking-widest ml-4">Full Name</label>
-                            <div className="relative">
-                                <User className="absolute left-6 top-1/2 -translate-y-1/2 text-white/40" size={20} />
-                                <input
-                                    type="text"
-                                    required
-                                    placeholder="John Doe"
-                                    value={formData.name}
-                                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full h-16 bg-white/5 border border-white/10 rounded-[24px] pl-14 pr-6 text-white placeholder:text-white/20 font-bold focus:outline-none focus:ring-4 focus:ring-white/10 transition-all"
-                                />
-                            </div>
-                        </div>
+                    {/* Full Name */}
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">Full Name</label>
+                        <input
+                            type="text"
+                            placeholder="John Doe"
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            className="w-full h-16 bg-[#003d91]/60 rounded-2xl border border-white/5 px-6 text-white placeholder:text-white/30 font-bold focus:outline-none focus:ring-2 focus:ring-brand-pink/50 transition-all"
+                        />
+                    </div>
 
-                        {/* Business Name */}
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-white/80 uppercase tracking-widest ml-4">Business Name (Optional)</label>
-                            <div className="relative">
-                                <Briefcase className="absolute left-6 top-1/2 -translate-y-1/2 text-white/40" size={20} />
-                                <input
-                                    type="text"
-                                    placeholder="My Shop Ltd"
-                                    value={formData.businessName}
-                                    onChange={e => setFormData({ ...formData, businessName: e.target.value })}
-                                    className="w-full h-16 bg-white/5 border border-white/10 rounded-[24px] pl-14 pr-6 text-white placeholder:text-white/20 font-bold focus:outline-none focus:ring-4 focus:ring-white/10 transition-all"
-                                />
-                            </div>
-                        </div>
+                    {/* Business Name */}
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">Business / Company Name</label>
+                        <input
+                            type="text"
+                            placeholder="Logistics Express"
+                            value={formData.businessName}
+                            onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+                            className="w-full h-16 bg-[#003d91]/60 rounded-2xl border border-white/5 px-6 text-white placeholder:text-white/30 font-bold focus:outline-none focus:ring-2 focus:ring-brand-pink/50 transition-all"
+                        />
+                    </div>
 
-                        {/* Email */}
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-white/80 uppercase tracking-widest ml-4">Email Address</label>
-                            <div className="relative">
-                                <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-white/40" size={20} />
-                                <input
-                                    type="email"
-                                    placeholder="john@example.com"
-                                    value={formData.email}
-                                    onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full h-16 bg-white/5 border border-white/10 rounded-[24px] pl-14 pr-6 text-white placeholder:text-white/20 font-bold focus:outline-none focus:ring-4 focus:ring-white/10 transition-all"
-                                />
-                            </div>
-                        </div>
+                    {/* Email */}
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">Email Address</label>
+                        <input
+                            type="email"
+                            placeholder="john@example.com"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            className="w-full h-16 bg-[#003d91]/60 rounded-2xl border border-white/5 px-6 text-white placeholder:text-white/30 font-bold focus:outline-none focus:ring-2 focus:ring-brand-pink/50 transition-all"
+                        />
+                    </div>
 
-                        {/* Phone */}
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-white/80 uppercase tracking-widest ml-4">Phone Number</label>
+                    {/* Phone Number */}
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">Phone Number</label>
+                        <div className="bg-[#003d91]/60 rounded-2xl overflow-hidden border border-white/5 focus-within:ring-2 focus-within:ring-brand-pink/50 transition-all">
                             <PhoneInput
                                 value={phone}
                                 onChange={setPhone}
                                 disabled={loading}
                             />
                         </div>
+                    </div>
 
-                        {/* Password */}
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-white/80 uppercase tracking-widest ml-4">Password</label>
-                            <div className="relative">
-                                <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-white/40" size={20} />
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    required
-                                    placeholder="Create a password"
-                                    value={formData.password}
-                                    onChange={e => setFormData({ ...formData, password: e.target.value })}
-                                    className="w-full h-16 bg-white/5 border border-white/10 rounded-[24px] pl-14 pr-14 text-white placeholder:text-white/20 font-bold focus:outline-none focus:ring-4 focus:ring-white/10 transition-all"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-6 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
-                                >
-                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                                </button>
-                            </div>
+                    {/* Password */}
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">Password</label>
+                        <div className="relative bg-[#003d91]/60 rounded-2xl border border-white/5 focus-within:ring-2 focus-within:ring-brand-pink/50 transition-all">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                value={formData.password}
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                className="w-full h-16 bg-transparent border-none text-white text-lg font-bold px-6 focus:outline-none placeholder:text-white/20"
+                                placeholder="Create a password"
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-white/40 hover:text-white transition-colors"
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
                         </div>
+                    </div>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full h-20 bg-[#ff1493] hover:bg-[#d10f7a] text-white rounded-[28px] font-black text-lg shadow-xl shadow-[#ff1493]/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 mt-6"
-                        >
-                            {loading ? "Creating Account..." : "Sign Up"}
-                            {!loading && <ArrowRight size={24} strokeWidth={3} />}
-                        </button>
-                    </form>
-                </div>
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full h-16 bg-[#ff1493] hover:bg-[#d10f7a] text-white rounded-2xl font-black text-lg shadow-xl shadow-[#ff1493]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-6"
+                    >
+                        {loading ? "Creating..." : "Create Account"}
+                        {!loading && <ArrowRight size={22} strokeWidth={3} />}
+                    </button>
 
-                <div className="mt-8 text-center pb-8">
-                    <p className="text-white/40 font-bold mb-4">Already have an account?</p>
-                    <Link href="/login" className="text-white font-bold hover:underline decoration-[#ff1493]">
-                        Back to Login
-                    </Link>
-                </div>
+                    {/* Footer */}
+                    <div className="text-center pt-2">
+                        <span className="text-white/40 text-sm font-bold mr-2">Already have an account?</span>
+                        <Link href="/login" className="text-[#ff1493] font-bold text-sm hover:underline">
+                            Sign in
+                        </Link>
+                    </div>
+
+                </form>
             </motion.div>
         </div>
     );

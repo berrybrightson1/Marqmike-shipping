@@ -89,8 +89,8 @@ export default function PhoneInput({ value, onChange, onEnter, disabled }: Phone
             {/* Unified Container - Glassmorphic Style */}
             <div
                 className={`
-                    flex items-center w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-[28px] px-6 py-2 h-20
-                    focus-within:ring-4 focus-within:ring-white/5 focus-within:border-white/20 
+                    flex items-center w-full bg-[#003d91]/60 backdrop-blur-md border border-white/5 rounded-3xl px-4 py-1 h-16
+                    focus-within:ring-2 focus-within:ring-brand-pink/50 focus-within:border-brand-pink/50
                     transition-all
                     ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
                 `}

@@ -65,11 +65,61 @@ export async function signUp(data: FormData) {
     }
 }
 
-// Sign in
-export async function signIn(phone: string, password?: string) {
+// Sign in as Admin (Password Only)
+export async function signInAsAdmin(password: string) {
+    if (password !== "admin") {
+        return { success: false, error: "Invalid admin password" };
+    }
+
     try {
-        const user = await db.user.findUnique({
-            where: { phone }
+        // Find an admin user to attach session to
+        let adminUser = await db.user.findFirst({
+            where: { role: "ADMIN" }
+        });
+
+        // If no admin exists, create one (Development/Fallback convenience)
+        if (!adminUser) {
+            // We need a phone number since it's unique.
+            // We'll use a dummy one.
+            const hashedPassword = await bcrypt.hash("admin", 10);
+            adminUser = await db.user.create({
+                data: {
+                    name: "Super Admin",
+                    phone: "+0000000000",
+                    password: hashedPassword,
+                    role: "ADMIN"
+                }
+            });
+        }
+
+        await createSession(adminUser.id);
+
+        await logAuditAction(
+            "ADMIN_LOGIN",
+            "ADMIN",
+            "Admin access via backdoor",
+            adminUser.id,
+            {},
+            "Super Admin"
+        );
+
+        return { success: true, userId: adminUser.id, role: "ADMIN" };
+    } catch (error) {
+        console.error("Admin Sign In Error:", error);
+        return { success: false, error: "Failed to sign in as admin" };
+    }
+}
+
+// Sign in
+export async function signIn(identifier: string, password?: string) {
+    try {
+        const user = await db.user.findFirst({
+            where: {
+                OR: [
+                    { phone: identifier },
+                    { email: identifier }
+                ]
+            }
         });
 
         if (!user) {
@@ -80,9 +130,6 @@ export async function signIn(phone: string, password?: string) {
         if (!user.password) {
             if (password) {
                 // User provided a password but it's not set in DB yet -> First time login legacy
-                // We should technically verify them via OTP before setting it, or just set it?
-                // THE INSTRUCTION: "anybody who has an account with us if they try to sign in now, they should ask them to create a password."
-                // This implies we return a flag telling UI to show "Create Password" view.
                 return { success: false, code: "REQUIRE_PASSWORD_SETUP", userId: user.id };
             }
             return { success: false, code: "REQUIRE_PASSWORD_SETUP", userId: user.id };
@@ -118,10 +165,17 @@ export async function signIn(phone: string, password?: string) {
 
 
 // Set Password (for migration)
-export async function setInitialPassword(phone: string, newPassword: string) {
+export async function setInitialPassword(identifier: string, newPassword: string) {
     // Ideally verify OTP here too for security
     try {
-        const user = await db.user.findUnique({ where: { phone } });
+        const user = await db.user.findFirst({
+            where: {
+                OR: [
+                    { phone: identifier },
+                    { email: identifier }
+                ]
+            }
+        });
         if (!user) return { success: false, error: "User not found" };
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);

@@ -2,17 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn, setInitialPassword } from "@/app/actions/auth";
+import { signIn, setInitialPassword, signInAsAdmin } from "@/app/actions/auth";
 import { toast } from "sonner";
 import Link from "next/link";
 import PhoneInput from "@/components/auth/PhoneInput";
-import { Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+import BannerSlider from "@/components/auth/BannerSlider";
+import { Lock, Eye, EyeOff, ArrowRight, ChevronLeft, ShieldCheck } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function LoginPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [requiresSetup, setRequiresSetup] = useState(false);
+
+    // Auth State
+    const [loginMethod, setLoginMethod] = useState<'PHONE' | 'ADMIN'>('PHONE');
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -22,25 +26,37 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            if (requiresSetup) {
-                const res = await setInitialPassword(phone, password);
+            if (loginMethod === 'ADMIN') {
+                // Admin Login Flow (Password Only)
+                const res = await signInAsAdmin(password);
                 if (res.success) {
-                    toast.success("Password set! Logging in...");
-                    router.push("/dashboard");
+                    toast.success("Admin Access Granted");
+                    router.push("/admin/dashboard"); // Redirect to Admin Dashboard
                 } else {
-                    toast.error(res.error || "Failed to set password");
+                    toast.error(res.error || "Access Denied");
                 }
             } else {
-                const res = await signIn(phone, password);
-                if (res.success) {
-                    toast.success("Welcome back!");
-                    router.push("/dashboard");
-                } else if (res.code === "REQUIRE_PASSWORD_SETUP") {
-                    setRequiresSetup(true);
-                    setPassword("");
-                    toast.info("Please create a password for your account");
+                // Regular User Login Flow
+                if (requiresSetup) {
+                    const res = await setInitialPassword(phone, password);
+                    if (res.success) {
+                        toast.success("Password set! Logging in...");
+                        router.push("/dashboard");
+                    } else {
+                        toast.error(res.error || "Failed to set password");
+                    }
                 } else {
-                    toast.error(res.error || "Login failed");
+                    const res = await signIn(phone, password);
+                    if (res.success) {
+                        toast.success("Welcome back!");
+                        router.push("/dashboard");
+                    } else if (res.code === "REQUIRE_PASSWORD_SETUP") {
+                        setRequiresSetup(true);
+                        setPassword("");
+                        toast.info("Please create a password for your account");
+                    } else {
+                        toast.error(res.error || "Login failed");
+                    }
                 }
             }
         } catch (error) {
@@ -51,103 +67,130 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#074eaf] relative overflow-hidden flex flex-col items-center justify-center p-6">
+        <div className="min-h-screen bg-[#074eaf] relative overflow-hidden flex flex-col items-center justify-center p-6 font-sans">
 
-            {/* Background Accents (Subtle) */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-                <div className="absolute top-[-20%] right-[-20%] w-[600px] h-[600px] bg-[#ff1493]/20 rounded-full blur-[120px]" />
-                <div className="absolute bottom-[-20%] left-[-20%] w-[600px] h-[600px] bg-cyan-500/20 rounded-full blur-[120px]" />
-            </div>
+            {/* Back Button */}
+            <Link href="/" className="absolute top-8 left-8 text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full">
+                <ChevronLeft size={32} />
+            </Link>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-md relative z-10"
+                className="w-full max-w-sm flex flex-col items-center"
             >
-                {/* Logo */}
-                <div className="flex justify-center mb-10">
-                    <img src="/logos/marqmike-white-logo.svg" alt="Marqmike" className="h-20 w-auto" />
+                {/* Banner Slider */}
+                <BannerSlider />
+
+                {/* Header */}
+                <h1 className="text-4xl font-black text-white text-center mb-2">
+                    {loginMethod === 'ADMIN' ? "Admin Access" : (requiresSetup ? "Create Password" : "Welcome Back")}
+                </h1>
+                <p className="text-white/80 text-center mb-10 font-bold text-sm">
+                    {loginMethod === 'ADMIN' ? "Authorized personnel only" : (requiresSetup ? "Secure your account" : "Global logistics at your fingertips")}
+                </p>
+
+                {/* Toggle Switch */}
+                <div className="bg-[#003d91]/50 p-1 rounded-3xl flex w-full mb-8 relative">
+                    <button
+                        onClick={() => { setLoginMethod('PHONE'); setPassword(""); }}
+                        className={`flex-1 font-black py-3 rounded-3xl text-sm transition-all ${loginMethod === 'PHONE' ? 'bg-white text-[#074eaf] shadow-lg' : 'text-white/40 hover:text-white'}`}
+                    >
+                        User
+                    </button>
+                    <button
+                        onClick={() => { setLoginMethod('ADMIN'); setPassword(""); }}
+                        className={`flex-1 font-black py-3 rounded-3xl text-sm transition-all ${loginMethod === 'ADMIN' ? 'bg-white text-[#074eaf] shadow-lg' : 'text-white/40 hover:text-white'}`}
+                    >
+                        Admin
+                    </button>
                 </div>
 
-                {/* Card */}
-                <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[40px] p-8 shadow-2xl">
-                    <h1 className="text-3xl font-black text-white text-center mb-2">
-                        {requiresSetup ? "Create Password" : "Welcome Back"}
-                    </h1>
-                    <p className="text-white/60 text-center mb-8 font-medium">
-                        {requiresSetup ? "Secure your account to continue" : "Sign in to your account"}
-                    </p>
+                <form onSubmit={handleLogin} className="w-full space-y-6">
 
-                    <form onSubmit={handleLogin} className="space-y-6">
-
-                        {/* Phone Input */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-white/80 uppercase tracking-widest ml-4">Phone Number</label>
-                            <PhoneInput
-                                value={phone}
-                                onChange={setPhone}
-                                disabled={loading || requiresSetup}
-                            />
-                        </div>
-
-                        {/* Password Input */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-white/80 uppercase tracking-widest ml-4">Password</label>
-                            <div className="relative">
-                                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-white/40">
-                                    <Lock size={20} />
+                    <AnimatePresence mode="wait">
+                        {loginMethod === 'PHONE' && (
+                            <motion.div
+                                key="phone"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="space-y-3"
+                            >
+                                <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">
+                                    Active Phone Number
+                                </label>
+                                <div className="bg-[#003d91]/60 rounded-3xl overflow-hidden border border-white/5 focus-within:ring-2 focus-within:ring-brand-pink/50 transition-all">
+                                    <PhoneInput
+                                        value={phone}
+                                        onChange={setPhone}
+                                        disabled={loading || requiresSetup}
+                                    />
                                 </div>
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full h-20 bg-white/5 border border-white/10 rounded-[28px] pl-14 pr-14 text-white placeholder:text-white/20 text-lg font-bold focus:outline-none focus:ring-4 focus:ring-white/10 transition-all"
-                                    placeholder="Enter your password"
-                                    required
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-6 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
-                                >
-                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Forgot Password */}
-                        {!requiresSetup && (
-                            <div className="flex justify-end pr-2">
-                                <Link href="/contact" className="text-xs font-bold text-[#ff1493] hover:text-[#ff1493]/80 transition-colors">
-                                    Forgot Password?
-                                </Link>
-                            </div>
+                            </motion.div>
                         )}
+                    </AnimatePresence>
 
-                        {/* Submit Button */}
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full h-20 bg-[#ff1493] hover:bg-[#d10f7a] text-white rounded-[28px] font-black text-lg shadow-xl shadow-[#ff1493]/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 mt-4"
-                        >
-                            {loading ? "Processing..." : (requiresSetup ? "Set Password" : "Sign In")}
-                            {!loading && <ArrowRight size={24} strokeWidth={3} />}
-                        </button>
+                    {/* Password Input (Shared but labeled differently) */}
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">
+                            {loginMethod === 'ADMIN' ? 'Admin Key' : 'Password'}
+                        </label>
+                        <div className="relative bg-[#003d91]/60 rounded-3xl border border-white/5 focus-within:ring-2 focus-within:ring-brand-pink/50 transition-all">
+                            {loginMethod === 'ADMIN' && (
+                                <ShieldCheck className="absolute left-6 top-1/2 -translate-y-1/2 text-white/40" size={20} />
+                            )}
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className={`w-full h-16 bg-transparent border-none text-white text-lg font-bold px-6 focus:outline-none placeholder:text-white/20 ${loginMethod === 'ADMIN' ? 'pl-16' : ''}`}
+                                placeholder={loginMethod === 'ADMIN' ? "Enter admin key" : (requiresSetup ? "Create a password" : "Enter your password")}
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-white/40 hover:text-white transition-colors"
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
+                    </div>
 
-                    </form>
-                </div>
+                    {/* Forgot Password Link (Only for User) */}
+                    {loginMethod === 'PHONE' && !requiresSetup && (
+                        <div className="flex justify-end">
+                            <Link href="/forgot-password" className="text-xs font-bold text-white hover:text-white/80 transition-colors">
+                                Forgot Password?
+                            </Link>
+                        </div>
+                    )}
 
-                {/* Footer Links */}
-                {!requiresSetup && (
-                    <div className="mt-8 text-center">
-                        <p className="text-white/40 font-bold mb-4">Don't have an account?</p>
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full h-16 bg-[#ff1493] hover:bg-[#d10f7a] text-white rounded-3xl font-black text-lg shadow-xl shadow-[#ff1493]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4"
+                    >
+                        {loading ? "Processing..." : (loginMethod === 'ADMIN' ? "Access Dashboard" : (requiresSetup ? "Set Password" : "Sign In"))}
+                        {!loading && <ArrowRight size={22} strokeWidth={3} />}
+                    </button>
+
+                </form>
+
+                {/* Footer (Only for User) */}
+                {loginMethod === 'PHONE' && (
+                    <div className="mt-12 flex items-center gap-4 w-full justify-center pt-8 border-t border-white/10">
+                        <span className="text-white/60 font-bold text-sm">New to Marqmike?</span>
                         <Link href="/signup">
-                            <button className="bg-white/10 text-white font-bold py-4 px-8 rounded-full hover:bg-white hover:text-[#074eaf] transition-all">
+                            <button className="bg-white/10 text-white px-6 py-2 rounded-2xl font-black text-xs hover:bg-white hover:text-[#074eaf] transition-colors uppercase tracking-wide">
                                 Create Account
                             </button>
                         </Link>
                     </div>
                 )}
+
             </motion.div>
         </div>
     );
