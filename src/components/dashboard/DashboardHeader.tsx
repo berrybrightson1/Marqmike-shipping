@@ -213,7 +213,7 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
                                 )}
 
                                 {showNotifs && (
-                                    <div className="absolute top-full right-0 mt-3 w-[400px] bg-white rounded-[24px] shadow-2xl shadow-brand-blue/20 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 border border-slate-100 ring-1 ring-slate-100">
+                                    <div className="absolute top-full right-0 mt-3 w-[calc(100vw-3rem)] sm:w-[400px] bg-white rounded-[24px] shadow-2xl shadow-brand-blue/20 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 border border-slate-100 ring-1 ring-slate-100">
                                         <div className="p-4 border-b border-slate-50 flex justify-between items-center bg-white sticky top-0 z-10">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-brand-pink animate-pulse" />

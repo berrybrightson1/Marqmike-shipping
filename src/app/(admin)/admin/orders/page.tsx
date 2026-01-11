@@ -187,11 +187,16 @@ export default function AdminOrdersPage() {
                                                             <MessageCircle size={14} />
                                                         </button>
                                                         <button
-                                                            onClick={() => {
-                                                                toast.success(`Notification sent to ${order.customerName}`);
-                                                                // In future, call sendNotification action here
+                                                            onClick={async () => {
+                                                                const { notifyAndSyncOrder } = await import("@/app/actions/orders");
+                                                                const res = await notifyAndSyncOrder(order.id);
+                                                                if (res.success) {
+                                                                    toast.success(`Notification sent & Order synced for ${order.customerName}`);
+                                                                } else {
+                                                                    toast.error(res.error || "Failed to notify");
+                                                                }
                                                             }}
-                                                            title="Send App Notification"
+                                                            title="Send App Notification & Sync"
                                                             className="w-7 h-7 flex items-center justify-center text-brand-blue hover:text-brand-blue/80 bg-brand-blue/5 hover:bg-brand-blue/10 rounded-full transition-colors"
                                                         >
                                                             <Bell size={14} />

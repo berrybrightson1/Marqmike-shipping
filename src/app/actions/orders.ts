@@ -105,19 +105,87 @@ export async function getAdminOrders() {
     }
 }
 
+// --- Notify & Sync Order (Bell Icon Action) ---
+export async function notifyAndSyncOrder(orderId: string) {
+    const user = await getCurrentUser();
+    if (!user || user.role !== "ADMIN") return { success: false, error: "Unauthorized" };
+
+    try {
+        const order = await prisma.order.findUnique({
+            where: { id: orderId },
+            include: { items: true }
+        });
+
+        if (!order || !order.trackingId) {
+            return { success: false, error: "Order or tracking ID missing" };
+        }
+
+        // 1. Ensure Shipment Exists
+        await syncToShipment(order);
+
+        // 2. Notify User
+        if (order.userId) {
+            const { sendSystemNotification } = await import("./notification");
+            await sendSystemNotification(
+                order.userId,
+                `Order Processed: ${order.refCode}`,
+                `Your order has been processed. Tracking ID: ${order.trackingId}. You can now view it in your Orders page.`
+            );
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error("Notify Sync Error:", error);
+        return { success: false, error: "Failed to notify and sync" };
+    }
+}
+
+// --- Internal Helper: Sync Order to Shipment ---
+async function syncToShipment(order: any) {
+    // Check if shipment exists
+    const existing = await prisma.shipment.findUnique({
+        where: { trackingId: order.trackingId }
+    });
+
+    if (existing) return;
+
+    // Create Shipment Name from Items
+    const mainItem = order.items?.[0]?.itemName || "General Goods";
+    const otherCount = (order.items?.length || 0) - 1;
+    const itemName = otherCount > 0 ? `${mainItem} + ${otherCount} others` : mainItem;
+
+    await prisma.shipment.create({
+        data: {
+            trackingId: order.trackingId,
+            customerId: order.userId,
+            status: order.status === "Pending" ? "Processing" : order.status,
+            shipperName: itemName, // Storing Item Description in shipperName slightly hacky but maps to UI "Item" column
+            recipientName: order.customerName,
+            origin: "Guangzhou Warehouse",
+            destination: "Ghana Branch",
+        }
+    });
+}
+
 // --- Admin: Update Status ---
 export async function updateOrderStatus(orderId: string, newStatus: string, trackingId?: string) {
     const user = await getCurrentUser();
     if (!user || user.role !== "ADMIN") return { success: false, error: "Unauthorized" };
 
     try {
-        await prisma.order.update({
+        const updatedOrder = await prisma.order.update({
             where: { id: orderId },
             data: {
                 status: newStatus,
                 ...(trackingId && { trackingId })
-            }
+            },
+            include: { items: true }
         });
+
+        // If tracking ID is present, ensure Shipment is synced
+        if (updatedOrder.trackingId) {
+            await syncToShipment(updatedOrder);
+        }
 
         await logAuditAction(
             "ORDER_STATUS_UPDATE",
@@ -131,6 +199,7 @@ export async function updateOrderStatus(orderId: string, newStatus: string, trac
         revalidatePath("/admin/orders");
         return { success: true };
     } catch (error) {
+        console.error("Update Order Error", error);
         return { success: false, error: "Failed to update status" };
     }
 }
