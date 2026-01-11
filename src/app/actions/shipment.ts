@@ -160,39 +160,112 @@ export async function getUserOrders() {
         const user = await getCurrentUser();
         if (!user) return { success: false, data: [] };
 
-        const orders = await db.shipment.findMany({
+        // 1. Fetch Shipments (Tracking Active)
+        const shipments = await db.shipment.findMany({
             where: { customerId: user.id },
             orderBy: { createdAt: 'desc' },
             include: {
-                events: {
-                    orderBy: { timestamp: 'desc' },
-                    take: 1
-                }
+                events: { orderBy: { timestamp: 'desc' }, take: 1 }
             }
         });
 
-        // calculate progress based on status (simple mock logic for now or deriving from status)
-        const enriched = orders.map(order => {
-            let progress = 0;
-            if (order.status === 'Pending') progress = 10;
-            else if (order.status === 'Processing') progress = 30;
-            else if (order.status === 'In Transit') progress = 60;
-            else if (order.status === 'Arrived') progress = 90;
-            else if (order.status === 'Delivered') progress = 100;
+        // 2. Fetch Shop Orders (Purchases)
+        const shopOrders = await db.order.findMany({
+            where: { userId: user.id },
+            orderBy: { createdAt: 'desc' },
+            include: { items: true }
+        });
+
+        // 3. Fetch Procurement Requests (Buy For Me)
+        const procurementRequests = await db.procurementRequest.findMany({
+            where: { userId: user.id },
+            orderBy: { createdAt: 'desc' }
+        });
+
+        // --- Normalization & Merging ---
+
+        // Map Shipments
+        const normalizedShipments = shipments.map(s => {
+            let progress = 10;
+            if (s.status === 'Processing') progress = 30;
+            if (s.status === 'In Transit') progress = 60;
+            if (s.status === 'Arrived') progress = 90;
+            if (s.status === 'Delivered') progress = 100;
 
             return {
-                ...order,
+                id: s.id,
+                trackingId: s.trackingId,
+                ref: s.trackingId,
+                item: s.shipperName || "Package", // Often contains "Order Items..."
+                status: s.status,
                 progress,
-                // Map database fields to UI expectations if needed
-                item: order.shipperName || "Package", // Fallback if item name isn't in DB, though creating shipment should have it.
-                // Actually, Shipment model structure might not match my Mock Data perfectly.
-                // let's assume we map standard fields.
-                date: order.createdAt.toLocaleDateString(),
-                type: 'Air' // Default or db field
+                date: s.createdAt.toLocaleDateString(),
+                type: 'Shipment',
+                origin: s.origin,
+                destination: s.destination,
+                rawDate: s.createdAt
             };
         });
 
-        return { success: true, data: enriched };
+        // Map Shop Orders
+        // *IMPORTANT*: Exclude orders that already have a Shipment (via trackingId) to avoid duplicates.
+        const shipmentTrackingIds = new Set(shipments.map(s => s.trackingId));
+
+        const normalizedOrders = shopOrders
+            .filter(o => !o.trackingId || !shipmentTrackingIds.has(o.trackingId))
+            .map(o => {
+                const mainItem = o.items[0]?.itemName || "General Goods";
+                const otherCount = o.items.length - 1;
+                const itemLabel = otherCount > 0 ? `${mainItem} + ${otherCount} others` : mainItem;
+
+                let progress = 10;
+                if (o.status === 'Processing') progress = 30;
+                if (o.status === 'Completed') progress = 100;
+
+                return {
+                    id: o.id,
+                    trackingId: o.trackingId || "Pending",
+                    ref: o.refCode,
+                    item: itemLabel,
+                    status: o.status,
+                    progress,
+                    date: o.createdAt.toLocaleDateString(),
+                    type: 'Shop Order',
+                    origin: 'Marqmike Shop',
+                    destination: 'Ghana',
+                    rawDate: o.createdAt
+                };
+            });
+
+        // Map Procurements
+        const normalizedProcurements = procurementRequests.map(p => {
+            let progress = 10;
+            if (p.status === 'Approved') progress = 30;
+            if (p.status === 'Purchased') progress = 60;
+            if (p.status === 'Shipped') progress = 80; // Usually moves to shipment then
+            if (p.status === 'Completed') progress = 100;
+
+            return {
+                id: p.id,
+                trackingId: "REQ-" + p.id.slice(-6).toUpperCase(),
+                ref: "Procurement",
+                item: p.itemName,
+                status: p.status,
+                progress,
+                date: p.createdAt.toLocaleDateString(),
+                type: 'Procurement',
+                origin: 'Request',
+                destination: 'Review',
+                rawDate: p.createdAt
+            }
+        });
+
+        // Combine and Sort by Date
+        const allItems = [...normalizedShipments, ...normalizedOrders, ...normalizedProcurements]
+            .sort((a, b) => new Date(b.rawDate).getTime() - new Date(a.rawDate).getTime());
+
+        return { success: true, data: allItems };
+
     } catch (error) {
         console.error("Get User Orders Error:", error);
         return { success: false, data: [] };

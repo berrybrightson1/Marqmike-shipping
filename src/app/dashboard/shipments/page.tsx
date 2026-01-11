@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Package, ArrowLeft, Copy, CheckCircle, ExternalLink, MapPin, Truck, Ship, Archive, Trash2, Calendar, MoreVertical, X } from "lucide-react";
+import { Search, Package, ArrowLeft, Copy, CheckCircle, ExternalLink, MapPin, Truck, Ship, Archive, Trash2, Calendar, MoreVertical, X, ShoppingBag, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCurrency } from "@/context/CurrencyContext";
@@ -126,17 +126,24 @@ export default function ShipmentsPage() {
 
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="flex items-center gap-3">
-                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${shipment.type === 'Air' ? 'bg-blue-50 text-blue-600' : 'bg-teal-50 text-teal-600'}`}>
-                                            {shipment.type === 'Air' ? <ExternalLink size={20} className="rotate-45" /> : <Ship size={20} />}
+                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 
+                                            ${shipment.type === 'Shop Order' ? 'bg-purple-50 text-purple-600' :
+                                                shipment.type === 'Procurement' ? 'bg-orange-50 text-orange-600' :
+                                                    shipment.type === 'Air' ? 'bg-blue-50 text-blue-600' : 'bg-teal-50 text-teal-600'}`}>
+                                            {shipment.type === 'Shop Order' ? <ShoppingBag size={20} /> :
+                                                shipment.type === 'Procurement' ? <ShoppingCart size={20} /> :
+                                                    shipment.type === 'Air' ? <ExternalLink size={20} className="rotate-45" /> : <Ship size={20} />}
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-slate-800 text-sm leading-tight mb-1">{shipment.item}</h3>
-                                            <div className="flex items-center gap-2">
+                                            <h3 className="font-bold text-slate-800 text-sm leading-tight mb-1 line-clamp-2">{shipment.item}</h3>
+                                            <div className="flex items-center gap-2 flex-wrap">
                                                 <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-bold flex items-center gap-1">
                                                     <Calendar size={10} /> {shipment.date}
                                                 </span>
-                                                <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-bold">
-                                                    {shipment.origin} → {shipment.destination}
+                                                <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md font-bold truncate max-w-[150px]">
+                                                    {shipment.type === 'Shop Order' ? 'Marqmike Shop Order' :
+                                                        shipment.type === 'Procurement' ? 'Procurement Request' :
+                                                            `${shipment.origin} → ${shipment.destination}`}
                                                 </span>
                                             </div>
                                         </div>
