@@ -53,7 +53,7 @@ export default function AdminSidebar() {
             title: "SYSTEM",
             items: [
                 { name: "Settings", href: "/admin/settings", icon: Settings },
-                { name: "Help Center", href: "/help", icon: HelpCircle },
+                { name: "Help Center", href: "/admin/help", icon: HelpCircle },
             ]
         }
     ];
