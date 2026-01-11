@@ -132,7 +132,7 @@ export default function ProcurementAdminPage() {
                                         </span>
                                     </td>
                                     <td className="p-6 text-right">
-                                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="flex justify-end gap-2">
                                             {req.status === "Pending" && (
                                                 <>
                                                     <button onClick={() => handleStatusUpdate(req.id, "Item Available")} title="Item Available" className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100">

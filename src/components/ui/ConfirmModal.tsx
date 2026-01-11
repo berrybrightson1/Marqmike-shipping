@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface ConfirmModalProps {
     isOpen: boolean;
@@ -28,13 +28,10 @@ export default function ConfirmModal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-            <div className="bg-white rounded-[24px] shadow-2xl w-full max-w-sm p-6 transform scale-100 animate-in zoom-in-95 duration-200 border border-slate-100">
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent pointer-events-none">
+            <div className="bg-white rounded-[20px] shadow-2xl w-full max-w-sm p-6 transform scale-100 animate-in zoom-in-95 duration-200 border border-slate-100 pointer-events-auto shadow-slate-300/50">
                 <div className="flex flex-col items-center text-center">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 ${isDestructive ? "bg-red-50 text-red-500" : "bg-brand-blue/10 text-brand-blue"}`}>
-                        <AlertTriangle size={24} />
-                    </div>
-
                     <h3 className="text-lg font-bold text-slate-900 mb-2">{title}</h3>
                     <p className="text-sm text-slate-500 font-medium mb-6 leading-relaxed">
                         {message}

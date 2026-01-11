@@ -2,6 +2,7 @@
 
 import { GlassCard } from "@/components/ui/GlassCard";
 import ConfirmModal from "@/components/ui/ConfirmModal";
+import CustomSelect from "@/components/ui/CustomSelect";
 import { Search, Plus, Upload, DollarSign, Package, AlertCircle, Loader2, Trash2, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getInventory, updateProduct, deleteProduct } from "@/app/actions/product";

@@ -5,6 +5,7 @@ import { getTrendingItems, addTrendingItem, deleteTrendingItem } from "@/app/act
 import { toast } from "sonner";
 import { Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
 import ConfirmModal from "@/components/ui/ConfirmModal";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 export default function TrendingManager() {
     const [items, setItems] = useState<any[]>([]);
@@ -117,15 +118,15 @@ export default function TrendingManager() {
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-slate-500 mb-1">Currency</label>
-                                    <select
+                                    <CustomSelect
                                         value={newItem.currency}
-                                        onChange={e => setNewItem({ ...newItem, currency: e.target.value })}
-                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-brand-blue"
-                                    >
-                                        <option value="CNY">CNY (¥)</option>
-                                        <option value="USD">USD ($)</option>
-                                        <option value="GHS">GHS (₵)</option>
-                                    </select>
+                                        onChange={(val) => setNewItem({ ...newItem, currency: val })}
+                                        options={[
+                                            { value: "CNY", label: "CNY (¥)" },
+                                            { value: "USD", label: "USD ($)" },
+                                            { value: "GHS", label: "GHS (₵)" },
+                                        ]}
+                                    />
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4">

@@ -110,35 +110,42 @@ export default function StaffPicks() {
                             </div>
 
                             {/* Content Section */}
-                            <div className="p-4 flex flex-col flex-1">
-                                <h3 className="text-sm font-bold text-slate-800 leading-tight mb-2 line-clamp-2 h-10" title={item.name}>
-                                    {item.name}
-                                </h3>
+                            <div className="p-3 flex flex-col flex-1">
+                                <div className="mb-2">
+                                    <h3 className="text-xs font-bold text-slate-700 leading-snug line-clamp-2 min-h-[2.5rem]" title={item.name}>
+                                        {item.name}
+                                    </h3>
+                                </div>
 
-                                <div className="mt-auto">
-                                    <div className="flex items-baseline gap-1 mb-3">
-                                        <span className="text-sm text-brand-blue font-black">₵{item.priceGHS?.toFixed(2)}</span>
-                                        {item.priceRMB && <span className="text-[10px] text-slate-400 font-medium">¥{item.priceRMB}</span>}
+                                <div className="mt-auto flex flex-col gap-2">
+                                    <div className="flex flex-col">
+                                        <div className="flex items-baseline gap-1">
+                                            <span className="text-[10px] text-slate-400 font-bold">GHS</span>
+                                            <span className="text-lg font-black text-slate-900 tracking-tight">{item.priceGHS?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                        </div>
+                                        {item.priceRMB && (
+                                            <span className="text-[10px] text-slate-400 font-medium">¥{item.priceRMB}</span>
+                                        )}
                                     </div>
 
                                     <button
                                         onClick={(e) => handleAddToCart(e, item)}
                                         className={`
-                                            w-full h-9 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 active:scale-95 shadow-sm
+                                            w-full h-8 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95 shadow-sm border
                                             ${count > 0
-                                                ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
-                                                : 'bg-slate-900 text-white hover:bg-[#FF6600] border border-transparent'}
+                                                ? 'bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100'
+                                                : 'bg-white text-slate-900 border-slate-200 hover:border-brand-blue hover:text-brand-blue'}
                                         `}
                                     >
-                                        <span className="text-xs font-bold">
-                                            {count > 0 ? 'Added' : 'Add to Cart'}
+                                        <span className="text-[10px] font-bold uppercase tracking-wide">
+                                            {count > 0 ? 'Added' : 'Add'}
                                         </span>
                                         {count > 0 ? (
-                                            <div className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center">
-                                                <span className="text-[10px]">✓</span>
+                                            <div className="w-3.5 h-3.5 rounded-full bg-emerald-100 flex items-center justify-center">
+                                                <span className="text-[8px]">✓</span>
                                             </div>
                                         ) : (
-                                            <Plus size={14} strokeWidth={3} />
+                                            <Plus size={12} strokeWidth={3} />
                                         )}
                                     </button>
                                 </div>
