@@ -1,0 +1,771 @@
+﻿
+> marqmike-shipping@0.1.0 lint
+> eslint
+
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\customers\[id]\page.tsx
+    4:34  warning  'MapPin' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   29:38  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   60:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  129:54  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\customers\page.tsx
+  3:39  warning  'MapPin' is defined but never used        @typescript-eslint/no-unused-vars
+  9:48  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\help\page.tsx
+  3:45  warning  'CreditCard' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\inventory\page.tsx
+    5:8   warning  'CustomSelect' is defined but never used                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+    6:32  warning  'DollarSign' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+    6:44  warning  'Package' is defined but never used                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+    6:53  warning  'AlertCircle' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+   13:48  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   14:12  warning  'loading' is assigned a value but never used                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   86:41  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  127:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\inventory\trending\page.tsx
+   11:40  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+   24:9   error    Error: Cannot access variable before it is declared
+
+`loadItems` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\inventory\trending\page.tsx:24:9
+  22 |
+  23 |     useEffect(() => {
+> 24 |         loadItems();
+     |         ^^^^^^^^^ `loadItems` accessed before it is declared
+  25 |     }, []);
+  26 |
+  27 |     const loadItems = async () => {
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\inventory\trending\page.tsx:27:5
+  25 |     }, []);
+  26 |
+> 27 |     const loadItems = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |         setLoading(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 29 |         const res = await getTrendingItems();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 30 |         if (res.success && res.data) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |             setItems(res.data);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 32 |         }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |         setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 34 |     };
+     | ^^^^^^^ `loadItems` is declared here
+  35 |
+  36 |     const handleSubmit = async (e: React.FormEvent) => {
+  37 |         e.preventDefault();  react-hooks/immutability
+   74:63  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react/no-unescaped-entities
+   74:75  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react/no-unescaped-entities
+  182:37  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @next/next/no-img-element
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\orders\page.tsx
+    4:18  warning  'Filter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+    4:26  warning  'ChevronDown' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+    4:48  warning  'Clock' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+    4:55  warning  'CheckCircle' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+    4:68  warning  'RotateCw' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+    7:10  warning  'GlassCard' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+   12:7   warning  'TABS' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+   20:13  warning  'currency' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   21:42  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   22:56  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   23:12  warning  'activeTab' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+   23:23  warning  'setActiveTab' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   28:9   error    Error: Cannot access variable before it is declared
+
+`loadOrders` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\orders\page.tsx:28:9
+  26 |
+  27 |     useEffect(() => {
+> 28 |         loadOrders();
+     |         ^^^^^^^^^^ `loadOrders` accessed before it is declared
+  29 |
+  30 |         // Auto-refresh orders list every 5 seconds
+  31 |         const interval = setInterval(() => {
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\orders\page.tsx:38:5
+  36 |     }, []);
+  37 |
+> 38 |     const loadOrders = async (silent = false) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 39 |         if (!silent) setLoading(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         const res = await getAdminOrders();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |         if (res.success) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |             setOrders(res.data || []);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |         } else {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |             console.error("Failed to load orders");
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |         if (!silent) setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |     };
+     | ^^^^^^^ `loadOrders` is declared here
+  48 |
+  49 |     const handleStatusUpdate = async (id: string, newStatus: string) => {
+  50 |         // Optimistic update  react-hooks/immutability
+   64:55  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\orders\page.tsx:64:55
+  62 |     const handleGenerateTracking = async (id: string) => {
+  63 |         // Generate a tracking ID (e.g. TRK-...)
+> 64 |         const trackingId = `TRK-${Math.floor(100000 + Math.random() * 900000)}`;
+     |                                                       ^^^^^^^^^^^^^ Cannot call impure function
+  65 |
+  66 |         // Optimistic update
+  67 |         setOrders(prev => prev.map(o => o.id === id ? { ...o, trackingId } : o));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/purity
+  152:74  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  281:73  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  286:57  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @next/next/no-img-element
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\page.tsx
+    3:10  warning  'DollarSign' is defined but never used      @typescript-eslint/no-unused-vars
+    6:8   warning  'AdminCharts' is defined but never used     @typescript-eslint/no-unused-vars
+    8:8   warning  'DealsPromoCard' is defined but never used  @typescript-eslint/no-unused-vars
+   11:40  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+   12:38  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+   53:44  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  105:63  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  134:64  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  153:70  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\procurement\page.tsx
+   3:10  warning  'GlassCard' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   4:32  warning  'Package' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   4:41  warning  'Clock' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+   4:77  warning  'MoreHorizontal' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+   8:8   warning  'Link' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  11:46  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  15:9   error    Error: Cannot access variable before it is declared
+
+`loadRequests` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\procurement\page.tsx:15:9
+  13 |
+  14 |     useEffect(() => {
+> 15 |         loadRequests();
+     |         ^^^^^^^^^^^^ `loadRequests` accessed before it is declared
+  16 |     }, []);
+  17 |
+  18 |     const loadRequests = async () => {
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\procurement\page.tsx:18:5
+  16 |     }, []);
+  17 |
+> 18 |     const loadRequests = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 19 |         const res = await getAdminProcurementRequests();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |         if (res.success && res.data) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 21 |             setRequests(res.data);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 22 |         }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |         setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 24 |     };
+     | ^^^^^^^ `loadRequests` is declared here
+  25 |
+  26 |     const handleStatusUpdate = async (id: string, newStatus: string) => {
+  27 |         const oldRequests = [...requests];  react-hooks/immutability
+  73:63  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+  73:74  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\settings\page.tsx
+   26:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  161:61  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\shipments\page.tsx
+   4:10  warning  'GlassCard' is defined but never used     @typescript-eslint/no-unused-vars
+   5:18  warning  'Filter' is defined but never used        @typescript-eslint/no-unused-vars
+   5:26  warning  'MoreVertical' is defined but never used  @typescript-eslint/no-unused-vars
+   5:49  warning  'MapPin' is defined but never used        @typescript-eslint/no-unused-vars
+  13:48  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:18  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  71:62  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\support\page.tsx
+    3:55  warning  'Clock' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+    9:44  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+   10:60  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+   11:54  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+   20:9   error    Error: Cannot access variable before it is declared
+
+`loadTickets` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\support\page.tsx:20:9
+  18 |
+  19 |     useEffect(() => {
+> 20 |         loadTickets();
+     |         ^^^^^^^^^^^ `loadTickets` accessed before it is declared
+  21 |     }, []);
+  22 |
+  23 |     useEffect(() => {
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\support\page.tsx:44:5
+  42 |     };
+  43 |
+> 44 |     const loadTickets = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         setLoading(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |         const res = await getAllTickets();
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 57 |         setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 58 |     };
+     | ^^^^^^^ `loadTickets` is declared here
+  59 |
+  60 |     const handleReply = async (e: React.FormEvent) => {
+  61 |         e.preventDefault();                react-hooks/immutability
+   21:8   warning  React Hook useEffect has a missing dependency: 'loadTickets'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/exhaustive-deps
+   37:9   error    Error: Cannot access variable before it is declared
+
+`scrollToBottom` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\support\page.tsx:37:9
+  35 |
+  36 |     useEffect(() => {
+> 37 |         scrollToBottom();
+     |         ^^^^^^^^^^^^^^ `scrollToBottom` accessed before it is declared
+  38 |     }, [activeTicket, activeTicket?.messages]);
+  39 |
+  40 |     const scrollToBottom = () => {
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\(admin)\admin\support\page.tsx:40:5
+  38 |     }, [activeTicket, activeTicket?.messages]);
+  39 |
+> 40 |     const scrollToBottom = () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |     };
+     | ^^^^^^^ `scrollToBottom` is declared here
+  43 |
+  44 |     const loadTickets = async () => {
+  45 |         setLoading(true);  react-hooks/immutability
+   53:51  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+  193:62  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\admin.ts
+  51:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\audit.ts
+   4:10  warning  'revalidatePath' is defined but never used  @typescript-eslint/no-unused-vars
+  11:16  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  40:19  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\auth.ts
+   14:11  warning  'expiresAt' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  292:14  warning  'error' is defined but never used               @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\export.ts
+  7:11  warning  'user' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\notification.ts
+  35:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\orders.ts
+   12:12  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   37:55  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   56:30  warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+   88:43  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+  103:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  133:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  140:43  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+  151:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\procurement.ts
+   80:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  107:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\product.ts
+   72:17  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  103:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\search.ts
+   4:10  warning  'getCurrentUser' is defined but never used       @typescript-eslint/no-unused-vars
+  10:15  warning  'lowerQuery' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\settings.ts
+  36:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\shipment.ts
+  16:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\actions\support.ts
+   54:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+   77:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+   94:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  107:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\api\auth\admin\route.ts
+   2:10  warning  'cookies' is defined but never used  @typescript-eslint/no-unused-vars
+  31:14  warning  'error' is defined but never used    @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\auth\login\page.tsx
+   3:20  warning  'useEffect' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  64:18  warning  'err' is defined but never used                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  87:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\auth\signup\page.tsx
+  86:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\cart\page.tsx
+   4:8   warning  'DashboardHeader' is defined but never used                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+   5:43  warning  'MessageCircle' is defined but never used                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  12:35  warning  'clearCart' is assigned a value but never used                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  48:88  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  60:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\documents\page.tsx
+   4:49  warning  'Plus' is defined but never used          @typescript-eslint/no-unused-vars
+  11:44  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\notifications\page.tsx
+  10:56  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  11:72  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\page.tsx
+   3:8   warning  'ShipmentCard' is defined but never used        @typescript-eslint/no-unused-vars
+  16:13  warning  'shipments' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\procurement\page.tsx
+   4:10  warning  'Plus' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   4:30  warning  'Trash2' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+   7:8   warning  'CBMCalculator' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  12:7   warning  'ALLOWED_DOMAINS' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  21:46  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+  29:15  warning  'price' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  40:9   error    Error: Cannot access variable before it is declared
+
+`loadRequests` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\procurement\page.tsx:40:9
+  38 |         }
+  39 |
+> 40 |         loadRequests();
+     |         ^^^^^^^^^^^^ `loadRequests` accessed before it is declared
+  41 |     }, [searchParams]);
+  42 |
+  43 |     const loadRequests = async () => {
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\procurement\page.tsx:43:5
+  41 |     }, [searchParams]);
+  42 |
+> 43 |     const loadRequests = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |         const res = await getUserProcurementRequests();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |         setRequests(res.data || []);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |     };
+     | ^^^^^^^ `loadRequests` is declared here
+  47 |
+  48 |     const handleSubmit = async () => {
+  49 |         if (!currentItem.itemUrl || !currentItem.itemName) {  react-hooks/immutability
+  79:96  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\profile\page.tsx
+  22:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  52:50  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\settings\addresses\page.tsx
+   4:41  warning  'MoreVertical' is defined but never used           @typescript-eslint/no-unused-vars
+  10:23  warning  'setAddresses' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\shipment\[id]\invoice\page.tsx
+  5:10  warning  'Box' is defined but never used           @typescript-eslint/no-unused-vars
+  5:15  warning  'MapPin' is defined but never used        @typescript-eslint/no-unused-vars
+  8:46  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\shipment\[id]\page.tsx
+   3:34  warning  'User' is defined but never used          @typescript-eslint/no-unused-vars
+  80:66  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\shipments\page.tsx
+   4:18  warning  'Loader2' is defined but never used                              @typescript-eslint/no-unused-vars
+   5:10  warning  'useRouter' is defined but never used                            @typescript-eslint/no-unused-vars
+  11:12  warning  'loading' is assigned a value but never used                     @typescript-eslint/no-unused-vars
+  11:21  warning  'setLoading' is assigned a value but never used                  @typescript-eslint/no-unused-vars
+  17:73  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  17:81  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\support\page.tsx
+    8:10  warning  'getRelativeTime' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+   11:44  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+   12:54  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+   27:9   error    Error: Cannot access variable before it is declared
+
+`loadTickets` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\support\page.tsx:27:9
+  25 |
+  26 |     useEffect(() => {
+> 27 |         loadTickets();
+     |         ^^^^^^^^^^^ `loadTickets` accessed before it is declared
+  28 |     }, []);
+  29 |
+  30 |     useEffect(() => {
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\support\page.tsx:38:5
+  36 |     };
+  37 |
+> 38 |     const loadTickets = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 39 |         setLoading(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         const res = await getUserTickets();
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 49 |         setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 50 |     };
+     | ^^^^^^^ `loadTickets` is declared here
+  51 |
+  52 |     const handleCreateTicket = async (e: React.FormEvent) => {
+  53 |         e.preventDefault();        react-hooks/immutability
+   28:8   warning  React Hook useEffect has a missing dependency: 'loadTickets'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/exhaustive-deps
+   31:9   error    Error: Cannot access variable before it is declared
+
+`scrollToBottom` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\support\page.tsx:31:9
+  29 |
+  30 |     useEffect(() => {
+> 31 |         scrollToBottom();
+     |         ^^^^^^^^^^^^^^ `scrollToBottom` accessed before it is declared
+  32 |     }, [activeTicket, activeTicket?.messages]);
+  33 |
+  34 |     const scrollToBottom = () => {
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\support\page.tsx:34:5
+  32 |     }, [activeTicket, activeTicket?.messages]);
+  33 |
+> 34 |     const scrollToBottom = () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 35 |         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 36 |     };
+     | ^^^^^^^ `scrollToBottom` is declared here
+  37 |
+  38 |     const loadTickets = async () => {
+  39 |         setLoading(true);  react-hooks/immutability
+   45:51  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+   70:19  warning  'newTicket' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  181:98  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react/no-unescaped-entities
+  243:66  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\dashboard\tracking\page.tsx
+  4:18  warning  'MapPin' is defined but never used                 @typescript-eslint/no-unused-vars
+  4:26  warning  'Clock' is defined but never used                  @typescript-eslint/no-unused-vars
+  9:7   warning  'mockTimeline' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\help\page.tsx
+  402:49  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  402:63  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\login\page.tsx
+  86:33  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\store\[id]\page.tsx
+   4:32  warning  'Ruler' is defined but never used        @typescript-eslint/no-unused-vars
+  27:13  warning  'id' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\store\page.tsx
+  24:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\app\track\[id]\page.tsx
+   4:61  warning  'Truck' is defined but never used             @typescript-eslint/no-unused-vars
+   9:37  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  28:19  warning  'loading' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  91:54  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\admin\AdminCharts.tsx
+  3:32  warning  'YAxis' is defined but never used         @typescript-eslint/no-unused-vars
+  5:56  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\admin\AdminLogoutButton.tsx
+  17:18  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\admin\AdminSidebar.tsx
+   5:74  warning  'LogOut' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  91:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\admin\CallLogFeed.tsx
+    4:17   warning  'Archive' is defined but never used       @typescript-eslint/no-unused-vars
+    4:26   warning  'User' is defined but never used          @typescript-eslint/no-unused-vars
+    4:32   warning  'CheckCircle' is defined but never used   @typescript-eslint/no-unused-vars
+    4:45   warning  'AlertCircle' is defined but never used   @typescript-eslint/no-unused-vars
+    4:58   warning  'Clock' is defined but never used         @typescript-eslint/no-unused-vars
+   96:136  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  100:46   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:46   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\admin\CreateShipmentModal.tsx
+    4:22   warning  'Ruler' is defined but never used                                @typescript-eslint/no-unused-vars
+   32:18   warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+  140:145  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  140:154  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\admin\DataFilter.tsx
+   5:10  warning  'format' is defined but never used                 @typescript-eslint/no-unused-vars
+   7:84  error    Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  12:23  warning  'setDateRange' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\admin\GlobalSearchModal.tsx
+   12:44  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  125:85  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  125:93  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\admin\LogCallModal.tsx
+    3:21  warning  'Check' is defined but never used         @typescript-eslint/no-unused-vars
+   16:48  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   17:62  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  124:59  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\admin\ProductForm.tsx
+    5:10  warning  'Upload' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+    5:37  warning  'ImageIcon' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+   13:12  warning  'imageFile' is assigned a value but never used                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  137:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\auth\AuthGuard.tsx
+  19:47  warning  'fallback' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\auth\PhoneInput.tsx
+  56:17  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\auth\PhoneInput.tsx:56:17
+  54 |             );
+  55 |             if (matchedCountry && matchedCountry.code !== selectedCountry.code) {
+> 56 |                 setSelectedCountry(matchedCountry);
+     |                 ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  57 |             }
+  58 |         }
+  59 |     }, [value]);  react-hooks/set-state-in-effect
+  59:8   warning  React Hook useEffect has a missing dependency: 'selectedCountry.code'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/exhaustive-deps
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\cart\CartDrawer.tsx
+   3:13  warning  'Minus' is defined but never used                @typescript-eslint/no-unused-vars
+   3:20  warning  'Plus' is defined but never used                 @typescript-eslint/no-unused-vars
+  18:46  warning  'totalItems' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  21:11  warning  'router' is assigned a value but never used      @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\checkout\CheckoutModal.tsx
+   5:10  warning  'GlassCard' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  12:16  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-explicit-any
+  22:13  error    Error: Cannot access variable before it is declared
+
+`loadUserProfile` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\checkout\CheckoutModal.tsx:22:13
+  20 |     useEffect(() => {
+  21 |         if (isOpen) {
+> 22 |             loadUserProfile();
+     |             ^^^^^^^^^^^^^^^ `loadUserProfile` accessed before it is declared
+  23 |         }
+  24 |     }, [isOpen]);
+  25 |
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\checkout\CheckoutModal.tsx:26:5
+  24 |     }, [isOpen]);
+  25 |
+> 26 |     const loadUserProfile = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 27 |         const profile = await getUserProfile();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |         if (profile) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 29 |             // Prefer Business Name, fallback to Name
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 30 |             setName(profile.businessName || profile.name || "");
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |             setPhone(profile.phone || "");
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 32 |         }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |     };
+     | ^^^^^^^ `loadUserProfile` is declared here
+  34 |
+  35 |     if (!isOpen) return null;
+  36 |  react-hooks/immutability
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\checkout\WhatsAppCheckoutModal.tsx
+  91:61  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\dashboard\ActionGrid.tsx
+  7:11  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\dashboard\DashboardHeader.tsx
+   15:24   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   27:56   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  122:37   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  221:100  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  221:113  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  235:61   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\dashboard\StaffPicks.tsx
+    3:23  warning  'Plus' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    3:29  warning  'Star' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    3:35  warning  'ArrowRight' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+    4:8   warning  'Link' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   14:46  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   28:57  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  104:33  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\dashboard\TrendingFeed.tsx
+  56:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\dashboard\settings\AddAddressModal.tsx
+  5:10  warning  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\dashboard\settings\SettingsView.tsx
+   11:56  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   49:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+   66:37  error    Comments inside children section of tag should be placed inside braces                                                                                                                                                                                                                   react/jsx-no-comment-textnodes
+  103:54  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  168:70  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\dashboard\shop\ShoppingView.tsx
+    4:31  warning  'ExternalLink' is defined but never used                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+    6:20  warning  'useRef' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   10:11  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   34:11  warning  'scrollContainerRef' is assigned a value but never used                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  126:37  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  180:33  error    Definition for rule 'react-dom/no-unsafe-inline-style' was not found                                                                                                                                                                                                                     react-dom/no-unsafe-inline-style
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\dashboard\wallet\TransactionHistory.tsx
+  3:10  warning  'ArrowUpRight' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\dashboard\wallet\WalletBalanceCard.tsx
+  3:30  warning  'ArrowUpRight' is defined but never used   @typescript-eslint/no-unused-vars
+  3:44  warning  'ArrowDownLeft' is defined but never used  @typescript-eslint/no-unused-vars
+  5:10  warning  'toast' is defined but never used          @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\layout\AdminSidebar.tsx
+  68:74  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\layout\Sidebar.tsx
+   3:10   warning  'LayoutGrid' is defined but never used         @typescript-eslint/no-unused-vars
+   3:22   warning  'Box' is defined but never used                @typescript-eslint/no-unused-vars
+   3:27   warning  'FileText' is defined but never used           @typescript-eslint/no-unused-vars
+   3:37   warning  'User' is defined but never used               @typescript-eslint/no-unused-vars
+   3:43   warning  'Settings' is defined but never used           @typescript-eslint/no-unused-vars
+   3:67   warning  'Users' is defined but never used              @typescript-eslint/no-unused-vars
+   3:74   warning  'Calendar' is defined but never used           @typescript-eslint/no-unused-vars
+   3:84   warning  'Truck' is defined but never used              @typescript-eslint/no-unused-vars
+   3:91   warning  'BarChart2' is defined but never used          @typescript-eslint/no-unused-vars
+   3:102  warning  'HelpCircle' is defined but never used         @typescript-eslint/no-unused-vars
+  16:11   warning  'pathname' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  54:10   warning  'MenuGroup' is defined but never used          @typescript-eslint/no-unused-vars
+  65:10   warning  'SidebarItem' is defined but never used        @typescript-eslint/no-unused-vars
+  65:69   error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  82:10   warning  'GlassCardCompact' is defined but never used   @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\tools\CBMCalculator.tsx
+   4:10  warning  'Calculator' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   4:22  warning  'Box' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  21:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\tools\CBMCalculator.tsx:21:9
+  19 |         const totalCBM = singleItemCBM * quantity;
+  20 |
+> 21 |         setCbm(totalCBM);
+     |         ^^^^^^ Avoid calling setState() directly within an effect
+  22 |
+  23 |         let estimatedCost = totalCBM * RATE_PER_CBM;
+  24 |         if (estimatedCost > 0 && estimatedCost < MIN_CHARGE) estimatedCost = MIN_CHARGE;  react-hooks/set-state-in-effect
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\tools\GlobalShippingCalculator.tsx
+   4:22  warning  'Box' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  18:12  warning  'cbm' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  43:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\tools\GlobalShippingCalculator.tsx:43:9
+  41 |
+  42 |         // Update State
+> 43 |         setCbm(totalCBM);
+     |         ^^^^^^ Avoid calling setState() directly within an effect
+  44 |         setVolumetricWeight(totalVolumetric);
+  45 |
+  46 |         // Cost Logic  react-hooks/set-state-in-effect
+  63:8   warning  React Hook useEffect has a missing dependency: 'RATES'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/exhaustive-deps
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\ui\Timeline.tsx
+  1:24  warning  'Circle' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\components\ui\Toast.tsx
+  5:10  warning  'useState' is defined but never used   @typescript-eslint/no-unused-vars
+  5:20  warning  'useEffect' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\context\CartContext.tsx
+  34:17  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\context\CartContext.tsx:34:17
+  32 |         if (savedCart) {
+  33 |             try {
+> 34 |                 setCart(JSON.parse(savedCart));
+     |                 ^^^^^^^ Avoid calling setState() directly within an effect
+  35 |             } catch (e) {
+  36 |                 console.error("Failed to parse cart", e);
+  37 |             }  react-hooks/set-state-in-effect
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\hooks\useSession.ts
+   7:38  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  15:22  warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\hooks\useTrendingFeed.ts
+  110:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\lib\whatsapp.ts
+  1:10  warning  'db' is defined but never used  @typescript-eslint/no-unused-vars
+
+G:\wORKS 2\ACTIVE\Apps\Marqmike System\marqmike-shipping\src\middleware.ts
+  6:11  warning  'sessionToken' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+Γ£û 269 problems (106 errors, 163 warnings)
+

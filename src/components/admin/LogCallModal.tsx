@@ -95,7 +95,7 @@ export default function LogCallModal({ isOpen, onClose, onSuccess }: LogCallModa
                     <h2 className="text-2xl font-bold">
                         <span className="text-brand-blue">Log New</span> <span className="text-[#ff269b]">Call</span>
                     </h2>
-                    <button onClick={onClose} className="p-2 bg-slate-50 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
+                    <button onClick={onClose} aria-label="Close Modal" className="p-2 bg-slate-50 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
                         <X size={20} />
                     </button>
                 </div>
@@ -167,48 +167,52 @@ export default function LogCallModal({ isOpen, onClose, onSuccess }: LogCallModa
                     />
                 </div>
 
-                {/* Call Type & Outcome Grid */}
-                <div className="mb-8 grid grid-cols-2 gap-4">
-                    {/* Call Type */}
-                    <div>
-                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Call Type</label>
-                        <div className="flex bg-slate-100 rounded-xl p-1">
-                            <button
-                                onClick={() => setCallType("Incoming")}
-                                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${callType === "Incoming" ? "bg-white text-brand-blue shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
-                            >
-                                Incoming
-                            </button>
-                            <button
-                                onClick={() => setCallType("Outgoing")}
-                                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${callType === "Outgoing" ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
-                            >
-                                Outgoing
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Outcome */}
-                    <div>
-                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Outcome</label>
-                        <div className="grid grid-cols-2 gap-2">
-                            {outcomes.map((o) => (
+                {/* Call Detail Controls */}
+                <div className="mb-8 bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                    <div className="grid grid-cols-1 gap-6">
+                        {/* Call Type */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span> Call Direction
+                            </label>
+                            <div className="flex bg-white rounded-xl p-1.5 border border-slate-200 shadow-sm">
                                 <button
-                                    key={o}
-                                    onClick={() => setOutcome(o)}
-                                    className={`
-                                        py-2 rounded-lg text-xs font-bold transition-all
-                                        ${outcome === o
-                                            ? o === "Pending"
-                                                ? "bg-pink-50 text-pink-600 border border-pink-200"
-                                                : "bg-slate-800 text-white shadow-md"
-                                            : "bg-slate-50 text-slate-500 hover:bg-slate-100"
-                                        }
-                                    `}
+                                    onClick={() => setCallType("Incoming")}
+                                    className={`flex-1 py-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${callType === "Incoming" ? "bg-blue-50 text-blue-600 ring-1 ring-blue-200" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"}`}
                                 >
-                                    {o}
+                                    Login Incoming
                                 </button>
-                            ))}
+                                <button
+                                    onClick={() => setCallType("Outgoing")}
+                                    className={`flex-1 py-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${callType === "Outgoing" ? "bg-blue-50 text-blue-600 ring-1 ring-blue-200" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"}`}
+                                >
+                                    Log Outgoing
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Outcome */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-pink-400"></span> Call Outcome
+                            </label>
+                            <div className="grid grid-cols-2 gap-3">
+                                {outcomes.map((o) => (
+                                    <button
+                                        key={o}
+                                        onClick={() => setOutcome(o)}
+                                        className={`
+                                            py-3 rounded-xl text-xs font-bold transition-all border
+                                            ${outcome === o
+                                                ? "bg-slate-800 text-white border-slate-800 shadow-lg scale-[1.02]"
+                                                : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                                            }
+                                        `}
+                                    >
+                                        {o}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

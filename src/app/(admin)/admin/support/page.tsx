@@ -16,27 +16,6 @@ export default function AdminSupportPage() {
     const [replyMessage, setReplyMessage] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        loadTickets();
-    }, []);
-
-    useEffect(() => {
-        if (!searchQuery) {
-            setFilteredTickets(tickets);
-            return;
-        }
-        const lower = searchQuery.toLowerCase();
-        setFilteredTickets(tickets.filter(t =>
-            t.subject.toLowerCase().includes(lower) ||
-            t.user?.name?.toLowerCase().includes(lower) ||
-            t.id.includes(lower)
-        ));
-    }, [searchQuery, tickets]);
-
-    useEffect(() => {
-        scrollToBottom();
-    }, [activeTicket, activeTicket?.messages]);
-
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
@@ -96,6 +75,27 @@ export default function AdminSupportPage() {
         }
     }
 
+    useEffect(() => {
+        loadTickets();
+    }, []);
+
+    useEffect(() => {
+        if (!searchQuery) {
+            setFilteredTickets(tickets);
+            return;
+        }
+        const lower = searchQuery.toLowerCase();
+        setFilteredTickets(tickets.filter(t =>
+            t.subject.toLowerCase().includes(lower) ||
+            t.user?.name?.toLowerCase().includes(lower) ||
+            t.id.includes(lower)
+        ));
+    }, [searchQuery, tickets]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [activeTicket, activeTicket?.messages]);
+
     return (
         <div className="p-6 md:p-10 h-[calc(100vh-20px)] flex flex-col">
             <header className="flex justify-between items-center mb-6 shrink-0">
@@ -139,8 +139,8 @@ export default function AdminSupportPage() {
                                             {ticket.user?.name || "Unknown User"}
                                         </h4>
                                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${ticket.status === 'OPEN' ? 'bg-green-100 text-green-700' :
-                                                ticket.status === 'CLOSED' ? 'bg-slate-100 text-slate-500' :
-                                                    'bg-orange-100 text-orange-700'
+                                            ticket.status === 'CLOSED' ? 'bg-slate-100 text-slate-500' :
+                                                'bg-orange-100 text-orange-700'
                                             }`}>
                                             {ticket.status}
                                         </span>

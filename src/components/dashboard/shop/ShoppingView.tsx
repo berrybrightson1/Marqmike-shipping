@@ -177,6 +177,7 @@ export default function ShoppingView({ user }: ShoppingViewProps) {
                         <div className="w-12 h-1.5 bg-slate-200/60 rounded-full overflow-hidden relative">
                             <div
                                 className="absolute top-0 bottom-0 w-4 bg-[#FF6600] rounded-full transition-all duration-150 ease-out"
+                                // eslint-disable-next-line react-dom/no-unsafe-inline-style
                                 style={{
                                     left: `${Math.min(70, Math.max(0, scrollProgress * 0.7))}%`
                                 }}

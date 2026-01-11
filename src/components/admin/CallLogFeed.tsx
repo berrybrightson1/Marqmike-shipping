@@ -87,16 +87,26 @@ function CallLogItem({ log }: { log: CallLog }) {
                             animate={{ opacity: 1, height: "auto" }}
                             className="mt-3 pt-3 border-t border-slate-100 space-y-2"
                         >
+                            <div className="flex justify-between items-center">
+                                <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${avatarColor}`}>
+                                    {log.outcome}
+                                </span>
+
+                                {/* Call Type Badge */}
+                                <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full border ${(log as any).type === "Incoming"
+                                        ? "bg-blue-50 text-blue-600 border-blue-100"
+                                        : "bg-green-50 text-green-600 border-green-100"
+                                    }`}>
+                                    {(log as any).type === "Incoming" ? <ChevronDown size={12} /> : <ChevronUp size={12} />}
+                                    {(log as any).type || "Outbound"}
+                                </div>
+                            </div>
+
                             <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
                                 <Phone size={12} />
                                 <a href={`tel:${log.phoneNumber}`} className="hover:text-brand-blue underline decoration-dotted">
                                     {log.phoneNumber}
                                 </a>
-                            </div>
-                            <div className="flex gap-2">
-                                <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${avatarColor}`}>
-                                    {log.outcome}
-                                </span>
                             </div>
                         </motion.div>
                     )}

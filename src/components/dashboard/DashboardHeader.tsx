@@ -87,11 +87,19 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
                 <div className="relative z-20 flex flex-col gap-6">
 
                     {/* 1. TOP: Greeting (Centered or Left) */}
+                    {/* 1. TOP: Greeting (Centered with Animation) */}
                     <div className="flex justify-center mb-2">
-                        <div className="bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/5">
-                            <span className="text-white/80 text-xs font-bold tracking-widest uppercase flex items-center gap-2">
-                                ☀️ {greeting}
-                            </span>
+                        <div className="relative group cursor-default">
+                            {/* Glow Effect */}
+                            <div className="absolute -inset-1 bg-white/20 rounded-full blur-md animate-pulse opacity-50 group-hover:opacity-100 transition-opacity duration-1000"></div>
+
+                            {/* Badge */}
+                            <div className="relative bg-white/10 backdrop-blur-md px-5 py-2 rounded-full border border-white/10 shadow-lg animate-in slide-in-from-top-4 fade-in duration-1000 flex items-center gap-2.5">
+                                <span className="animate-spin-slow text-sm">☀️</span>
+                                <span className="text-white text-xs font-bold tracking-[0.2em] uppercase bg-gradient-to-r from-white via-white/80 to-white/60 bg-clip-text text-transparent">
+                                    {greeting}
+                                </span>
+                            </div>
                         </div>
                     </div>
 

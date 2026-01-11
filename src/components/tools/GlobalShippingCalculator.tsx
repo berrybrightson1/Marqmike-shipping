@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Calculator, Box, Info, Plane, Ship, MapPin, Scale } from "lucide-react";
 
 type ShippingMode = "AIR" | "SEA";
@@ -14,20 +14,15 @@ export default function GlobalShippingCalculator() {
     const [quantity, setQuantity] = useState(1);
 
     // Results
-    const [volumetricWeight, setVolumetricWeight] = useState(0);
-    const [cbm, setCbm] = useState(0);
-    const [chargeableWeight, setChargeableWeight] = useState(0);
-    const [estimatedCost, setEstimatedCost] = useState(0);
-
     // Rates (Mock Global Rates)
-    const RATES = {
+    const RATES = useMemo(() => ({
         GHANA: { AIR: 12, SEA: 380, CURRENCY: "USD" }, // $12/kg, $380/cbm
         NIGERIA: { AIR: 10, SEA: 450, CURRENCY: "USD" },
         KENYA: { AIR: 15, SEA: 400, CURRENCY: "USD" }
-    };
+    }), []);
 
-    useEffect(() => {
-        // Calculations
+    // Derived Calculations
+    const results = useMemo(() => {
         // 1. CBM (Total Volume in m3) = (L*W*H / 1,000,000) * Qty
         const singleCBM = (dimensions.length * dimensions.width * dimensions.height) / 1000000;
         const totalCBM = singleCBM * quantity;
@@ -38,10 +33,6 @@ export default function GlobalShippingCalculator() {
 
         // 3. Actual Weight Total
         const totalActualWeight = weight * quantity;
-
-        // Update State
-        setCbm(totalCBM);
-        setVolumetricWeight(totalVolumetric);
 
         // Cost Logic
         let cost = 0;
@@ -57,10 +48,15 @@ export default function GlobalShippingCalculator() {
             cost = Math.max(20, totalCBM * RATES[destination].SEA); // Min charge $20
         }
 
-        setChargeableWeight(chargeable);
-        setEstimatedCost(cost);
-
+        return {
+            cbm: totalCBM,
+            volumetricWeight: totalVolumetric,
+            chargeableWeight: chargeable,
+            estimatedCost: cost
+        };
     }, [dimensions, weight, quantity, mode, destination]);
+
+    const { cbm, volumetricWeight, chargeableWeight, estimatedCost } = results;
 
     return (
         <div className="bg-white/90 backdrop-blur-xl rounded-[32px] p-6 mb-6 border border-white/50 shadow-sm">
@@ -88,8 +84,8 @@ export default function GlobalShippingCalculator() {
                                 key={dest}
                                 onClick={() => setDestination(dest)}
                                 className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${destination === dest
-                                        ? "bg-white text-brand-blue shadow-sm"
-                                        : "text-slate-400 hover:text-slate-600"
+                                    ? "bg-white text-brand-blue shadow-sm"
+                                    : "text-slate-400 hover:text-slate-600"
                                     }`}
                             >
                                 {dest}
@@ -103,8 +99,8 @@ export default function GlobalShippingCalculator() {
                     <button
                         onClick={() => setMode("AIR")}
                         className={`p-3 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${mode === "AIR"
-                                ? "border-brand-blue bg-brand-blue/5 text-brand-blue"
-                                : "border-slate-100 bg-white text-slate-400 hover:border-slate-200"
+                            ? "border-brand-blue bg-brand-blue/5 text-brand-blue"
+                            : "border-slate-100 bg-white text-slate-400 hover:border-slate-200"
                             }`}
                     >
                         <Plane size={24} />
@@ -114,8 +110,8 @@ export default function GlobalShippingCalculator() {
                     <button
                         onClick={() => setMode("SEA")}
                         className={`p-3 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${mode === "SEA"
-                                ? "border-brand-blue bg-brand-blue/5 text-brand-blue"
-                                : "border-slate-100 bg-white text-slate-400 hover:border-slate-200"
+                            ? "border-brand-blue bg-brand-blue/5 text-brand-blue"
+                            : "border-slate-100 bg-white text-slate-400 hover:border-slate-200"
                             }`}
                     >
                         <Ship size={24} />

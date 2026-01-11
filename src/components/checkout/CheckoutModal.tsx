@@ -17,12 +17,6 @@ export default function CheckoutModal({ isOpen, onClose, cartItems }: CheckoutMo
     const [phone, setPhone] = useState("");
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        if (isOpen) {
-            loadUserProfile();
-        }
-    }, [isOpen]);
-
     const loadUserProfile = async () => {
         const profile = await getUserProfile();
         if (profile) {
@@ -31,6 +25,12 @@ export default function CheckoutModal({ isOpen, onClose, cartItems }: CheckoutMo
             setPhone(profile.phone || "");
         }
     };
+
+    useEffect(() => {
+        if (isOpen) {
+            loadUserProfile();
+        }
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
