@@ -7,7 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { toast } from "sonner";
-import { getInventory } from "@/app/actions/product";
+import { getProductById } from "@/app/actions/product";
 
 export default function ProductDetailsPage() {
     const params = useParams();
@@ -23,10 +23,9 @@ export default function ProductDetailsPage() {
     useEffect(() => {
         const fetchProduct = async () => {
             if (!params.id) return;
-            const res = await getInventory();
+            const res = await getProductById(params.id as string);
             if (res.success && res.data) {
-                const found = res.data.find((p: any) => p.id === params.id);
-                setProduct(found);
+                setProduct(res.data);
             }
             setLoading(false);
         };
@@ -53,7 +52,8 @@ export default function ProductDetailsPage() {
         return <div className="min-h-screen flex items-center justify-center text-slate-500">Product not found</div>;
     }
 
-    const images = [
+    // Use fetched images array (gallery) or fallback to cover/placeholders
+    const images = (product.images && product.images.length > 0) ? product.images : [
         product.imageUrl,
         `https://placehold.co/400x400/f1f5f9/1e293b?text=Side+View`,
         `https://placehold.co/400x400/f1f5f9/1e293b?text=Detail+Shot`
@@ -120,7 +120,7 @@ export default function ProductDetailsPage() {
                 {/* Thumbnails */}
                 <div className="-mt-6 relative z-20 px-4">
                     <div className="flex justify-center gap-3 overflow-x-auto no-scrollbar py-2">
-                        {images.map((img, idx) => (
+                        {images.map((img: string, idx: number) => (
                             <button
                                 key={idx}
                                 title={`View Image ${idx + 1}`}

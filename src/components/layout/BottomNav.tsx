@@ -13,9 +13,6 @@ export default function BottomNav() {
     // Strict Allowlist: Show ONLY on these main tabs
     const allowedExactRoutes = [
         "/dashboard",
-        "/dashboard/tracking",
-        "/dashboard/shipments",
-        "/dashboard/profile",
     ];
 
     const isVisible = allowedExactRoutes.includes(pathname || "");

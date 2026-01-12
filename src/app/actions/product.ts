@@ -119,11 +119,35 @@ export async function getInventory() {
     try {
         const products = await prisma.product.findMany({
             orderBy: { createdAt: 'desc' },
-            take: 20 // Limit for homepage display
+            take: 20, // Limit for homepage display
+            select: {
+                id: true,
+                name: true,
+                category: true,
+                priceRMB: true,
+                priceGHS: true,
+                stock: true,
+                moq: true,
+                imageUrl: true, // Only cover image
+                status: true,
+                createdAt: true,
+            }
         });
         return { success: true, data: products };
     } catch (error) {
         console.error("Get Inventory Error:", error);
         return { success: false, data: [] };
+    }
+}
+
+export async function getProductById(id: string) {
+    try {
+        const product = await prisma.product.findUnique({
+            where: { id }
+        });
+        return { success: true, data: product };
+    } catch (error) {
+        console.error("Get Product Error:", error);
+        return { success: false, error: "Failed to fetch product" };
     }
 }
