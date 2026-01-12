@@ -1,6 +1,6 @@
 "use server";
 
-import { db as prisma } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/app/actions/auth";
 import { revalidatePath } from "next/cache";
 

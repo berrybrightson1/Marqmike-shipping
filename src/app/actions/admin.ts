@@ -1,6 +1,6 @@
 "use server";
 
-import { db as prisma } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export async function logCustomerCall(data: {

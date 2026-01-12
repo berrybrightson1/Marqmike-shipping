@@ -1,5 +1,5 @@
 "use server";
-import { db } from "@/lib/db";
+import { prisma as db } from "@/lib/prisma";
 
 export async function clearAllNotifications() {
     try {

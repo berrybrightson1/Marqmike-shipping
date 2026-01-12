@@ -1,6 +1,6 @@
 "use server";
 
-import { db } from "@/lib/db";
+import { prisma as db } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import crypto from "crypto";
 import { logAuditAction } from "@/app/actions/audit";

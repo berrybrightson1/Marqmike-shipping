@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { prisma as db } from "@/lib/prisma";
 
 const WHATSAPP_API_URL = "https://graph.facebook.com/v17.0";
 
