@@ -87,56 +87,48 @@ export default function StaffPicks() {
                 onScroll={handleScroll}
                 className="
                 flex gap-4
-                overflow-x-auto pb-4 px-1
+                overflow-x-auto pb-4 px-2
                 no-scrollbar snap-x
                 touch-pan-x
             ">
                 {products.map((item) => {
                     const count = getItemCount(item.id);
-                    const imageSrc = item.imageUrl || `https://placehold.co/400x400/e2e8f0/1e293b?text=${encodeURIComponent(item.name)}`;
-
+                    // Use TrendingFeed Card Design
                     return (
-                        <div key={item.id} className="
-                            w-[180px] bg-white rounded-[16px] border border-slate-100/80 shadow-[0_2px_8px_rgba(0,0,0,0.04)]
-                            hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 group flex flex-col 
-                            snap-start shrink-0 overflow-hidden relative
-                        ">
-                            {/* Image Section - Full Bleed */}
-                            <div className="h-[180px] w-full bg-white relative overflow-hidden">
-                                <img src={imageSrc} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <div key={item.id} className="min-w-[200px] w-[200px] shrink-0 bg-white rounded-[20px] p-3 shadow-sm border border-slate-100 group hover:border-brand-blue/30 hover:shadow-lg transition-all snap-start">
+                            {/* Image Badge Container */}
+                            <div className="relative w-full h-32 rounded-xl bg-slate-50 overflow-hidden mb-3">
+                                <img src={item.imageUrl || `https://placehold.co/400x400/e2e8f0/1e293b?text=${encodeURIComponent(item.name)}`} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                 {item.moq && (
-                                    <div className="absolute top-2 left-2 bg-slate-900/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded backdrop-blur-md">
+                                    <div className="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur">
                                         MOQ: {item.moq}
                                     </div>
                                 )}
                             </div>
 
-                            {/* Content Section */}
-                            <div className="p-3 flex flex-col flex-1 bg-white">
-                                <h3 className="text-[13px] font-medium text-slate-700 leading-snug line-clamp-2 min-h-[2.5rem] mb-2 group-hover:text-brand-blue transition-colors" title={item.name}>
-                                    {item.name}
-                                </h3>
+                            {/* Content */}
+                            <div>
+                                <h4 className="font-bold text-slate-800 text-sm line-clamp-2 leading-tight mb-2 h-9" title={item.name}>{item.name}</h4>
 
-                                <div className="mt-auto flex flex-col gap-2">
-                                    <div className="flex items-baseline gap-1">
-                                        <span className="text-lg font-bold text-slate-900 tracking-tight">
+                                <div className="flex items-end justify-between mb-2">
+                                    <div>
+                                        <div className="text-[10px] text-slate-400 font-medium">Price</div>
+                                        <div className="text-lg font-extrabold text-[#FF6600]">
                                             {formatPrice(item.priceRMB || 0, 'RMB')}
-                                        </span>
+                                        </div>
                                     </div>
+                                </div>
 
+                                <div className="flex items-center justify-between gap-2 border-t border-slate-50 pt-2">
+                                    <span className="text-[10px] font-bold text-slate-400 truncate max-w-[80px]">In Stock</span>
                                     <button
                                         onClick={(e) => handleAddToCart(e, item)}
                                         className={`
-                                            w-full h-8 rounded-full flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95
-                                            ${count > 0
-                                                ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
-                                                : 'bg-slate-900 text-white hover:bg-brand-blue shadow-md shadow-slate-200'}
+                                            w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-lg active:scale-95
+                                            ${count > 0 ? 'bg-emerald-500 text-white' : 'bg-slate-900 text-white hover:bg-[#FF6600]'}
                                         `}
                                     >
-                                        <span className="text-[11px] font-bold">
-                                            {count > 0 ? 'Added' : 'Add to Cart'}
-                                        </span>
-                                        {count > 0 && <span className="text-[10px]">✓</span>}
+                                        {count > 0 ? <ShieldCheck size={16} /> : <Plus size={16} />}
                                     </button>
                                 </div>
                             </div>

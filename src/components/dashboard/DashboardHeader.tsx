@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Bell, Search, ScanLine, DollarSign, LogOut, ArrowLeft, Trash2, Link as LinkIcon, ShoppingBag } from "lucide-react";
-import AddLinkModal from "./AddLinkModal";
+import { Bell, Search, ScanLine, DollarSign, ArrowLeft, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { signOut } from "@/app/actions/auth";
 import { toast } from "sonner";
 import { useClickOutside } from "@/hooks/useClickOutside";
 
@@ -30,7 +28,6 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
     const [greeting, setGreeting] = useState("Good Day");
 
     const [newNotification, setNewNotification] = useState<any>(null);
-    const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
     const { totalItems } = useCart();
 
     useEffect(() => {
@@ -162,24 +159,8 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
 
                         {/* Right Side: Actions */}
                         <div className="flex gap-2">
-                            {/* Buy for Me Button */}
-                            <button
-                                onClick={() => setIsLinkModalOpen(true)}
-                                className="h-10 px-3 rounded-full bg-brand-pink text-white flex items-center gap-2 font-bold text-xs shadow-lg shadow-brand-pink/20 hover:bg-brand-pink/90 transition-all"
-                            >
-                                <LinkIcon size={14} />
-                                <span className="hidden sm:inline">Buy for Me</span>
-                            </button>
 
-                            {/* Cart Button */}
-                            <Link href="/dashboard/cart" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors relative backdrop-blur-sm">
-                                <ShoppingBag size={20} />
-                                {totalItems > 0 && (
-                                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-brand-pink rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-brand-blue">
-                                        {totalItems}
-                                    </div>
-                                )}
-                            </Link>
+
                             <div className="relative" ref={currencyRef}>
                                 <button
                                     onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}
@@ -335,7 +316,6 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
                     </form>
                 </div>
             </div>
-            <AddLinkModal isOpen={isLinkModalOpen} onClose={() => setIsLinkModalOpen(false)} />
         </div>
     );
 }

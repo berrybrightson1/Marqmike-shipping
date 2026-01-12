@@ -92,7 +92,7 @@ export default function ShipmentsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#F2F6FC] pb-32">
+        <div className="min-h-screen bg-[#F2F6FC] pb-48">
             {/* Header */}
             <header className="bg-white pt-12 pb-6 px-6 shadow-sm border-b border-slate-100 sticky top-0 z-10">
                 <div className="flex items-center gap-4 mb-6">
@@ -252,7 +252,7 @@ export default function ShipmentsPage() {
 
             {/* Floating Action Button for Warehouse */}
             {activeTab === 'warehouse' && selectedIds.size > 0 && (
-                <div className="fixed bottom-6 left-6 right-6 z-20 animate-in slide-in-from-bottom-5 duration-300">
+                <div className="fixed bottom-24 lg:bottom-10 left-6 right-6 md:left-1/2 md:-translate-x-1/2 md:w-[600px] z-40 animate-in slide-in-from-bottom-5 duration-300">
                     <button
                         onClick={handleShipSelected}
                         disabled={isShipping}
