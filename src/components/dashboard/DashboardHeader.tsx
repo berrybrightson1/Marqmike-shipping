@@ -160,15 +160,17 @@ export default function DashboardHeader({ user, title = "My Shipments", showBack
                         {/* Right Side: Actions */}
                         <div className="flex gap-2">
 
-
+                            {/* Currency Selector (Restored) */}
                             <div className="relative" ref={currencyRef}>
                                 <button
                                     onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}
-                                    className="h-10 px-3 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors gap-1.5 backdrop-blur-sm hidden sm:flex"
+                                    // Added explicit styling: Minimal, white/10 border, backdrop blur
+                                    className="h-10 px-3 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors gap-1.5 backdrop-blur-sm"
                                 >
                                     <DollarSign size={14} className="text-brand-pink" />
                                     <span className="text-xs font-bold">{currency}</span>
                                 </button>
+
                                 {showCurrencyDropdown && (
                                     <div className="absolute top-full right-0 mt-3 w-40 bg-white rounded-[24px] shadow-xl shadow-brand-blue/20 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 border border-slate-100">
                                         <div className="p-2 space-y-1">

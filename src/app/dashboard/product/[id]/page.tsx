@@ -78,22 +78,29 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Hero Image Section */}
-            <div className="bg-white pb-6 rounded-b-[32px] shadow-sm mb-4 overflow-hidden">
+            <div className="bg-white pb-10 rounded-b-[40px] shadow-sm mb-4 relative z-10">
                 <div className="aspect-square w-full relative bg-slate-50">
-                    <img src={images[selectedImage]} alt={product.name} className="w-full h-full object-cover mix-blend-multiply" />
+                    <img src={images[selectedImage]} alt={product.name} className="w-full h-full object-cover" />
                 </div>
                 {/* Thumbnails */}
-                <div className="flex justify-center gap-3 mt-4 px-4 overflow-x-auto no-scrollbar">
-                    {images.map((img, idx) => (
-                        <button
-                            key={idx}
-                            title={`View Image ${idx + 1}`}
-                            onClick={() => setSelectedImage(idx)}
-                            className={`w-16 h-16 rounded-xl border-2 overflow-hidden transition-all ${selectedImage === idx ? 'border-brand-pink scale-110 shadow-md' : 'border-transparent bg-slate-100'}`}
-                        >
-                            <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
-                        </button>
-                    ))}
+                <div className="-mt-6 relative z-20 px-4">
+                    <div className="flex justify-center gap-3 overflow-x-auto no-scrollbar py-2">
+                        {images.map((img, idx) => (
+                            <button
+                                key={idx}
+                                title={`View Image ${idx + 1}`}
+                                onClick={() => setSelectedImage(idx)}
+                                className={`
+                                    w-16 h-16 shrink-0 rounded-2xl overflow-hidden transition-all duration-300
+                                    ${selectedImage === idx
+                                        ? 'ring-2 ring-brand-pink ring-offset-2 scale-110 shadow-lg'
+                                        : 'ring-1 ring-slate-100 bg-slate-50 opacity-70 hover:opacity-100'}
+                                `}
+                            >
+                                <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 

@@ -9,6 +9,16 @@ export default function BottomNav() {
     const pathname = usePathname();
     const { totalItems } = useCart();
 
+    // Pages where BottomNav should be hidden
+    const hiddenRoutes = [
+        "/dashboard/product", // Starts with check handles [id]
+        "/dashboard/cart",
+        "/dashboard/checkout",
+        "/dashboard/wallet/topup"
+    ];
+
+    const isHidden = hiddenRoutes.some(route => pathname?.startsWith(route));
+
     const navItems = [
         { label: "Feed", icon: LayoutGrid, href: "/dashboard" },
         { label: "Track", icon: Truck, href: "/dashboard/tracking" },
@@ -17,8 +27,11 @@ export default function BottomNav() {
         { label: "Profile", icon: User, href: "/dashboard/profile" },
     ];
 
+    if (isHidden) return null;
+
     return (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-sm px-6 z-50">
+            {/* Nav Container */}
             <div className="bg-white/90 backdrop-blur-2xl border border-white/60 rounded-[32px] p-2 shadow-[0_8px_32px_rgba(0,73,173,0.15)] ring-1 ring-white/60 flex justify-between items-center relative overflow-hidden">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href;
