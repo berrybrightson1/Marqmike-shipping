@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, MessageCircle, MapPin, Phone } from "lucide-react";
 // import { useUser } from "@clerk/nextjs"; 
 import { toast } from "sonner";
+import { getUserProfile } from "@/app/actions/auth";
 
 import { createOrder } from "@/app/actions/orders";
 
@@ -21,14 +22,25 @@ interface WhatsAppCheckoutModalProps {
 
 export default function WhatsAppCheckoutModal({ isOpen, onClose, product, quantity, totalCBM }: WhatsAppCheckoutModalProps) {
     // const { user } = useUser();
-    const [phone, setPhone] = useState(""); // user?.phoneNumbers?.[0]?.phoneNumber || ""
+    const [phone, setPhone] = useState("");
+    const [name, setName] = useState("");
     const [location, setLocation] = useState("");
 
+    // Load User Profile to pre-fill
+    useEffect(() => {
+        if (isOpen) {
+            const loadProfile = async () => {
+                const profile = await getUserProfile();
+                if (profile) {
+                    setPhone(profile.phone || "");
+                    setName(profile.businessName || profile.name || "");
+                }
+            };
+            loadProfile();
+        }
+    }, [isOpen]);
+
     if (!isOpen) return null;
-
-
-
-    // ... inside component ...
 
     const handleCheckout = async () => {
         if (!phone || !location) {
@@ -38,14 +50,13 @@ export default function WhatsAppCheckoutModal({ isOpen, onClose, product, quanti
 
         // 1. Create Order in Database
         const res = await createOrder({
-            customerName: "Guest (Buy Now)", // or prompt name? using user logic inside createOrder will pick up logged in user
+            customerName: name || "Guest (Buy Now)",
             customerPhone: phone,
             items: [{
                 itemName: product.name,
                 quantity: quantity,
                 priceAtTime: product.priceRMB,
-                productId: product.id // Pass ID for stock sync
-                // Add url if available in product prop, otherwise null
+                productId: product.id
             }]
         });
 
@@ -55,6 +66,7 @@ export default function WhatsAppCheckoutModal({ isOpen, onClose, product, quanti
         // Construct WhatsApp Message
         const message = encodeURIComponent(
             `🛒 *New Order Request*\n\n` +
+            `👤 Customer: ${name || "Guest"}\n` +
             `📦 Product: ${product.name}\n` +
             `🔢 Quantity: ${quantity}\n` +
             `💰 Price: ¥${product.priceRMB} x ${quantity} = ¥${product.priceRMB * quantity}\n` +
