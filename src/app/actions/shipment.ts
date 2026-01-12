@@ -203,7 +203,7 @@ export async function getUserOrders() {
                 type: 'Shipment',
                 origin: s.origin,
                 destination: s.destination,
-                rawDate: s.createdAt
+                rawDate: s.createdAt.toISOString()
             };
         });
 
@@ -233,7 +233,7 @@ export async function getUserOrders() {
                     type: 'Shop Order',
                     origin: 'Marqmike Shop',
                     destination: 'Ghana',
-                    rawDate: o.createdAt
+                    rawDate: o.createdAt.toISOString()
                 };
             });
 
@@ -256,7 +256,7 @@ export async function getUserOrders() {
                 type: 'Procurement',
                 origin: 'Request',
                 destination: 'Review',
-                rawDate: p.createdAt
+                rawDate: p.createdAt.toISOString()
             }
         });
 
