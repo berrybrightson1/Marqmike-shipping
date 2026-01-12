@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { useCurrency } from "@/context/CurrencyContext";
 
-const STATUS_OPTIONS = ["Pending", "Processing", "Shipped", "Completed", "Cancelled"];
+const STATUS_OPTIONS = ["Pending", "Processing", "Arrived", "Shipped", "Completed", "Cancelled"];
 
 const TABS = [
     { id: 'all', label: 'All Orders' },
@@ -237,7 +237,7 @@ export default function AdminOrdersPage() {
                                                     ${order.status === 'Cancelled' ? 'bg-slate-50 text-slate-500 border-slate-100' : ''}
                                                 `}
                                             >
-                                                {(order.type === 'Shop' ? STATUS_OPTIONS : ['Pending', 'Approved', 'Purchased', 'Shipped', 'Completed', 'Cancelled']).map(status => (
+                                                {(order.type === 'Shop' ? STATUS_OPTIONS : ['Pending', 'Approved', 'Purchased', 'Arrived', 'Shipped', 'Completed', 'Cancelled']).map(status => (
                                                     <option key={status} value={status}>{status}</option>
                                                 ))}
                                             </select>

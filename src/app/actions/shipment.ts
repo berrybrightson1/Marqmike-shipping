@@ -160,31 +160,33 @@ export async function getUserOrders() {
         const user = await getCurrentUser();
         if (!user) return { success: false, data: [] };
 
-        // 1. Fetch Shipments (Tracking Active)
+        // 1. Fetch Shipments (The "In Transit" containers)
         const shipments = await db.shipment.findMany({
             where: { customerId: user.id },
             orderBy: { createdAt: 'desc' },
             include: {
-                events: { orderBy: { timestamp: 'desc' }, take: 1 }
-            }
+                events: { orderBy: { timestamp: 'desc' }, take: 1 },
+                orders: true, // Includes items inside
+                procurementRequests: true
+            } as any // Temporary cast to bypass stale TS types
         });
 
-        // 2. Fetch Shop Orders (Purchases)
+        // 2. Fetch Shop Orders (Loose Items)
         const shopOrders = await db.order.findMany({
-            where: { userId: user.id },
+            where: { userId: user.id, shipmentId: null } as any, // Only those NOT in a shipment
             orderBy: { createdAt: 'desc' },
             include: { items: true }
         });
 
-        // 3. Fetch Procurement Requests (Buy For Me)
+        // 3. Fetch Procurement Requests (Loose Items)
         const procurementRequests = await db.procurementRequest.findMany({
-            where: { userId: user.id },
+            where: { userId: user.id, shipmentId: null } as any, // Only those NOT in a shipment
             orderBy: { createdAt: 'desc' }
         });
 
-        // --- Normalization & Merging ---
+        // --- Normalization ---
 
-        // Map Shipments
+        // A. Shipments (Tab: 'shipment')
         const normalizedShipments = shipments.map(s => {
             let progress = 10;
             if (s.status === 'Processing') progress = 30;
@@ -192,58 +194,55 @@ export async function getUserOrders() {
             if (s.status === 'Arrived') progress = 90;
             if (s.status === 'Delivered') progress = 100;
 
+            const itemCount = s.orders.length + s.procurementRequests.length;
+
             return {
                 id: s.id,
                 trackingId: s.trackingId,
                 ref: s.trackingId,
-                item: s.shipperName || "Package", // Often contains "Order Items..."
+                item: s.shipperName || `${itemCount} Items Consolidated`,
                 status: s.status,
                 progress,
                 date: s.createdAt.toLocaleDateString(),
                 type: 'Shipment',
                 origin: s.origin,
                 destination: s.destination,
-                rawDate: s.createdAt.toISOString()
+                rawDate: s.createdAt.toISOString(),
+                tab: 'shipment',
+                items: [...s.orders, ...s.procurementRequests] // useful for details
             };
         });
 
-        // Map Shop Orders
-        // *IMPORTANT*: Exclude orders that already have a Shipment (via trackingId) to avoid duplicates.
-        const shipmentTrackingIds = new Set(shipments.map(s => s.trackingId));
+        // B. Shop Orders (Tab: 'request' or 'warehouse')
+        const normalizedOrders = shopOrders.map(o => {
+            const mainItem = o.items[0]?.itemName || "General Goods";
+            const otherCount = o.items.length - 1;
+            const itemLabel = otherCount > 0 ? `${mainItem} + ${otherCount} others` : mainItem;
 
-        const normalizedOrders = shopOrders
-            .filter(o => !o.trackingId || !shipmentTrackingIds.has(o.trackingId))
-            .map(o => {
-                const mainItem = o.items[0]?.itemName || "General Goods";
-                const otherCount = o.items.length - 1;
-                const itemLabel = otherCount > 0 ? `${mainItem} + ${otherCount} others` : mainItem;
+            // "Arrived" means it's in the Virtual Warehouse
+            const isWarehouse = o.status === 'Arrived';
 
-                let progress = 10;
-                if (o.status === 'Processing') progress = 30;
-                if (o.status === 'Completed') progress = 100;
+            return {
+                id: o.id,
+                trackingId: o.trackingId || "Pending",
+                ref: o.refCode,
+                item: itemLabel,
+                status: o.status,
+                progress: isWarehouse ? 100 : 30,
+                date: o.createdAt.toLocaleDateString(),
+                type: 'Shop',
+                origin: 'Marqmike Shop',
+                destination: 'Warehouse',
+                rawDate: o.createdAt.toISOString(),
+                tab: isWarehouse ? 'warehouse' : 'request',
+                price: o.totalAmount
+            };
+        });
 
-                return {
-                    id: o.id,
-                    trackingId: o.trackingId || "Pending",
-                    ref: o.refCode,
-                    item: itemLabel,
-                    status: o.status,
-                    progress,
-                    date: o.createdAt.toLocaleDateString(),
-                    type: 'Shop Order',
-                    origin: 'Marqmike Shop',
-                    destination: 'Ghana',
-                    rawDate: o.createdAt.toISOString()
-                };
-            });
-
-        // Map Procurements
+        // C. Procurements (Tab: 'request' or 'warehouse')
         const normalizedProcurements = procurementRequests.map(p => {
-            let progress = 10;
-            if (p.status === 'Approved') progress = 30;
-            if (p.status === 'Purchased') progress = 60;
-            if (p.status === 'Shipped') progress = 80; // Usually moves to shipment then
-            if (p.status === 'Completed') progress = 100;
+            // "Arrived" means it's in the Virtual Warehouse
+            const isWarehouse = p.status === 'Arrived';
 
             return {
                 id: p.id,
@@ -251,16 +250,18 @@ export async function getUserOrders() {
                 ref: "Procurement",
                 item: p.itemName,
                 status: p.status,
-                progress,
+                progress: isWarehouse ? 100 : 30,
                 date: p.createdAt.toLocaleDateString(),
                 type: 'Procurement',
-                origin: 'Request',
-                destination: 'Review',
-                rawDate: p.createdAt.toISOString()
+                origin: 'External Link',
+                destination: 'Warehouse',
+                rawDate: p.createdAt.toISOString(),
+                tab: isWarehouse ? 'warehouse' : 'request',
+                price: 0 // usually unknown until quoted
             }
         });
 
-        // Combine and Sort by Date
+        // Combine and Sort
         const allItems = [...normalizedShipments, ...normalizedOrders, ...normalizedProcurements]
             .sort((a, b) => new Date(b.rawDate).getTime() - new Date(a.rawDate).getTime());
 
@@ -269,5 +270,65 @@ export async function getUserOrders() {
     } catch (error) {
         console.error("Get User Orders Error:", error);
         return { success: false, data: [] };
+    }
+}
+
+// --- Create Consolidated Shipment (Virtual Warehouse -> Shipment) ---
+export async function createConsolidatedShipment(selectedItems: { id: string, type: 'Shop' | 'Procurement' }[]) {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, error: "Unauthorized" };
+
+    if (!selectedItems || selectedItems.length === 0) {
+        return { success: false, error: "No items selected" };
+    }
+
+    try {
+        const trackingId = `TRK-${Math.floor(100000 + Math.random() * 900000)}`;
+
+        // 1. Create Shipment
+        const shipment = await db.shipment.create({
+            data: {
+                trackingId,
+                customerId: user.id,
+                status: "Processing", // Valid initial status
+                shipperName: `Consolidated Shipment (${selectedItems.length} items)`,
+                recipientName: user.name || "Customer",
+                origin: "Guangzhou Warehouse",
+                destination: "Ghana"
+            }
+        });
+
+        // 2. Link Items to Shipment
+        // We have to loop or use Promise.all because they are different tables
+        await Promise.all(selectedItems.map(async (item) => {
+            if (item.type === 'Shop') {
+                await db.order.update({
+                    where: { id: item.id },
+                    data: { shipmentId: shipment.id, status: "Shipped" } as any // Move status forward
+                });
+            } else {
+                await db.procurementRequest.update({
+                    where: { id: item.id },
+                    data: { shipmentId: shipment.id, status: "Shipped" } as any
+                });
+            }
+        }));
+
+        // 3. Log Audit
+        await logAuditAction(
+            "SHIPMENT_CREATED",
+            "SHIPMENT",
+            `Consolidated Shipment ${trackingId} created with ${selectedItems.length} items`,
+            shipment.id,
+            { itemCount: selectedItems.length },
+            user.name || "Customer"
+        );
+
+        revalidatePath('/dashboard/shipments');
+        return { success: true, trackingId };
+
+    } catch (error) {
+        console.error("Create Consolidated Shipment Error:", error);
+        return { success: false, error: "Failed to create shipment" };
     }
 }

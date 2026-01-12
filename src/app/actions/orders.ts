@@ -228,7 +228,10 @@ export async function updateUnifiedStatus(id: string, newStatus: string, type: '
                 include: { items: true }
             });
 
-            if (updatedOrder.trackingId) await syncToShipment(updatedOrder);
+            // Only sync to legacy Shipment logic if it's actually shipping out, not just arriving at warehouse
+            if (updatedOrder.trackingId && newStatus !== 'Arrived' && newStatus !== 'Arrived at Warehouse') {
+                await syncToShipment(updatedOrder);
+            }
 
             await logAuditAction(
                 "ORDER_STATUS_UPDATE",

@@ -86,6 +86,11 @@ model ProcurementRequest {
   notes     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  shipmentId String?
+  shipment   Shipment? @relation(fields: [shipmentId], references: [id])
+
+  @@index([shipmentId])
 }
 
 model Shipment {
@@ -104,6 +109,9 @@ model Shipment {
   destination   String   @default("Unspecified")
   
   events        ShipmentEvent[]
+
+  orders              Order[]
+  procurementRequests ProcurementRequest[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -152,6 +160,8 @@ model Order {
   customerName  String
   customerPhone String
   trackingId    String?
+  shipmentId    String?
+  shipment      Shipment?   @relation(fields: [shipmentId], references: [id])
   
   status        String      @default("Pending") // Pending, Processing, Completed, Cancelled
   totalAmount   Float       @default(0)
@@ -162,6 +172,7 @@ model Order {
   updatedAt     DateTime    @updatedAt
   
   @@index([userId])
+  @@index([shipmentId])
 }
 
 model OrderItem {
