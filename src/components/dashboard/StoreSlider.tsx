@@ -63,8 +63,8 @@ export default function StoreSlider() {
         // Pause on interactions
         scrollContainer.addEventListener('mouseenter', stopAutoScroll);
         scrollContainer.addEventListener('mouseleave', startAutoScroll);
-        scrollContainer.addEventListener('touchstart', stopAutoScroll);
-        scrollContainer.addEventListener('touchend', startAutoScroll);
+        scrollContainer.addEventListener('touchstart', stopAutoScroll, { passive: true });
+        scrollContainer.addEventListener('touchend', startAutoScroll, { passive: true });
 
         return () => {
             stopAutoScroll();
