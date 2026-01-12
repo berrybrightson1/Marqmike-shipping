@@ -96,7 +96,7 @@ export default function StoreSlider() {
                 className="
                 flex gap-4
                 overflow-x-auto pb-6 px-2
-                no-scrollbar snap-x
+                no-scrollbar
                 touch-pan-x
                 scroll-smooth
             ">
@@ -112,7 +112,7 @@ export default function StoreSlider() {
                             shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] 
                             border border-slate-100/50 
                             hover:border-indigo-500/30 hover:shadow-xl hover:-translate-y-1 
-                            transition-all duration-300 snap-start
+                            transition-all duration-300
                             flex flex-col items-center text-center
                         "
                     >

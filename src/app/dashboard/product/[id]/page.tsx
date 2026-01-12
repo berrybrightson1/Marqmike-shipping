@@ -53,7 +53,9 @@ export default function ProductDetailsPage() {
     }
 
     // Use fetched images array (gallery) or fallback to cover/placeholders
-    const images = (product.images && product.images.length > 0) ? product.images : [
+    // Safer check: Ensure product.images is actually an array
+    const productImages = Array.isArray(product.images) ? product.images : [];
+    const images = productImages.length > 0 ? productImages : [
         product.imageUrl,
         `https://placehold.co/400x400/f1f5f9/1e293b?text=Side+View`,
         `https://placehold.co/400x400/f1f5f9/1e293b?text=Detail+Shot`
