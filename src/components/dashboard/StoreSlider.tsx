@@ -26,49 +26,52 @@ export default function StoreSlider() {
         }
     };
 
-    // Auto-scroll logic (Continuous Smooth Marquee)
+    // Auto-scroll logic (Stepped every 2 seconds)
     React.useEffect(() => {
         const scrollContainer = scrollRef.current;
         if (!scrollContainer) return;
 
-        let animationId: number;
-        let lastTimestamp: number = 0;
-        const speed = 0.5; // Pixels per frame - Adjust for smoothness
+        let intervalId: NodeJS.Timeout;
 
-        const step = (timestamp: number) => {
-            if (!lastTimestamp) lastTimestamp = timestamp;
-            const deltaTime = timestamp - lastTimestamp;
-            lastTimestamp = timestamp;
+        const scrollStep = () => {
+            if (!scrollContainer) return;
 
-            if (scrollContainer) {
-                // If we are within 1px of the end (or past it), reset to start
-                if (scrollContainer.scrollLeft >= (scrollContainer.scrollWidth - scrollContainer.clientWidth - 1)) {
-                    scrollContainer.scrollLeft = 0;
-                } else {
-                    scrollContainer.scrollLeft += speed;
-                }
+            // Check if we are near the end
+            const { scrollLeft, scrollWidth, clientWidth } = scrollContainer;
+            const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 10; // Buffer
+
+            if (isAtEnd) {
+                // Smooth scroll back to start
+                scrollContainer.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                // Scroll forward by approx 1 card width + gap (approx 160px + 16px)
+                scrollContainer.scrollBy({ left: 180, behavior: 'smooth' });
             }
-            animationId = requestAnimationFrame(step);
         };
 
-        // Start animation
-        animationId = requestAnimationFrame(step);
+        const startAutoScroll = () => {
+            intervalId = setInterval(scrollStep, 2000); // Every 2 seconds
+        };
 
-        // Pause on hover (handled via CSS pointer-events or JS listener? Let's use JS listener for simplicity)
-        const pause = () => cancelAnimationFrame(animationId);
-        const resume = () => { lastTimestamp = 0; animationId = requestAnimationFrame(step); };
+        const stopAutoScroll = () => {
+            clearInterval(intervalId);
+        };
 
-        scrollContainer.addEventListener('mouseenter', pause);
-        scrollContainer.addEventListener('mouseleave', resume);
-        scrollContainer.addEventListener('touchstart', pause);
-        scrollContainer.addEventListener('touchend', resume);
+        // Start initially
+        startAutoScroll();
+
+        // Pause on interactions
+        scrollContainer.addEventListener('mouseenter', stopAutoScroll);
+        scrollContainer.addEventListener('mouseleave', startAutoScroll);
+        scrollContainer.addEventListener('touchstart', stopAutoScroll);
+        scrollContainer.addEventListener('touchend', startAutoScroll);
 
         return () => {
-            cancelAnimationFrame(animationId);
-            scrollContainer.removeEventListener('mouseenter', pause);
-            scrollContainer.removeEventListener('mouseleave', resume);
-            scrollContainer.removeEventListener('touchstart', pause);
-            scrollContainer.removeEventListener('touchend', resume);
+            stopAutoScroll();
+            scrollContainer.removeEventListener('mouseenter', stopAutoScroll);
+            scrollContainer.removeEventListener('mouseleave', startAutoScroll);
+            scrollContainer.removeEventListener('touchstart', stopAutoScroll);
+            scrollContainer.removeEventListener('touchend', startAutoScroll);
         };
     }, []);
 
