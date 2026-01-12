@@ -19,6 +19,7 @@ export default function ProductDetailsPage() {
     const [activeTab, setActiveTab] = useState("details");
     const [quantity, setQuantity] = useState(1);
     const [selectedImage, setSelectedImage] = useState(0);
+    const [isWishlisted, setIsWishlisted] = useState(false);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -61,7 +62,6 @@ export default function ProductDetailsPage() {
         `https://placehold.co/400x400/f1f5f9/1e293b?text=Detail+Shot`
     ].filter(Boolean);
 
-    const [isWishlisted, setIsWishlisted] = useState(false);
 
     const handleShare = async () => {
         if (!product) return;
