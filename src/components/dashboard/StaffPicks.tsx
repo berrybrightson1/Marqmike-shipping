@@ -96,9 +96,11 @@ export default function StaffPicks() {
                     // Use TrendingFeed Card Design
                     return (
                         <div key={item.id} className="min-w-[200px] w-[200px] shrink-0 bg-white rounded-[20px] p-3 shadow-sm border border-slate-100 group hover:border-brand-blue/30 hover:shadow-lg transition-all snap-start flex flex-col h-full relative">
-                            <Link href={`/dashboard/product/${item.id}`} className="absolute inset-0 z-0" />
-                            {/* Image Badge Container */}
-                            <div className="relative w-full h-32 rounded-xl bg-slate-50 overflow-hidden mb-3 z-10 pointer-events-none">
+                            {/* Full Card Link Overlay - High Z-Index to capture clicks */}
+                            <Link href={`/dashboard/product/${item.id}`} className="absolute inset-0 z-10 rounded-[20px]" aria-label={`View ${item.name}`} />
+
+                            {/* Image Badge Container - Visuals */}
+                            <div className="relative w-full h-32 rounded-xl bg-slate-50 overflow-hidden mb-3">
                                 <img src={item.imageUrl || `https://placehold.co/400x400/e2e8f0/1e293b?text=${encodeURIComponent(item.name)}`} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                 {item.moq && (
                                     <div className="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur">
@@ -108,7 +110,7 @@ export default function StaffPicks() {
                             </div>
 
                             {/* Content */}
-                            <div className="flex flex-col flex-1 z-10 pointer-events-none">
+                            <div className="flex flex-col flex-1">
                                 <h4 className="font-bold text-slate-800 text-sm line-clamp-2 leading-tight mb-2 h-9" title={item.name}>{item.name}</h4>
 
                                 <div className="flex items-end justify-between mb-2 mt-auto">
@@ -120,12 +122,12 @@ export default function StaffPicks() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between gap-2 border-t border-slate-50 pt-2 pointer-events-auto">
+                                <div className="flex items-center justify-between gap-2 border-t border-slate-50 pt-2 relative z-20">
                                     <span className="text-[10px] font-bold text-slate-400 truncate max-w-[80px]">In Stock</span>
                                     <button
                                         onClick={(e) => handleAddToCart(e, item)}
                                         className={`
-                                            w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-lg active:scale-95
+                                            w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-lg active:scale-95 cursor-pointer relative z-30
                                             ${count > 0 ? 'bg-emerald-500 text-white' : 'bg-slate-900 text-white hover:bg-[#FF6600]'}
                                         `}
                                     >
