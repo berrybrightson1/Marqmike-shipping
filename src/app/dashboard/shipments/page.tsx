@@ -120,7 +120,7 @@ export default function ShipmentsPage() {
 
             <div className="p-6">
                 {/* Search */}
-                <div className="bg-white p-2 pl-4 rounded-2xl shadow-sm border border-slate-100 flex gap-4 items-center mb-6 focus-within:ring-2 ring-brand-blue/20 transition-all">
+                <div className="bg-white/80 backdrop-blur-xl p-2 pl-4 rounded-2xl shadow-sm border border-white/40 flex gap-4 items-center mb-6 focus-within:ring-2 ring-brand-blue/20 transition-all hover:bg-white">
                     <Search className="text-slate-400 shrink-0" size={20} />
                     <input
                         type="text"
@@ -165,8 +165,8 @@ export default function ShipmentsPage() {
                     {/* Items List */}
                     {filtered.map((item) => (
                         <div key={item.id}
-                            className={`bg-white p-5 rounded-[24px] border shadow-sm transition-all relative overflow-hidden group
-                                ${activeTab === 'warehouse' && selectedIds.has(item.id) ? 'border-brand-blue ring-1 ring-brand-blue bg-blue-50/20' : 'border-slate-100'}`}
+                            className={`bg-white/80 backdrop-blur-xl p-5 rounded-[24px] border transition-all relative overflow-hidden group hover:shadow-md hover:bg-white
+                                ${activeTab === 'warehouse' && selectedIds.has(item.id) ? 'border-brand-blue ring-1 ring-brand-blue bg-blue-50/20' : 'border-white/40 shadow-sm'}`}
                             onClick={() => activeTab === 'warehouse' && toggleSelection(item.id)}
                         >
                             {/* Checkbox for Warehouse */}

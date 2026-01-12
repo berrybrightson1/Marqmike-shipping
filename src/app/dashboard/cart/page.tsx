@@ -36,22 +36,22 @@ export default function CartPage() {
 
     if (checkoutSuccess) {
         return (
-            <div className="min-h-screen bg-[#F2F6FC] pb-24 flex flex-col items-center justify-center px-6 text-center">
-                <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6 animate-in zoom-in duration-300">
+            <div className="fixed inset-0 z-50 bg-[#F2F6FC] flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-300">
+                <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6 animate-in zoom-in duration-500 delay-100">
                     <CheckCircle size={48} className="text-green-600" />
                 </div>
                 <h1 className="text-2xl font-bold text-slate-800 mb-2">Order Submitted!</h1>
-                <p className="text-slate-500 mb-8 max-w-xs mx-auto">
+                <p className="text-slate-500 mb-8 max-w-xs mx-auto text-sm">
                     We've opened WhatsApp for you to send the order details. An admin will confirm shortly.
                 </p>
                 <div className="space-y-3 w-full max-w-xs">
-                    <Link href="/dashboard/shipments" className="block w-full py-3.5 bg-brand-blue text-white rounded-xl font-bold shadow-lg shadow-brand-blue/20">
+                    <Link href="/dashboard/shipments" className="block w-full py-4 bg-brand-blue text-white rounded-xl font-bold shadow-xl shadow-brand-blue/20 hover:bg-brand-blue/90 transition-colors">
                         View My Requests
                     </Link>
-                    <Link href="/dashboard/shop" className="block w-full py-3.5 bg-white text-slate-600 rounded-xl font-bold border border-slate-200">
+                    <Link href="/dashboard/shop" className="block w-full py-4 bg-white text-slate-600 rounded-xl font-bold border-2 border-slate-100 hover:border-slate-300 transition-colors">
                         Continue Shopping
                     </Link>
-                    <button onClick={() => setCheckoutSuccess(false)} className="text-sm text-slate-400 font-bold mt-4">
+                    <button onClick={() => setCheckoutSuccess(false)} className="text-sm text-slate-400 font-bold hover:text-slate-600 transition-colors pt-2">
                         Back to Cart
                     </button>
                 </div>
@@ -77,7 +77,7 @@ export default function CartPage() {
                         </div>
                         <h2 className="text-xl font-bold text-slate-700 mb-2">Your cart is empty</h2>
                         <p className="text-slate-400 text-sm mb-8">Looks like you haven't added anything yet.</p>
-                        <Link href="/dashboard/shop" className="bg-brand-blue text-white py-3 px-8 rounded-xl font-bold shadow-lg hover:bg-brand-blue/90 transition-colors">
+                        <Link href="/dashboard/shop" className="bg-brand-blue text-white py-3 px-8 rounded-xl font-bold shadow-xl shadow-brand-blue/20 hover:bg-brand-blue/90 transition-colors">
                             Start Shopping
                         </Link>
                     </div>
@@ -114,10 +114,10 @@ export default function CartPage() {
                             </div>
                             <button
                                 onClick={handleCheckoutTrigger}
-                                className="w-full py-4 bg-brand-blue/5 text-brand-blue border-2 border-brand-blue rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-brand-blue hover:text-white transition-all"
+                                className="w-full py-4 bg-brand-blue/5 text-brand-blue border-2 border-brand-blue rounded-xl font-bold text-sm sm:text-base flex items-center justify-center gap-2 hover:bg-brand-blue hover:text-white transition-all"
                             >
                                 <ShoppingCart size={20} />
-                                Notify Admin via WhatsApp
+                                Notify Admin (WhatsApp)
                             </button>
                             <p className="text-center text-slate-400 text-xs mt-4">
                                 Your items are already saved. Click above if you want to speed up the process.
