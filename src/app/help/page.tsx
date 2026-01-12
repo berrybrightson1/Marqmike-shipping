@@ -286,7 +286,7 @@ export default function HelpPage() {
                             </div>
                             <span className="text-sm font-bold text-slate-700">Get Quote</span>
                         </Link>
-                        <Link href="/store" className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all group">
+                        <Link href="/dashboard/stores" className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-brand-blue/30 transition-all group">
                             <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                                 <BookOpen size={20} />
                             </div>

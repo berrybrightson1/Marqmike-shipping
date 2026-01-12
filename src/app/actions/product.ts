@@ -38,7 +38,12 @@ export async function createProduct(formData: FormData) {
     }
 
     // Image Handling
-    const imageUrl = formData.get("imageUrl") as string || null;
+    // Get all images (from hidden inputs named "images")
+    const images = formData.getAll("images") as string[];
+
+    // Legacy support: 'imageUrl' input is also sent as single value of first image or null
+    // But let's strictly use the first image of array if 'imageUrl' is not explicitly handled or if we prefer array source
+    const imageUrl = images.length > 0 ? images[0] : null;
 
     try {
         await prisma.product.create({
@@ -50,7 +55,8 @@ export async function createProduct(formData: FormData) {
                 priceGHS,
                 stock,
                 moq,
-                imageUrl,
+                imageUrl, // Primary cover
+                images,   // Gallery array
                 status: stock > 0 ? "In Stock" : "Out of Stock"
             }
         });

@@ -71,6 +71,7 @@ model Product {
   status      String   @default("In Stock")
   category    String   @default("General")
   imageUrl    String?
+  images      String[] // For gallery support
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   

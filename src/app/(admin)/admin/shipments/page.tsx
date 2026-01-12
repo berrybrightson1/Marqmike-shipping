@@ -147,13 +147,35 @@ export default function ShipmentManagerPage() {
                                         </td>
                                         <td className="p-6 text-right">
                                             <div className="flex items-center justify-end gap-1 opacity-100">
-                                                <button title="View/Edit" className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-brand-blue hover:bg-blue-50 transition-all">
+                                                <button
+                                                    onClick={() => {
+                                                        // TODO: Implement Edit - For now just toast
+                                                        toast.info("Edit functionality coming in next update");
+                                                    }}
+                                                    title="View/Edit"
+                                                    className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-brand-blue hover:bg-blue-50 transition-all"
+                                                >
                                                     <Edit2 size={16} />
                                                 </button>
-                                                <button title="Disable/Cancel" className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-orange-500 hover:bg-orange-50 transition-all">
+                                                <button
+                                                    onClick={() => handleStatusUpdate(shipment.trackingId, "Cancelled")}
+                                                    title="Disable/Cancel"
+                                                    className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-orange-500 hover:bg-orange-50 transition-all"
+                                                >
                                                     <Ban size={16} />
                                                 </button>
-                                                <button title="Delete" className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
+                                                <button
+                                                    onClick={() => {
+                                                        if (confirm(`Delete shipment ${shipment.trackingId}?`)) {
+                                                            // For now using native confirm, ideally switch to ConfirmModal
+                                                            // Simulate delete
+                                                            setShipments(prev => prev.filter(s => s.id !== shipment.id));
+                                                            toast.success("Shipment deleted");
+                                                        }
+                                                    }}
+                                                    title="Delete"
+                                                    className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all"
+                                                >
                                                     <Trash2 size={16} />
                                                 </button>
                                             </div>

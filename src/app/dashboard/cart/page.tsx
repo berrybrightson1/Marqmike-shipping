@@ -48,7 +48,7 @@ export default function CartPage() {
                     <Link href="/dashboard/shipments" className="block w-full py-4 bg-brand-blue text-white rounded-xl font-bold shadow-xl shadow-brand-blue/20 hover:bg-brand-blue/90 transition-colors">
                         View My Requests
                     </Link>
-                    <Link href="/dashboard/shop" className="block w-full py-4 bg-white text-slate-600 rounded-xl font-bold border-2 border-slate-100 hover:border-slate-300 transition-colors">
+                    <Link href="/dashboard" className="block w-full py-4 bg-white text-slate-600 rounded-xl font-bold border-2 border-slate-100 hover:border-slate-300 transition-colors">
                         Continue Shopping
                     </Link>
                     <button onClick={() => setCheckoutSuccess(false)} className="text-sm text-slate-400 font-bold hover:text-slate-600 transition-colors pt-2">
@@ -77,7 +77,7 @@ export default function CartPage() {
                         </div>
                         <h2 className="text-xl font-bold text-slate-700 mb-2">Your cart is empty</h2>
                         <p className="text-slate-400 text-sm mb-8">Looks like you haven't added anything yet.</p>
-                        <Link href="/dashboard/shop" className="bg-brand-blue text-white py-3 px-8 rounded-xl font-bold shadow-xl shadow-brand-blue/20 hover:bg-brand-blue/90 transition-colors">
+                        <Link href="/dashboard" className="bg-brand-blue text-white py-3 px-8 rounded-xl font-bold shadow-xl shadow-brand-blue/20 hover:bg-brand-blue/90 transition-colors">
                             Start Shopping
                         </Link>
                     </div>

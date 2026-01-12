@@ -41,18 +41,11 @@ export default function StoreSlider() {
             lastTimestamp = timestamp;
 
             if (scrollContainer) {
-                // If scrolled to end, reset to start seamlessly (or as seamlessly as possible without duplicating nodes)
-                // For a true seamless marquee, we'd need duplicated children. 
-                // For now, let's just checking specific boundaries.
-
-                // Correction: A "Ticker" feel typically needs standard JS loop.
-                // However, user said "animation... is not smooth".
-                // Let's try a very gentle scrollBy.
-
-                if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 1) {
+                // If we are within 1px of the end (or past it), reset to start
+                if (scrollContainer.scrollLeft >= (scrollContainer.scrollWidth - scrollContainer.clientWidth - 1)) {
                     scrollContainer.scrollLeft = 0;
                 } else {
-                    scrollContainer.scrollLeft += 0.5; // Very slow, continuous drift
+                    scrollContainer.scrollLeft += speed;
                 }
             }
             animationId = requestAnimationFrame(step);

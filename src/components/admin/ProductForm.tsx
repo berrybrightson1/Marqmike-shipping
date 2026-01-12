@@ -10,83 +10,95 @@ import { useRouter } from "next/navigation";
 
 export default function ProductForm() {
     const router = useRouter();
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const [base64Image, setBase64Image] = useState<string>("");
-    const [compressionStats, setCompressionStats] = useState<{ original: string; compressed: string; saved: string } | null>(null);
+    const [images, setImages] = useState<{ file: File; preview: string; base64: string; stats?: any }[]>([]);
     const [isCompressing, setIsCompressing] = useState(false);
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
+        const files = event.target.files;
+        if (!files || files.length === 0) return;
 
-        // Reset
-        setImageFile(null);
-        setCompressionStats(null);
-        setIsCompressing(true);
-
-        try {
-            // Stats before
-            const originalSize = (file.size / 1024 / 1024).toFixed(2) + " MB";
-
-            // Compression Config
-            const options = {
-                maxSizeMB: 0.1, // Target 100KB
-                maxWidthOrHeight: 1280,
-                useWebWorker: true,
-                fileType: "image/webp",
-                initialQuality: 0.8
-            };
-
-            const compressedFile = await imageCompression(file, options);
-
-            // Stats after
-            const compressedSize = (compressedFile.size / 1024).toFixed(0) + " KB";
-            const savedPercentage = ((1 - compressedFile.size / file.size) * 100).toFixed(0) + "%";
-
-            // Convert to Base64
-            const reader = new FileReader();
-            reader.readAsDataURL(compressedFile);
-            reader.onloadend = () => {
-                setBase64Image(reader.result as string);
-            };
-
-            setCompressionStats({
-                original: originalSize,
-                compressed: compressedSize,
-                saved: savedPercentage
-            });
-
-            setImageFile(compressedFile);
-            setPreviewUrl(URL.createObjectURL(compressedFile));
-            toast.success("Image optimized!", {
-                description: `Reduced by ${savedPercentage} (${originalSize} -> ${compressedSize})`
-            });
-
-        } catch (error) {
-            console.error("Compression Error:", error);
-            toast.error("Failed to compress image");
-        } finally {
-            setIsCompressing(false);
-        }
-    };
-
-    const removeImage = () => {
-        setImageFile(null);
-        setPreviewUrl(null);
-        setBase64Image("");
-        setCompressionStats(null);
-    };
-
-    const handleSubmit = async (formData: FormData) => {
-        if (!base64Image) {
-            toast.error("Please add a product image");
+        // Limit total images
+        if (images.length + files.length > 5) {
+            toast.error("Maximum 5 images allowed");
             return;
         }
 
-        // Add base64 image to formData is not standard, but we used hidden input
-        // logic below handles it via the form's natural submission or we append here if we manual call
-        // But since we use action={handleSubmit}, formData contains the hidden input value if it's there.
+        setIsCompressing(true);
+        const newImages: typeof images = [];
+
+        try {
+            // Process each file
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                // Stats before
+                const originalSize = (file.size / 1024 / 1024).toFixed(2) + " MB";
+
+                // Compression Config
+                const options = {
+                    maxSizeMB: 0.1, // Target 100KB
+                    maxWidthOrHeight: 1280,
+                    useWebWorker: true,
+                    fileType: "image/webp",
+                    initialQuality: 0.8
+                };
+
+                const compressedFile = await imageCompression(file, options);
+
+                // Stats after
+                const compressedSize = (compressedFile.size / 1024).toFixed(0) + " KB";
+                const savedPercentage = ((1 - compressedFile.size / file.size) * 100).toFixed(0) + "%";
+
+                // Convert to Base64
+                const base64 = await new Promise<string>((resolve) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(compressedFile);
+                    reader.onloadend = () => resolve(reader.result as string);
+                });
+
+                newImages.push({
+                    file: compressedFile,
+                    preview: URL.createObjectURL(compressedFile),
+                    base64: base64,
+                    stats: { original: originalSize, compressed: compressedSize, saved: savedPercentage }
+                });
+            }
+
+            setImages(prev => [...prev, ...newImages]);
+            toast.success(`${newImages.length} image(s) added!`);
+
+        } catch (error) {
+            console.error("Compression Error:", error);
+            toast.error("Failed to compress images");
+        } finally {
+            setIsCompressing(false);
+            // Reset input
+            event.target.value = "";
+        }
+    };
+
+    const removeImage = (index: number) => {
+        setImages(prev => {
+            const newImages = [...prev];
+            URL.revokeObjectURL(newImages[index].preview); // Cleanup memory
+            newImages.splice(index, 1);
+            return newImages;
+        });
+    };
+
+    const handleSubmit = async (formData: FormData) => {
+        if (images.length === 0) {
+            toast.error("Please add at least one image");
+            return;
+        }
+
+        // We can manually append images to formData or rely on hidden inputs
+        // It's cleaner to append manually to ensure array structure if using getAll
+        // But hidden inputs work well with native FormData collection too.
+        // Let's rely on hidden inputs named 'images' (plural) to get an array.
+
+        // Wait... formData.get('images') will only get the first one if we have multiple inputs with same name?
+        // Actually yes, formData.getAll('images') works if we have multiple inputs with name="images".
 
         const result = await createProduct(formData);
 
@@ -100,67 +112,79 @@ export default function ProductForm() {
 
     return (
         <form action={handleSubmit} className="space-y-8">
-            {/* Hidden input for base64 image */}
-            <input type="hidden" name="imageUrl" value={base64Image} />
+            {/* Hidden inputs for base64 images - This allows server to receive getAll('images') */}
+            {images.map((img, idx) => (
+                <input key={idx} type="hidden" name="images" value={img.base64} />
+            ))}
+            {/* Primary image fallback for backward compatibility logic (legacy imageUrl field) */}
+            <input type="hidden" name="imageUrl" value={images[0]?.base64 || ""} />
 
             {/* Image Upload Area */}
             <div className="space-y-4">
-                <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Product Image</label>
+                <div className="flex justify-between items-end">
+                    <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Product Images ({images.length}/5)</label>
+                    {images.length > 0 && (
+                        <span className="text-xs text-slate-400 font-medium">First image will be the cover</span>
+                    )}
+                </div>
 
-                {!previewUrl ? (
-                    <div className="relative group">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                            disabled={isCompressing}
-                        />
-                        <div className={`border-2 border-dashed border-slate-300 rounded-2xl p-12 flex flex-col items-center justify-center bg-slate-50 transition-colors ${isCompressing ? 'opacity-50' : 'group-hover:bg-slate-100 group-hover:border-brand-blue/50'}`}>
-                            {isCompressing ? (
-                                <Loader2 className="animate-spin text-brand-blue mb-4" size={32} />
-                            ) : (
-                                <div className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center text-brand-blue mb-4 group-hover:scale-110 transition-transform">
-                                    <CloudUploadIcon />
-                                </div>
-                            )}
-                            <h3 className="text-lg font-bold text-slate-700">
-                                {isCompressing ? "Optimizing..." : "Drop image here"}
-                            </h3>
-                            <p className="text-slate-400 text-sm mt-1">
-                                {isCompressing ? "Crunching pixels to 100KB" : "Auto-compressed to ~100KB WebP"}
-                            </p>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="relative w-full aspect-video md:w-80 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 group">
-                        <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-
-                        {/* Remove Button */}
-                        <button
-                            type="button"
-                            onClick={removeImage}
-                            className="absolute top-2 right-2 p-2 bg-white/90 backdrop-blur rounded-full text-slate-600 hover:text-red-500 shadow-sm transition-colors"
-                        >
-                            <X size={18} />
-                        </button>
-
-                        {/* Compression Badge */}
-                        {compressionStats && (
-                            <div className="absolute bottom-2 left-2 right-2 bg-black/75 backdrop-blur-md rounded-xl p-3 text-white">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <Check size={14} className="text-green-400" />
-                                    <span className="text-xs font-bold text-green-400">Saved {compressionStats.saved} Data</span>
-                                </div>
-                                <div className="flex justify-between text-[10px] text-white/60 font-mono">
-                                    <span>Original: {compressionStats.original}</span>
-                                    <span>→</span>
-                                    <span className="text-white font-bold">{compressionStats.compressed}</span>
-                                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {/* Upload Button */}
+                    {images.length < 5 && (
+                        <div className="relative group aspect-square">
+                            <input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={handleImageChange}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                disabled={isCompressing}
+                            />
+                            <div className={`w-full h-full border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center bg-slate-50 transition-colors ${isCompressing ? 'opacity-50' : 'group-hover:bg-slate-100 group-hover:border-brand-blue/50'}`}>
+                                {isCompressing ? (
+                                    <Loader2 className="animate-spin text-brand-blue mb-2" size={24} />
+                                ) : (
+                                    <div className="w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-brand-blue mb-2 group-hover:scale-110 transition-transform">
+                                        <CloudUploadIcon />
+                                    </div>
+                                )}
+                                <span className="text-xs font-bold text-slate-600">
+                                    {isCompressing ? "Processing..." : "Add Images"}
+                                </span>
                             </div>
-                        )}
-                    </div>
-                )}
+                        </div>
+                    )}
+
+                    {/* Previews */}
+                    {images.map((img, index) => (
+                        <div key={index} className="relative aspect-square bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 group/card animate-in fade-in zoom-in duration-300">
+                            <img src={img.preview} alt={`Preview ${index + 1}`} className="w-full h-full object-cover" />
+
+                            {/* Overlay info */}
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/card:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                                <div className="flex justify-end">
+                                    <button
+                                        type="button"
+                                        onClick={() => removeImage(index)}
+                                        className="p-1.5 bg-white/90 rounded-full text-red-500 hover:bg-white transition-colors"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                </div>
+                                {index === 0 && (
+                                    <span className="self-center px-2 py-1 bg-brand-blue/90 text-white text-[10px] font-bold rounded-full backdrop-blur-sm">
+                                        Cover
+                                    </span>
+                                )}
+                                {img.stats && (
+                                    <div className="text-[9px] text-white/80 font-mono text-center bg-black/50 rounded-lg py-1 backdrop-blur-sm">
+                                        {img.stats.compressed}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* Basic Info */}

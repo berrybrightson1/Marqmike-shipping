@@ -10,14 +10,17 @@ export default function BottomNav() {
     const { totalItems } = useCart();
 
     // Pages where BottomNav should be hidden
-    const hiddenRoutes = [
-        "/dashboard/product", // Starts with check handles [id]
-        "/dashboard/cart",
-        "/dashboard/checkout",
-        "/dashboard/wallet/topup"
+    // Strict Allowlist: Show ONLY on these main tabs
+    const allowedExactRoutes = [
+        "/dashboard",
+        "/dashboard/tracking",
+        "/dashboard/shipments",
+        "/dashboard/profile",
     ];
 
-    const isHidden = hiddenRoutes.some(route => pathname?.startsWith(route));
+    const isVisible = allowedExactRoutes.includes(pathname || "");
+
+    if (!isVisible) return null;
 
     const navItems = [
         { label: "Feed", icon: LayoutGrid, href: "/dashboard" },
@@ -26,8 +29,6 @@ export default function BottomNav() {
         { label: "Cart", icon: ShoppingBag, href: "/dashboard/cart" },
         { label: "Profile", icon: User, href: "/dashboard/profile" },
     ];
-
-    if (isHidden) return null;
 
     return (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-sm px-6 z-50">
