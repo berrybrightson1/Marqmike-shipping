@@ -21,17 +21,24 @@ export async function signUp(data: FormData) {
     }
 
     try {
-        const existingUser = await db.user.findFirst({
-            where: {
-                OR: [
-                    { phone },
-                    { email: email || undefined }
-                ]
-            }
+        // 1. Check for existing phone number
+        const existingPhone = await db.user.findUnique({
+            where: { phone }
         });
 
-        if (existingUser) {
-            return { success: false, error: "Account already exists (Phone or Email). Please sign in." };
+        if (existingPhone) {
+            return { success: false, error: "Phone number already registered. Please sign in." };
+        }
+
+        // 2. Check for existing email (if provided)
+        if (email) {
+            const existingEmail = await db.user.findUnique({
+                where: { email }
+            });
+
+            if (existingEmail) {
+                return { success: false, error: "Email already registered. Please sign in." };
+            }
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
