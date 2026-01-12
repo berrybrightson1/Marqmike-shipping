@@ -133,7 +133,7 @@ export default function ShipmentsPage() {
                 </div>
 
                 {/* Content Area */}
-                <div className="space-y-4">
+                <div className="space-y-4 min-h-[70vh] flex flex-col">
                     {/* Empty State */}
                     {filtered.length === 0 && !loading && (
                         <div className="text-center py-12">

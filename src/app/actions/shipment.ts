@@ -44,6 +44,8 @@ export async function createShipment(formData: FormData) {
         return { error: "Unauthorized" };
     }
 
+    const customerPhone = formData.get('customerPhone') as string;
+
     const rawData = {
         trackingId: formData.get('trackingId') as string,
         shipperName: formData.get('shipperName') as string,
@@ -51,11 +53,31 @@ export async function createShipment(formData: FormData) {
         origin: formData.get('origin') as string,
         destination: formData.get('destination') as string,
         status: "Pending",
-        customerId: user.id
+        customerId: user.id // Default to admin if no phone
     }
 
     if (!rawData.trackingId || !rawData.shipperName) {
         return { error: "Missing required fields" };
+    }
+
+    // Link to Customer if Phone Provided
+    if (customerPhone) {
+        // Find user by phone
+        // Remove spaces or format if needed, but assuming exact match for now
+        const customer = await db.user.findFirst({
+            where: { phone: { contains: customerPhone.replace('+', '') } } // Loose match
+        });
+
+        if (customer) {
+            rawData.customerId = customer.id;
+        } else {
+            return { error: "Customer not found with this phone number" };
+        }
+    } else {
+        // If meant for a customer, phone is required.
+        // If manual shipment without user account, leave as Admin ID?
+        // Let's enforce phone for visibility.
+        return { error: "Customer Phone is required to link shipment" };
     }
 
     try {

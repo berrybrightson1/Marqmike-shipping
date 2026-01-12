@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Package, Ruler, Disc, Box, Loader2 } from "lucide-react";
+import { X, Package, Ruler, Disc, Box, Loader2, Phone } from "lucide-react";
 import { createShipment } from "@/app/actions/shipment";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -84,6 +84,20 @@ export default function CreateShipmentModal({ isOpen, onClose }: Props) {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
+                                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 ml-1">Customer Phone</label>
+                                        <input
+                                            name="customerPhone"
+                                            required
+                                            placeholder="+233..."
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-blue/20 transition-all font-mono"
+                                        />
+                                    </div>
+                                    <div>
+                                        {/* Spacer or Tracking ID if moved here */}
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
                                         <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 ml-1">Shipper</label>
                                         <input
                                             name="shipperName"
@@ -158,8 +172,9 @@ export default function CreateShipmentModal({ isOpen, onClose }: Props) {
                         </motion.div>
                     </motion.div>
                 </>
-            )}
-        </AnimatePresence>
+            )
+            }
+        </AnimatePresence >
     );
 }
 
