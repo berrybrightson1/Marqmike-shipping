@@ -34,9 +34,9 @@ export default function HelpPage() {
                         "Go to 'Settings' from your dashboard bottom navigation",
                         "Tap on 'Profile' in the settings menu",
                         "Click 'Add Phone Number'",
-                        "Enter your Ghana number in format: +233 XX XXX XXXX",
-                        "Click 'Send Code' and wait for the SMS",
-                        "Enter the 6-digit verification code",
+                        "Enter your Ghana number in format: 055 XXX XXXX / +233 55 XXX XXXX",
+                        "Important: This number is used to auto-fill your WhatsApp checkout Orders",
+                        "Click 'Save' to confirm your number",
                         "Your phone is now verified and we can contact you for deliveries!"
                     ],
                     tags: ["phone", "verification", "sms", "settings"]
@@ -49,63 +49,50 @@ export default function HelpPage() {
             color: "bg-green-100 text-green-600",
             items: [
                 {
-                    title: "Buying from the Trending Feed (1688 Live)",
+                    title: "Staff Picks (Instant Buy)",
                     content: [
-                        "Our 'Trending Feed' shows live products directly from 1688 and other Chinese marketplaces",
-                        "Scroll horizontally to see hot items currently popular in the market",
-                        "Click on any item that interests you to open the 'Buy For Me' page",
-                        "The system will automatically fill in the product details (Link, Name, Price) for you",
-                        "Simply adjust the quantity you want and click 'Submit Request'",
-                        "This is the fastest way to request a quote for popular items!",
-                        "Note: Prices in the feed are estimates (¥) and final quote will include shipping to Ghana"
+                        "Staff Picks are items verified and in-stock for fast shipping",
+                        "Click 'Buy Now' to instantly trigger the WhatsApp order flow",
+                        "Our system auto-fills your Name and Phone Number",
+                        "You will be redirected to WhatsApp to chat with our verified number (0551171353)",
+                        "Send the pre-filled message to confirm your order",
+                        "Payment is handled directly on WhatsApp via MoMo or Bank Transfer"
                     ],
-                    tags: ["trending", "1688", "feed", "hot", "buy for me"]
+                    tags: ["staff picks", "inventory", "stock", "verified", "fast shipping", "buy now"]
                 },
                 {
-                    title: "Shopping Staff Picks (Verified Inventory)",
+                    title: "Using the Shopping Cart",
                     content: [
-                        "Staff Picks are items we have physically verified or have in stock",
-                        "These items ship faster because they are already in our warehouse or from trusted partners",
-                        "Click 'Add to Cart' to instantly add them to your shopping bag",
-                        "You can see the price fixed in GHS (Cedis)",
-                        "Checkout is instant via WhatsApp - no waiting for a quote!",
-                        "Look for the 'Shield' icon indicating verified quality"
-                    ],
-                    tags: ["staff picks", "inventory", "stock", "verified", "fast shipping"]
-                },
-                {
-                    title: "Buying from our Store",
-                    content: [
-                        "Visit the 'Store' page from the dashboard or homepage",
-                        "Browse products or use the search bar to find specific items",
-                        "Click on any product card to view full details",
-                        "Review the price in your preferred currency (RMB/GHS/USD)",
-                        "Check the CBM (shipping volume) by expanding the calculator",
-                        "Select your quantity using the +/- buttons",
-                        "Click 'Add to Cart' or 'Buy Now'",
-                        "For cart: Open cart drawer and click 'Checkout via WhatsApp'",
-                        "Fill in your phone number and delivery location",
-                        "Click 'Continue on WhatsApp' to finalize your order with our team",
-                        "You'll receive a unique reference code (e.g., MQM-XXXX) for tracking"
+                        "Browse products and click 'Add to Cart' for items you like",
+                        "Go to your Cart (Shopping Bag icon) to review items",
+                        "Click 'Checkout via WhatsApp' when ready",
+                        "Your delivery location and phone number will be pre-filled from your profile",
+                        "Click 'Continue on WhatsApp' to send the full order list to us",
+                        "You'll receive a unique Reference Code (e.g. MQM-7721) for your order"
                     ],
                     tags: ["buy", "store", "shop", "purchase", "whatsapp", "cart"]
                 },
                 {
-                    title: "'Buy For Me' Service Explained",
+                    title: "'Buy For Me' Service (1688/Alibaba)",
                     content: [
-                        "This service is perfect when you can't find an item in our store",
-                        "Find the product on 1688, Taobao, Alibaba, or any Chinese marketplace",
-                        "Copy the product URL (the link in your browser)",
-                        "Go to 'Buy For Me' from your dashboard",
-                        "Paste the link in the 'Product Link' field",
-                        "Enter the Item Name (e.g., 'Blue Sneakers') and Quantity",
-                        "Click 'Submit Request'",
-                        "Our team will verify availability and calculate total cost (product + shipping)",
-                        "Check 'Your Requests' below the form to see status updates",
-                        "Once approved, you can click 'Notify Admin via WhatsApp' to proceed with payment",
-                        "💡 Tip: You can submit multiple links one by one before checking out!"
+                        "Use this for items you see on other websites (1688, Taobao, Alibaba)",
+                        "Copy the product link from the external website",
+                        "Go to 'Buy For Me' on your dashboard",
+                        "Paste the link and enter the quantity you want",
+                        "Click 'Submit Request' for our team to quote you",
+                        "Once approved, you can pay via WhatsApp to proceed with procurement"
                     ],
                     tags: ["buy for me", "procurement", "1688", "taobao", "alibaba", "quote"]
+                },
+                {
+                    title: "Buying from the Trending Feed",
+                    content: [
+                        "The Trending Feed shows live items directly from Chinese marketplaces",
+                        "Click an item to see its estimated price in GHS",
+                        "Click 'Buy For Me' to auto-fill a procurement request",
+                        "We will confirm the exact price including shipping before you pay"
+                    ],
+                    tags: ["trending", "1688", "feed", "hot"]
                 }
             ]
         },

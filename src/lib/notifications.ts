@@ -12,7 +12,7 @@ export const sendNotification = async (type: NotificationType, payload: Notifica
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    console.log(`[${type}] Sending to ${payload.to}:`, payload);
+
 
     if (type === "EMAIL") {
         toast.success(`Email sent to ${payload.to}`, {

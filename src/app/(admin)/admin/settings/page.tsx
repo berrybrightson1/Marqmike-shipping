@@ -186,7 +186,7 @@ function BroadcastSection() {
         e.preventDefault();
 
         if (!confirm("Are you sure you want to send this to ALL users?")) {
-            console.log("Broadcast cancelled by user");
+            // Broadcast cancelled
             return;
         }
 
@@ -194,9 +194,9 @@ function BroadcastSection() {
         setSuccess(false);
 
         try {
-            console.log("Broadcasting:", { title, message });
+            // console.log("Broadcasting:", { title, message });
             const res = await broadcastNotification(title, message);
-            console.log("Broadcast result:", res);
+            // console.log("Broadcast result:", res);
 
             if (res.success) {
                 // Stop loading FIRST
