@@ -230,7 +230,7 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Sticky Bottom Action Bar */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-5 py-4 pb-8 flex items-center gap-4 z-50 shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.1)]">
+            <div className="fixed bottom-0 left-0 right-0 mx-auto max-w-md bg-white border-t border-slate-100 px-5 py-4 pb-8 flex items-center gap-4 z-50 shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.1)]">
                 {/* Quantity */}
                 <div className="flex items-center gap-3 bg-slate-50 rounded-2xl p-2 px-3 border border-slate-100">
                     <button title="Decrease Quantity" onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-600 hover:text-slate-900"><Minus size={16} /></button>
