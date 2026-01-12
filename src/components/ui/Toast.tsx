@@ -24,10 +24,10 @@ export function Toast({ message, action, isVisible, onClose }: ToastProps) {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 20, scale: 0.95 }}
                     className={cn(
-                        "fixed bottom-6 left-1/2 -translate-x-1/2 z-50",
-                        "flex items-center gap-3 px-6 py-3",
-                        "bg-black/80 backdrop-blur-md border border-white/10",
-                        "rounded-full shadow-2xl"
+                        "fixed top-6 left-1/2 -translate-x-1/2 z-[100]",
+                        "flex items-center gap-3 px-6 py-4",
+                        "bg-[#0a0a0a] border border-white/10",
+                        "rounded-2xl shadow-2xl min-w-[320px] max-w-[90vw]"
                     )}
                 >
                     <span className="text-white text-sm font-medium tracking-wide">

@@ -60,7 +60,7 @@ export default function GlobalSearchModal() {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-start justify-center pt-32 animate-in fade-in">
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-start justify-center pt-32 animate-in fade-in">
             <div className="bg-white w-full max-w-2xl rounded-[24px] shadow-2xl overflow-hidden flex flex-col transform transition-all animate-in zoom-in-95 slide-in-from-top-4">
                 {/* Search Input */}
                 <div className="flex items-center gap-4 px-6 py-4 border-b border-slate-100">

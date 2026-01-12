@@ -77,10 +77,10 @@ export default function CheckoutModal({ isOpen, onClose, cartItems, onCheckoutCo
     };
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md" onClick={onClose}>
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-black/60" onClick={onClose}>
             <div className="w-full max-w-md animate-in zoom-in-95 duration-200">
                 <div className="bg-white p-8 rounded-[32px] shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
-                    <button onClick={onClose} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors p-2 hover:bg-slate-100 rounded-full">
+                    <button onClick={onClose} title="Close" className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors p-2 hover:bg-slate-100 rounded-full">
                         <X size={20} />
                     </button>
 

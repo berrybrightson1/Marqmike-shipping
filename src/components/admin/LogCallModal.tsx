@@ -88,7 +88,7 @@ export default function LogCallModal({ isOpen, onClose, onSuccess }: LogCallModa
     const outcomes = ["Resolved", "Pending", "Urgent", "Follow-up"];
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 animate-in fade-in duration-200">
             <div className="bg-white rounded-[32px] w-full max-w-md p-8 shadow-2xl transform scale-100 animate-in zoom-in-95 duration-200 relative overflow-hidden">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-8">

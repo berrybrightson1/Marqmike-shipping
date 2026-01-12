@@ -74,7 +74,7 @@ export default function WhatsAppCheckoutModal({ isOpen, onClose, product, quanti
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end md:items-center justify-center p-0 md:p-4">
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-end md:items-center justify-center p-0 md:p-4">
             <div className="bg-white w-full md:max-w-lg md:rounded-[32px] rounded-t-[32px] p-8 relative animate-in slide-in-from-bottom md:slide-in-from-bottom-0">
                 {/* Close */}
                 <button

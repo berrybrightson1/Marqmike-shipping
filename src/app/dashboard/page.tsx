@@ -5,6 +5,7 @@ import ProductFeed from "@/components/dashboard/ProductFeed";
 import { getDashboardData } from "@/app/actions/shipment";
 import { getCurrentUser } from "@/app/actions/auth";
 import { redirect } from "next/navigation";
+import StoreSlider from "@/components/dashboard/StoreSlider";
 
 export default async function DashboardPage() {
     const user = await getCurrentUser();
@@ -25,6 +26,9 @@ export default async function DashboardPage() {
                 <div className="mx-2">
                     <ActionGrid />
                 </div>
+
+                {/* Featured Stores */}
+                <StoreSlider />
 
                 {/* Product Feed */}
                 <ProductFeed />

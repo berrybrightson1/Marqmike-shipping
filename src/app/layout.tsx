@@ -39,15 +39,15 @@ export default function RootLayout({
                 toastOptions={{
                   unstyled: true,
                   classNames: {
-                    toast: "bg-black/90 backdrop-blur-md border border-white/10 shadow-2xl rounded-full px-6 py-3 flex items-center gap-3 w-fit min-w-[300px] mx-auto mb-6",
+                    toast: "bg-[#0a0a0a] border border-white/10 shadow-2xl rounded-2xl px-6 py-4 flex items-center gap-3 w-auto max-w-[90vw] mb-6",
                     title: "text-white font-bold text-sm",
                     description: "text-white/60 text-xs font-medium",
                     actionButton: "bg-white text-black hover:bg-slate-200",
                     cancelButton: "bg-white/10 text-white hover:bg-white/20",
-                    error: "bg-red-950/90 border-red-500/20 text-red-200",
-                    success: "bg-black/90 border-white/10 text-white",
-                    warning: "bg-orange-950/90 border-orange-500/20 text-orange-200",
-                    info: "bg-blue-950/90 border-blue-500/20 text-blue-200",
+                    error: "bg-[#1a0505] border-red-900/50 text-red-200",
+                    success: "bg-[#051a05] border-green-900/50 text-green-200",
+                    warning: "bg-[#1a1205] border-orange-900/50 text-orange-200",
+                    info: "bg-[#050f1a] border-blue-900/50 text-blue-200",
                   }
                 }}
               />
