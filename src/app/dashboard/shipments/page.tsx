@@ -6,12 +6,12 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { getUserOrders, createConsolidatedShipment } from "@/app/actions/shipment";
 
-type TabType = 'request' | 'warehouse' | 'shipment';
+type TabType = 'incoming' | 'warehouse' | 'shipped';
 
 export default function ShipmentsPage() {
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState("");
-    const [activeTab, setActiveTab] = useState<TabType>('request');
+    const [activeTab, setActiveTab] = useState<TabType>('incoming');
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -27,10 +27,6 @@ export default function ShipmentsPage() {
         const res = await getUserOrders();
         if (res.success) {
             setOrders(res.data);
-
-            // Auto-switch tab if empty? No, keep user preference or default to 'request'
-            // But if user has nothing in requests but items in warehouse, maybe helpful.
-            // For now, simple.
         }
         setLoading(false);
     };
@@ -72,14 +68,17 @@ export default function ShipmentsPage() {
         // Find selected items to get their correct type logic
         const itemsToShip = orders
             .filter(o => selectedIds.has(o.id))
-            .map(o => ({ id: o.id, type: o.type === 'Shop' ? 'Shop' : 'Procurement' })); // strict typing match
+            .map(o => ({
+                id: o.id,
+                type: o.type as 'Shop' | 'Procurement'
+            }));
 
-        const res = await createConsolidatedShipment(itemsToShip as any);
+        const res = await createConsolidatedShipment(itemsToShip);
 
         if (res.success) {
-            toast.success("Shipment Created! Track it in the 'Shipments' tab.");
+            toast.success("Shipment Created! Track it in the 'Shipped' tab.");
             setSelectedIds(new Set());
-            setActiveTab('shipment'); // Switch to shipments tab
+            setActiveTab('shipped');
             fetchOrders();
         } else {
             toast.error(res.error || "Failed to create shipment");
@@ -105,14 +104,14 @@ export default function ShipmentsPage() {
 
                 {/* 3 Tabs Container */}
                 <div className="flex p-1 bg-slate-100 rounded-2xl overflow-x-auto">
-                    {(['request', 'warehouse', 'shipment'] as TabType[]).map((tab) => (
+                    {(['incoming', 'warehouse', 'shipped'] as TabType[]).map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
                             className={`flex-1 min-w-[100px] py-3 rounded-xl text-xs sm:text-sm font-bold transition-all capitalize whitespace-nowrap px-2
                                 ${activeTab === tab ? 'bg-white text-brand-blue shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
-                            {tab === 'request' ? 'Requests' : tab === 'warehouse' ? 'My Warehouse' : 'Shipments'}
+                            {tab === 'incoming' ? 'Incoming' : tab === 'warehouse' ? 'My Warehouse' : 'Shipped'}
                             {/* Badges could go here */}
                         </button>
                     ))}
@@ -138,17 +137,17 @@ export default function ShipmentsPage() {
                     {filtered.length === 0 && !loading && (
                         <div className="text-center py-12">
                             <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                {activeTab === 'request' && <ShoppingCart size={32} className="text-slate-400" />}
+                                {activeTab === 'incoming' && <ShoppingCart size={32} className="text-slate-400" />}
                                 {activeTab === 'warehouse' && <Box size={32} className="text-slate-400" />}
-                                {activeTab === 'shipment' && <Truck size={32} className="text-slate-400" />}
+                                {activeTab === 'shipped' && <Truck size={32} className="text-slate-400" />}
                             </div>
                             <h3 className="text-lg font-bold text-slate-700 mb-1">
-                                {activeTab === 'request' ? 'No active requests' :
+                                {activeTab === 'incoming' ? 'No incoming items' :
                                     activeTab === 'warehouse' ? 'Warehouse empty' :
                                         'No shipments found'}
                             </h3>
                             <p className="text-slate-400 text-sm max-w-xs mx-auto">
-                                {activeTab === 'request' ? 'New orders or procurement requests will appear here.' :
+                                {activeTab === 'incoming' ? 'New orders or procurement requests will appear here.' :
                                     activeTab === 'warehouse' ? 'Items we have purchased for you will show up here, ready to ship.' :
                                         'Your consolidated shipments will appear here.'}
                             </p>

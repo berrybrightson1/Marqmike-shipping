@@ -95,7 +95,9 @@ export async function getAdminOrders() {
         const [orders, procurements] = await Promise.all([
             prisma.order.findMany({
                 include: {
-                    items: true,
+                    items: {
+                        include: { product: true }
+                    },
                     user: { select: { name: true, email: true } }
                 },
                 orderBy: { createdAt: 'desc' }

@@ -25,7 +25,7 @@ export default function AdminSidebar() {
                 <AdminSidebarItem icon={LayoutGrid} label="Overview" href="/admin" isActive={pathname === "/admin"} />
                 <AdminSidebarItem icon={Box} label="Shipments" href="/admin/shipments" isActive={pathname.includes("/shipments")} />
                 <AdminSidebarItem icon={Users} label="Customers" href="/admin/customers" isActive={pathname.includes("/customers")} />
-                <AdminSidebarItem icon={ShoppingBag} label="Procurement" href="/admin/procurement" isActive={pathname.includes("/procurement")} />
+                <AdminSidebarItem icon={ShoppingBag} label="Orders" href="/admin/orders" isActive={pathname.includes("/orders")} />
 
                 {/* Reports Group */}
                 <div className="pt-4 pb-1 pl-4 text-xs font-bold text-slate-600 uppercase tracking-widest">Reports</div>

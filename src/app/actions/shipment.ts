@@ -230,7 +230,7 @@ export async function getUserOrders() {
                 origin: s.origin,
                 destination: s.destination,
                 rawDate: s.createdAt.toISOString(),
-                tab: 'shipment',
+                tab: 'shipped',
                 items: [...s.orders, ...s.procurementRequests] // useful for details
             };
         });
@@ -256,7 +256,7 @@ export async function getUserOrders() {
                 origin: 'Marqmike Shop',
                 destination: 'Warehouse',
                 rawDate: o.createdAt.toISOString(),
-                tab: isWarehouse ? 'warehouse' : 'request',
+                tab: isWarehouse ? 'warehouse' : 'incoming',
                 price: o.totalAmount
             };
         });
@@ -278,7 +278,7 @@ export async function getUserOrders() {
                 origin: 'External Link',
                 destination: 'Warehouse',
                 rawDate: p.createdAt.toISOString(),
-                tab: isWarehouse ? 'warehouse' : 'request',
+                tab: isWarehouse ? 'warehouse' : 'incoming',
                 price: 0 // usually unknown until quoted
             }
         });

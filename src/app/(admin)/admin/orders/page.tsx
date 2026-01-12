@@ -301,11 +301,11 @@ export default function AdminOrdersPage() {
                                             <div key={i} className="flex gap-4 p-3 border border-slate-100 rounded-xl hover:border-brand-blue/20 hover:bg-brand-blue/5 transition-all group">
                                                 {/* Image Thumbnail */}
                                                 <div className="w-16 h-16 bg-slate-100 rounded-lg flex-shrink-0 overflow-hidden relative">
-                                                    {item.itemUrl && item.itemUrl.startsWith('http') ? (
-                                                        <img src={item.itemUrl} alt="" className="w-full h-full object-cover" />
+                                                    {item.product?.images?.[0] ? (
+                                                        <img src={item.product.images[0]} alt={item.itemName} className="w-full h-full object-cover" />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-slate-300">
-                                                            <Package size={20} />
+                                                        <div className="w-full h-full flex items-center justify-center text-slate-300 bg-slate-50">
+                                                            {item.itemUrl ? <ExternalLink size={20} /> : <Package size={20} />}
                                                         </div>
                                                     )}
                                                 </div>
