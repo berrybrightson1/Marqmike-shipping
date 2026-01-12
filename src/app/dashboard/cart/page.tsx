@@ -45,7 +45,7 @@ export default function CartPage() {
                     We've opened WhatsApp for you to send the order details. An admin will confirm shortly.
                 </p>
                 <div className="space-y-3 w-full max-w-xs">
-                    <Link href="/dashboard/procurement" className="block w-full py-3.5 bg-brand-blue text-white rounded-xl font-bold shadow-lg shadow-brand-blue/20">
+                    <Link href="/dashboard/shipments" className="block w-full py-3.5 bg-brand-blue text-white rounded-xl font-bold shadow-lg shadow-brand-blue/20">
                         View My Requests
                     </Link>
                     <Link href="/dashboard/shop" className="block w-full py-3.5 bg-white text-slate-600 rounded-xl font-bold border border-slate-200">

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, Filter, ChevronDown, Package, Clock, CheckCircle, RotateCw, ShoppingBag, Eye, X, ExternalLink, RefreshCw, MessageCircle, Bell } from "lucide-react";
-import { getAdminOrders, updateOrderStatus } from "@/app/actions/orders";
+import { ClipboardList, Search, Filter, ChevronDown, Package, Clock, CheckCircle, RotateCw, ShoppingBag, Eye, X, ExternalLink, RefreshCw, MessageCircle, Bell } from "lucide-react";
+import { getAdminOrders, updateUnifiedStatus } from "@/app/actions/orders";
 import { toast } from "sonner";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { useCurrency } from "@/context/CurrencyContext";
@@ -46,11 +46,11 @@ export default function AdminOrdersPage() {
         if (!silent) setLoading(false);
     };
 
-    const handleStatusUpdate = async (id: string, newStatus: string) => {
+    const handleStatusUpdate = async (id: string, newStatus: string, type: 'Shop' | 'Procurement') => {
         // Optimistic update
         setOrders(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } : o));
 
-        const res = await updateOrderStatus(id, newStatus);
+        const res = await updateUnifiedStatus(id, newStatus, type);
         if (res.success) {
             toast.success("Status updated");
         } else {
@@ -66,7 +66,7 @@ export default function AdminOrdersPage() {
         // Optimistic update
         setOrders(prev => prev.map(o => o.id === id ? { ...o, trackingId } : o));
 
-        const res = await updateOrderStatus(id, "Processing", trackingId);
+        const res = await updateUnifiedStatus(id, "Processing", 'Shop', trackingId);
         if (res.success) {
             toast.success(`Tracking ID Generated: ${trackingId}`);
         } else {
@@ -136,14 +136,14 @@ export default function AdminOrdersPage() {
                                 filteredOrders.map((order) => (
                                     <tr key={order.id} className="hover:bg-slate-50/50 transition-colors group">
                                         <td className="py-3 px-4 align-top">
-                                            <div className="font-mono text-[10px] font-bold text-brand-blue bg-brand-blue/5 px-2 py-1 rounded w-fit">
-                                                {order.refCode}
-                                            </div>
-                                            <div className="text-[10px] text-slate-400 mt-1">
-                                                {new Date(order.createdAt).toLocaleDateString()}
-                                                <span className="block text-[9px] text-slate-300 font-medium">
-                                                    {new Date(order.createdAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })}
-                                                </span>
+                                            <div className="flex flex-col gap-1 items-start">
+                                                <div className={`font-mono text-[10px] font-bold px-2 py-1 rounded w-fit flex items-center gap-1 ${order.type === 'Procurement' ? 'bg-orange-50 text-orange-600' : 'bg-brand-blue/5 text-brand-blue'}`}>
+                                                    {order.type === 'Procurement' && <ClipboardList size={10} />}
+                                                    {order.refCode}
+                                                </div>
+                                                <div className="text-[10px] text-slate-400 mt-1">
+                                                    {new Date(order.createdAt).toLocaleDateString()}
+                                                </div>
                                             </div>
                                         </td>
                                         <td className="py-3 px-4 align-top">
@@ -163,70 +163,81 @@ export default function AdminOrdersPage() {
                                             </div>
                                         </td>
                                         <td className="py-3 px-4 align-top">
-                                            <div className="font-bold text-slate-800 text-xs">
-                                                Coming Soon
-                                            </div>
-                                        </td>
-                                        <td className="py-3 px-4 align-top">
-                                            {order.trackingId ? (
-                                                <div className="flex flex-col gap-1 items-start">
-                                                    <div className="flex items-center gap-1 text-xs font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded border border-slate-200">
-                                                        <Package size={12} className="text-slate-400" />
-                                                        {order.trackingId}
-                                                    </div>
-                                                    <div className="flex gap-2 mt-1">
-                                                        <button
-                                                            onClick={() => {
-                                                                const phone = order.customerPhone?.replace(/\D/g, '') || "";
-                                                                const message = `Hello ${order.customerName}, your order *${order.refCode}* has been processed! Your tracking ID is *${order.trackingId}*. You can track it here: https://marqmike.com/track`;
-                                                                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
-                                                            }}
-                                                            title="Chat on WhatsApp"
-                                                            className="w-7 h-7 flex items-center justify-center text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 rounded-full transition-colors"
-                                                        >
-                                                            <MessageCircle size={14} />
-                                                        </button>
-                                                        <button
-                                                            onClick={async () => {
-                                                                const { notifyAndSyncOrder } = await import("@/app/actions/orders");
-                                                                const res = await notifyAndSyncOrder(order.id);
-                                                                if (res.success) {
-                                                                    toast.success(`Notification sent & Order synced for ${order.customerName}`);
-                                                                } else {
-                                                                    toast.error(res.error || "Failed to notify");
-                                                                }
-                                                            }}
-                                                            title="Send App Notification & Sync"
-                                                            className="w-7 h-7 flex items-center justify-center text-brand-blue hover:text-brand-blue/80 bg-brand-blue/5 hover:bg-brand-blue/10 rounded-full transition-colors"
-                                                        >
-                                                            <Bell size={14} />
-                                                        </button>
-                                                    </div>
+                                            {order.type === 'Shop' ? (
+                                                <div className="font-bold text-slate-800 text-xs">
+                                                    ¥{order.totalAmount?.toFixed(2)}
                                                 </div>
                                             ) : (
-                                                <button
-                                                    onClick={() => handleGenerateTracking(order.id)}
-                                                    className="text-[10px] font-bold text-brand-blue bg-brand-blue/5 hover:bg-brand-blue/10 px-2 py-1.5 rounded transition-colors"
-                                                >
-                                                    Generate ID
-                                                </button>
+                                                <div className="text-[10px] text-orange-400 font-bold bg-orange-50 px-2 py-1 rounded">
+                                                    Quotable
+                                                </div>
+                                            )}
+                                        </td>
+                                        <td className="py-3 px-4 align-top">
+                                            {order.type === 'Shop' ? (
+                                                order.trackingId ? (
+                                                    <div className="flex flex-col gap-1 items-start">
+                                                        <div className="flex items-center gap-1 text-xs font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded border border-slate-200">
+                                                            <Package size={12} className="text-slate-400" />
+                                                            {order.trackingId}
+                                                        </div>
+                                                        {/* Actions */}
+                                                        <div className="flex gap-2 mt-1">
+                                                            <button
+                                                                onClick={() => {
+                                                                    const phone = order.customerPhone?.replace(/\D/g, '') || "";
+                                                                    const message = `Hello ${order.customerName}, your order *${order.refCode}* has been processed! Your tracking ID is *${order.trackingId}*. You can track it here: https://marqmike.com/track`;
+                                                                    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                                                                }}
+                                                                title="Chat on WhatsApp"
+                                                                className="w-7 h-7 flex items-center justify-center text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 rounded-full transition-colors"
+                                                            >
+                                                                <MessageCircle size={14} />
+                                                            </button>
+                                                            <button
+                                                                onClick={async () => {
+                                                                    const { notifyAndSyncOrder } = await import("@/app/actions/orders");
+                                                                    const res = await notifyAndSyncOrder(order.id);
+                                                                    if (res.success) {
+                                                                        toast.success(`Notification sent & Order synced for ${order.customerName}`);
+                                                                    } else {
+                                                                        toast.error(res.error || "Failed to notify");
+                                                                    }
+                                                                }}
+                                                                title="Notification"
+                                                                className="w-7 h-7 flex items-center justify-center text-brand-blue hover:text-brand-blue/80 bg-brand-blue/5 hover:bg-brand-blue/10 rounded-full transition-colors"
+                                                            >
+                                                                <Bell size={14} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => handleGenerateTracking(order.id)}
+                                                        className="text-[10px] font-bold text-brand-blue bg-brand-blue/5 hover:bg-brand-blue/10 px-2 py-1.5 rounded transition-colors"
+                                                    >
+                                                        Generate ID
+                                                    </button>
+                                                )
+                                            ) : (
+                                                <span className="text-[10px] text-slate-400 italic">Not Shipped</span>
                                             )}
                                         </td>
                                         <td className="py-3 px-4 align-top">
                                             <select
                                                 aria-label="Order Status"
                                                 value={order.status}
-                                                onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
+                                                onChange={(e) => handleStatusUpdate(order.id, e.target.value, order.type)}
                                                 className={`
                                                     text-xs font-bold px-2 py-1.5 rounded-lg border-2 outline-none cursor-pointer transition-colors
                                                     ${order.status === 'Pending' ? 'bg-amber-50 text-amber-600 border-amber-100' : ''}
-                                                    ${order.status === 'Processing' ? 'bg-blue-50 text-blue-600 border-blue-100' : ''}
-                                                    ${order.status === 'Shipped' ? 'bg-purple-50 text-purple-600 border-purple-100' : ''}
+                                                    ${order.status === 'Processing' || order.status === 'Approved' ? 'bg-blue-50 text-blue-600 border-blue-100' : ''}
+                                                    ${order.status === 'Shipped' || order.status === 'Purchased' ? 'bg-purple-50 text-purple-600 border-purple-100' : ''}
                                                     ${order.status === 'Completed' ? 'bg-green-50 text-green-600 border-green-100' : ''}
                                                     ${order.status === 'Cancelled' ? 'bg-slate-50 text-slate-500 border-slate-100' : ''}
                                                 `}
                                             >
-                                                {STATUS_OPTIONS.map(status => (
+                                                {(order.type === 'Shop' ? STATUS_OPTIONS : ['Pending', 'Approved', 'Purchased', 'Shipped', 'Completed', 'Cancelled']).map(status => (
                                                     <option key={status} value={status}>{status}</option>
                                                 ))}
                                             </select>

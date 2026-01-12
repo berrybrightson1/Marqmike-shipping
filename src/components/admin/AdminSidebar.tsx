@@ -34,8 +34,7 @@ export default function AdminSidebar() {
             title: "", // Main group has no title
             items: [
                 { name: "Overview", href: "/admin", icon: LayoutDashboard },
-                { name: "Shop Orders", href: "/admin/orders", icon: ShoppingBag, badge: pendingOrders },
-                { name: "Procurement Requests", href: "/admin/procurement", icon: ClipboardList },
+                { name: "Orders", href: "/admin/orders", icon: ShoppingBag, badge: pendingOrders },
                 { name: "Customer Shipments", href: "/admin/shipments", icon: Package },
                 { name: "Customers", href: "/admin/customers", icon: User },
                 { name: "Inventory", href: "/admin/inventory", icon: LayoutDashboard },

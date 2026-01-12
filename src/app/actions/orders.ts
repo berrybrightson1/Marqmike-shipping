@@ -92,15 +92,59 @@ export async function getAdminOrders() {
     if (!user || user.role !== "ADMIN") return { success: false, error: "Unauthorized" };
 
     try {
-        const orders = await prisma.order.findMany({
-            include: {
-                items: true,
-                user: { select: { name: true, email: true } }
-            },
-            orderBy: { createdAt: 'desc' }
-        });
-        return { success: true, data: orders };
+        const [orders, procurements] = await Promise.all([
+            prisma.order.findMany({
+                include: {
+                    items: true,
+                    user: { select: { name: true, email: true } }
+                },
+                orderBy: { createdAt: 'desc' }
+            }),
+            prisma.procurementRequest.findMany({
+                include: {
+                    user: { select: { name: true, phone: true } } // Fetch user details for procurement
+                },
+                orderBy: { createdAt: 'desc' }
+            })
+        ]);
+
+        // Normalize Orders
+        const normalizedOrders = orders.map(o => ({
+            id: o.id,
+            type: 'Shop',
+            refCode: o.refCode,
+            customerName: o.customerName || o.user?.name || "Unknown",
+            customerPhone: o.customerPhone,
+            items: o.items,
+            totalAmount: o.totalAmount,
+            trackingId: o.trackingId,
+            status: o.status,
+            createdAt: o.createdAt.toISOString(),
+            rawDate: o.createdAt
+        }));
+
+        // Normalize Procurements
+        const normalizedProcurements = procurements.map(p => ({
+            id: p.id,
+            type: 'Procurement',
+            refCode: "REQ-" + p.id.slice(-6).toUpperCase(),
+            customerName: p.user?.name || "Unknown",
+            customerPhone: p.user?.phone || "Unknown",
+            items: [{ itemName: p.itemName, quantity: 1, itemUrl: p.itemUrl }], // Mock single item list
+            totalAmount: 0, // Procurements often don't have price yet until paid
+            trackingId: null, // Usually handled via status
+            status: p.status,
+            createdAt: p.createdAt.toISOString(),
+            rawDate: p.createdAt,
+            notes: p.notes
+        }));
+
+        const unified = [...normalizedOrders, ...normalizedProcurements]
+            .sort((a, b) => new Date(b.rawDate).getTime() - new Date(a.rawDate).getTime());
+
+        return { success: true, data: unified };
     } catch (error) {
+        console.error("Get Admin Orders Error:", error);
         return { success: false, error: "Failed to fetch orders" };
     }
 }
@@ -168,41 +212,61 @@ async function syncToShipment(order: any) {
 }
 
 // --- Admin: Update Status ---
-export async function updateOrderStatus(orderId: string, newStatus: string, trackingId?: string) {
+// --- Admin: Update Unified Status (Shop or Procurement) ---
+export async function updateUnifiedStatus(id: string, newStatus: string, type: 'Shop' | 'Procurement', trackingId?: string) {
     const user = await getCurrentUser();
     if (!user || user.role !== "ADMIN") return { success: false, error: "Unauthorized" };
 
     try {
-        const updatedOrder = await prisma.order.update({
-            where: { id: orderId },
-            data: {
-                status: newStatus,
-                ...(trackingId && { trackingId })
-            },
-            include: { items: true }
-        });
+        if (type === 'Shop') {
+            const updatedOrder = await prisma.order.update({
+                where: { id },
+                data: {
+                    status: newStatus,
+                    ...(trackingId && { trackingId })
+                },
+                include: { items: true }
+            });
 
-        // If tracking ID is present, ensure Shipment is synced
-        if (updatedOrder.trackingId) {
-            await syncToShipment(updatedOrder);
+            if (updatedOrder.trackingId) await syncToShipment(updatedOrder);
+
+            await logAuditAction(
+                "ORDER_STATUS_UPDATE",
+                "ORDER",
+                `Order status updated to ${newStatus}`,
+                id,
+                { newStatus, trackingId },
+                user.name || "Admin"
+            );
+        } else {
+            // Procurement Update
+            await prisma.procurementRequest.update({
+                where: { id },
+                data: { status: newStatus }
+            });
+
+            // If status changed to Purchased/Shipped, we might want to notify user too. 
+            // For now just basic update.
+            await logAuditAction(
+                "PROCUREMENT_STATUS_UPDATE",
+                "PROCUREMENT",
+                `Procurement status updated to ${newStatus}`,
+                id,
+                { newStatus },
+                user.name || "Admin"
+            );
         }
-
-        await logAuditAction(
-            "ORDER_STATUS_UPDATE",
-            "ORDER",
-            `Order status updated to ${newStatus}`,
-            orderId,
-            { newStatus, trackingId },
-            user.name || "Admin"
-        );
 
         revalidatePath("/admin/orders");
         return { success: true };
     } catch (error) {
-        console.error("Update Order Error", error);
+        console.error("Update Unified Error", error);
         return { success: false, error: "Failed to update status" };
     }
 }
+
+// Keep existing for backward compat if needed, or remove.
+export const updateOrderStatus = async (id: string, status: string, tracking?: string) => updateUnifiedStatus(id, status, 'Shop', tracking);
 
 // --- Admin: Get Pending Order Count ---
 export async function getPendingOrderCount() {
@@ -213,10 +277,12 @@ export async function getPendingOrderCount() {
     if (!user || user.role !== "ADMIN") return { success: false, count: 0 };
 
     try {
-        const count = await prisma.order.count({
-            where: { status: "Pending" }
-        });
-        return { success: true, count };
+        const [orderCount, procurementCount] = await Promise.all([
+            prisma.order.count({ where: { status: "Pending" } }),
+            prisma.procurementRequest.count({ where: { status: "Pending" } })
+        ]);
+
+        return { success: true, count: orderCount + procurementCount };
     } catch (error) {
         return { success: false, count: 0 };
     }
