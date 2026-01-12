@@ -47,19 +47,13 @@ function ActionButton({ icon: Icon, label, href, onClick, active }: ActionButton
 }
 
 import { useState } from "react";
-import AddLinkModal from "./AddLinkModal";
+// Modal removed in favor of dedicated page
 
 export default function ActionGrid() {
-    const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
 
     const actions = [
         { label: "Calculator", icon: Calculator, href: "/dashboard/create", active: true },
-        {
-            label: "Buy For Me",
-            icon: ShoppingCart,
-            onClick: () => setIsLinkModalOpen(true),
-            active: false
-        },
+        { label: "Buy For Me", icon: ShoppingCart, href: "/dashboard/buy-for-me", active: false },
         { label: "Check Address", icon: MapPin, href: "/dashboard/address", active: false },
         { label: "Help Center", icon: HelpCircle, href: "/help", active: false },
     ];
@@ -74,7 +68,6 @@ export default function ActionGrid() {
                     />
                 ))}
             </div>
-            <AddLinkModal isOpen={isLinkModalOpen} onClose={() => setIsLinkModalOpen(false)} />
         </>
     );
 }
