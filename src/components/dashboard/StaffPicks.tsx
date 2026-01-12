@@ -95,9 +95,10 @@ export default function StaffPicks() {
                     const count = getItemCount(item.id);
                     // Use TrendingFeed Card Design
                     return (
-                        <div key={item.id} className="min-w-[200px] w-[200px] shrink-0 bg-white rounded-[20px] p-3 shadow-sm border border-slate-100 group hover:border-brand-blue/30 hover:shadow-lg transition-all snap-start">
+                        <div key={item.id} className="min-w-[200px] w-[200px] shrink-0 bg-white rounded-[20px] p-3 shadow-sm border border-slate-100 group hover:border-brand-blue/30 hover:shadow-lg transition-all snap-start flex flex-col h-full relative">
+                            <Link href={`/dashboard/product/${item.id}`} className="absolute inset-0 z-0" />
                             {/* Image Badge Container */}
-                            <div className="relative w-full h-32 rounded-xl bg-slate-50 overflow-hidden mb-3">
+                            <div className="relative w-full h-32 rounded-xl bg-slate-50 overflow-hidden mb-3 z-10 pointer-events-none">
                                 <img src={item.imageUrl || `https://placehold.co/400x400/e2e8f0/1e293b?text=${encodeURIComponent(item.name)}`} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                 {item.moq && (
                                     <div className="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur">
@@ -107,10 +108,10 @@ export default function StaffPicks() {
                             </div>
 
                             {/* Content */}
-                            <div>
+                            <div className="flex flex-col flex-1 z-10 pointer-events-none">
                                 <h4 className="font-bold text-slate-800 text-sm line-clamp-2 leading-tight mb-2 h-9" title={item.name}>{item.name}</h4>
 
-                                <div className="flex items-end justify-between mb-2">
+                                <div className="flex items-end justify-between mb-2 mt-auto">
                                     <div>
                                         <div className="text-[10px] text-slate-400 font-medium">Price</div>
                                         <div className="text-lg font-extrabold text-[#FF6600]">
@@ -119,7 +120,7 @@ export default function StaffPicks() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between gap-2 border-t border-slate-50 pt-2">
+                                <div className="flex items-center justify-between gap-2 border-t border-slate-50 pt-2 pointer-events-auto">
                                     <span className="text-[10px] font-bold text-slate-400 truncate max-w-[80px]">In Stock</span>
                                     <button
                                         onClick={(e) => handleAddToCart(e, item)}

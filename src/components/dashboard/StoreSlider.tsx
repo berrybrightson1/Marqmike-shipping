@@ -1,52 +1,22 @@
 "use client";
 
-import { ShieldCheck, Plus, Star, ArrowRight, Loader2, Store } from "lucide-react";
+import { Star, Store } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { toast } from "sonner";
+import React, { useRef, useState } from "react";
 
-// Mock Data for Stores (Replace with real API call if needed)
+// Original Stores Data (Restored)
 const STORES = [
-    {
-        id: "shein",
-        name: "Shein",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Shein_logo.svg/2560px-Shein_logo.svg.png",
-        rating: 4.8,
-        url: "https://shein.com"
-    },
-    {
-        id: "alibaba",
-        name: "Alibaba",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Alibaba-Logo.png/1200px-Alibaba-Logo.png",
-        rating: 4.9,
-        url: "https://alibaba.com"
-    },
-    {
-        id: "1688",
-        name: "1688",
-        image: "https://upload.wikimedia.org/wikipedia/commons/3/30/1688_logo.png",
-        rating: 4.7,
-        url: "https://1688.com"
-    },
-    {
-        id: "taobao",
-        name: "Taobao",
-        image: "https://upload.wikimedia.org/wikipedia/zh/5/5b/Taobao_logo.png",
-        rating: 4.6,
-        url: "https://taobao.com"
-    },
-    {
-        id: "amazon",
-        name: "Amazon",
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png",
-        rating: 4.9,
-        url: "https://amazon.com"
-    }
+    { name: "1688", url: "https://www.1688.com", color: "bg-[#FF6600]", textColor: "text-white", description: "Wholesale", rating: 4.8 },
+    { name: "Taobao", url: "https://world.taobao.com", color: "bg-[#FF5000]", textColor: "text-white", description: "Variety", rating: 4.6 },
+    { name: "Alibaba", url: "https://www.alibaba.com", color: "bg-[#F5F5F5]", textColor: "text-[#FF6600]", description: "Global", rating: 4.9 },
+    { name: "Tmall", url: "https://www.tmall.com", color: "bg-[#DD0000]", textColor: "text-white", description: "Brands", rating: 4.7 },
+    { name: "JD.com", url: "https://www.jd.com", color: "bg-[#E33333]", textColor: "text-white", description: "Fast Ship", rating: 4.8 },
+    { name: "Pinduoduo", url: "https://www.pinduoduo.com", color: "bg-[#E02E24]", textColor: "text-white", description: "Deals", rating: 4.5 },
 ];
 
 export default function StoreSlider() {
-    const scrollRef = React.useRef<HTMLDivElement>(null);
-    const [scrollProgress, setScrollProgress] = React.useState(0);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [scrollProgress, setScrollProgress] = useState(0);
 
     const handleScroll = () => {
         if (scrollRef.current) {
@@ -68,7 +38,7 @@ export default function StoreSlider() {
                         <p className="text-xs text-slate-500 font-medium">Browse verified suppliers</p>
                     </div>
                 </div>
-                <Link href="/stores" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors">
+                <Link href="/dashboard/stores" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors">
                     View All
                 </Link>
             </div>
@@ -85,12 +55,12 @@ export default function StoreSlider() {
             ">
                 {STORES.map((store) => (
                     <a
-                        key={store.id}
+                        key={store.name}
                         href={store.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="
-                            min-w-[160px] w-[160px] md:min-w-[180px] md:w-[180px] 
+                            min-w-[140px] w-[140px] md:min-w-[160px] md:w-[160px] 
                             shrink-0 bg-white rounded-[24px] p-4 
                             shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] 
                             border border-slate-100/50 
@@ -99,8 +69,9 @@ export default function StoreSlider() {
                             flex flex-col items-center text-center
                         "
                     >
-                        <div className="w-16 h-16 rounded-full bg-slate-50 border border-slate-100 p-3 mb-4 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                            <img src={store.image} alt={store.name} className="w-full h-full object-contain mix-blend-multiply" />
+                        {/* CSS Logo Circle */}
+                        <div className={`w-16 h-16 rounded-full ${store.color} ${store.textColor} mb-4 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform`}>
+                            <span className="font-black text-sm tracking-tight">{store.name.substring(0, 2).toUpperCase()}</span>
                         </div>
 
                         <div className="flex items-center gap-1 mb-1">
@@ -108,10 +79,11 @@ export default function StoreSlider() {
                             <span className="text-xs font-bold text-slate-700">{store.rating}</span>
                         </div>
 
-                        <h3 className="text-base font-bold text-slate-900 mb-3">{store.name}</h3>
+                        <h3 className="text-base font-bold text-slate-900 mb-1">{store.name}</h3>
+                        <p className="text-[10px] text-slate-400 font-medium mb-3">{store.description}</p>
 
                         <div className="mt-auto w-full py-2 rounded-xl bg-slate-50 text-slate-600 text-xs font-bold group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                            Visit Store
+                            Shop Now
                         </div>
                     </a>
                 ))}
@@ -123,7 +95,7 @@ export default function StoreSlider() {
                     <div className="w-16 h-1 rounded-full overflow-hidden bg-slate-100">
                         <div
                             className="h-full bg-indigo-500 rounded-full transition-all duration-100"
-                            style={{ width: '30%', transform: `translateX(${scrollProgress * 2.3}px)` }} // Approximate movement
+                            style={{ width: '30%', transform: `translateX(${scrollProgress * 2.3}px)` }}
                         />
                     </div>
                 </div>
