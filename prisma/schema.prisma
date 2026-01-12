@@ -67,6 +67,7 @@ model Product {
   priceRMB    Float
   priceGHS    Float
   stock       Int      @default(0)
+  moq         Int      @default(1)
   status      String   @default("In Stock")
   category    String   @default("General")
   imageUrl    String?

@@ -28,7 +28,7 @@ export default function ConfirmModal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 pointer-events-none animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none animate-in fade-in duration-200">
             <div className="bg-white rounded-[24px] shadow-2xl w-full max-w-sm p-8 transform scale-100 animate-in zoom-in-95 duration-200 pointer-events-auto border border-white/20">
                 <div className="flex flex-col items-center text-center">
                     <h3 className="text-xl font-bold text-slate-900 mb-2 font-sora">{title}</h3>

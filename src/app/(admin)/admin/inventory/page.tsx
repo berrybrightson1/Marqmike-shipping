@@ -66,9 +66,10 @@ export default function InventoryManagerPage() {
                     <thead className="bg-slate-50/50">
                         <tr className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                             <th className="p-6">Product</th>
+                            <th className="p-6">Category</th>
                             <th className="p-6">Pricing (RMB / GHS)</th>
                             <th className="p-6">Status</th>
-                            <th className="p-6 text-right">Stock</th>
+                            <th className="p-6 text-right">Stock / MOQ</th>
                             <th className="p-6 text-right">Actions</th>
                         </tr>
                     </thead>
@@ -85,6 +86,7 @@ export default function InventoryManagerPage() {
 
 function InventoryRow({ item }: { item: any }) {
     const [stock, setStock] = useState(item.stock);
+    const [moq, setMoq] = useState(item.moq || 1); // New state
     const [status, setStatus] = useState(item.status);
     const [saving, setSaving] = useState(false);
     const [deleted, setDeleted] = useState(false);
@@ -95,6 +97,7 @@ function InventoryRow({ item }: { item: any }) {
         const formData = new FormData();
         formData.append("id", item.id);
         formData.append("stock", stock.toString());
+        formData.append("moq", moq.toString()); // Save MOQ
         formData.append("status", status);
 
         const res = await updateProduct(formData);
@@ -134,6 +137,9 @@ function InventoryRow({ item }: { item: any }) {
                     </div>
                 </td>
                 <td className="p-6">
+                    <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-lg capitalize">{item.category || "General"}</span>
+                </td>
+                <td className="p-6">
                     <div className="flex flex-col">
                         <span className="text-sm font-bold text-slate-900">¥{item.priceRMB}</span>
                         <span className="text-xs font-bold text-slate-600">₵{item.priceGHS}</span>
@@ -159,13 +165,28 @@ function InventoryRow({ item }: { item: any }) {
                     </select>
                 </td>
                 <td className="p-6 text-right">
-                    <input
-                        type="number"
-                        aria-label="Stock Quantity"
-                        value={stock}
-                        onChange={(e) => setStock(parseInt(e.target.value) || 0)}
-                        className="w-16 bg-transparent text-right font-mono font-bold text-slate-900 border-b border-transparent focus:border-brand-blue outline-none transition-colors"
-                    />
+                    <div className="flex flex-col items-end gap-1">
+                        <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-slate-400 font-bold uppercase">Stock</span>
+                            <input
+                                type="number"
+                                aria-label="Stock Quantity"
+                                value={stock}
+                                onChange={(e) => setStock(parseInt(e.target.value) || 0)}
+                                className="w-12 bg-transparent text-right font-mono font-bold text-slate-900 border-b border-transparent focus:border-brand-blue outline-none transition-colors"
+                            />
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-slate-400 font-bold uppercase">MOQ</span>
+                            <input
+                                type="number"
+                                aria-label="MOQ"
+                                value={moq}
+                                onChange={(e) => setMoq(parseInt(e.target.value) || 1)}
+                                className="w-12 bg-transparent text-right font-mono font-bold text-slate-900 border-b border-transparent focus:border-brand-blue outline-none transition-colors border-dashed border-slate-200"
+                            />
+                        </div>
+                    </div>
                 </td>
                 <td className="p-6 text-right">
                     <div className="flex justify-end gap-2">

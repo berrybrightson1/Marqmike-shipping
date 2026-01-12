@@ -15,11 +15,13 @@ export async function createProduct(formData: FormData) {
     // 2. Extract Data
     const name = formData.get("name") as string;
     const category = formData.get("category") as string;
+    const description = formData.get("description") as string;
 
     // Currency Logic
     const currency = formData.get("currency") as string || "GHS";
     const priceValue = parseFloat(formData.get("priceValue") as string);
     const stock = parseInt(formData.get("stock") as string) || 0;
+    const moq = parseInt(formData.get("moq") as string) || 1;
 
     let priceRMB = 0;
     let priceGHS = 0;
@@ -43,9 +45,11 @@ export async function createProduct(formData: FormData) {
             data: {
                 name,
                 category,
+                description,
                 priceRMB,
                 priceGHS,
                 stock,
+                moq,
                 imageUrl,
                 status: stock > 0 ? "In Stock" : "Out of Stock"
             }

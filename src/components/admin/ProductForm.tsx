@@ -195,8 +195,19 @@ export default function ProductForm() {
                 </div>
             </div>
 
-            {/* Pricing */}
-            <div className="grid grid-cols-2 gap-6">
+            {/* Description - New */}
+            <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Description</label>
+                <textarea
+                    name="description"
+                    rows={4}
+                    placeholder="Describe the product features, quality, and usage..."
+                    className="w-full p-4 bg-slate-50 border-none rounded-2xl font-medium text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-brand-blue/20 outline-none resize-none"
+                />
+            </div>
+
+            {/* Pricing & Stock */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Price</label>
                     <div className="relative flex gap-2">
@@ -207,7 +218,7 @@ export default function ProductForm() {
                             </select>
                         </div>
                         <input
-                            name="priceValue" // Changed name to handle logic manually
+                            name="priceValue"
                             type="number"
                             step="0.01"
                             required
@@ -216,18 +227,24 @@ export default function ProductForm() {
                         />
                     </div>
                 </div>
-                {/* 
-                   Note: DB has stock, form had CBM?
-                   Let's stick to CBM/Weight if valid, but for Staff Picks likely need 'Stock' or 'Min Order'
-                   User original code had "cbm".
-                   Let's change label to "Stock Quantity" for Creator Studio
-                */}
+
                 <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Stock Qty</label>
                     <input
-                        name="stock" // changed from cbm
+                        name="stock"
                         type="number"
                         placeholder="10"
+                        className="w-full p-4 bg-slate-50 border-none rounded-xl font-bold text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-brand-blue/20 outline-none"
+                    />
+                </div>
+
+                <div className="space-y-2 col-span-2 md:col-span-1">
+                    <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">MOQ</label>
+                    <input
+                        name="moq"
+                        type="number"
+                        placeholder="1"
+                        defaultValue="1"
                         className="w-full p-4 bg-slate-50 border-none rounded-xl font-bold text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-brand-blue/20 outline-none"
                     />
                 </div>

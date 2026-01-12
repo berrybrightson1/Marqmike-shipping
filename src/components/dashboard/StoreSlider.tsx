@@ -26,51 +26,57 @@ export default function StoreSlider() {
         }
     };
 
-    // Auto-scroll logic
+    // Auto-scroll logic (Continuous Smooth Marquee)
     React.useEffect(() => {
-        const interval = setInterval(() => {
-            if (scrollRef.current) {
-                const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-                // Calculate item width including gap (140px + 16px gap = 156px) - rough estimate, verifying via dynamic measurement best
-                // Actually getting dynamic child width is safer
-                const firstCard = scrollRef.current.firstElementChild as HTMLElement;
-                const cardWidth = firstCard ? firstCard.clientWidth : 156;
-                const gap = 16;
-                const scrollAmount = (cardWidth + gap) * 2; // Scroll 2 items
+        const scrollContainer = scrollRef.current;
+        if (!scrollContainer) return;
 
-                // Check if we reached the end
-                if (scrollLeft + clientWidth >= scrollWidth - 10) {
-                    // Reset to start smoothly
-                    scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        let animationId: number;
+        let lastTimestamp: number = 0;
+        const speed = 0.5; // Pixels per frame - Adjust for smoothness
+
+        const step = (timestamp: number) => {
+            if (!lastTimestamp) lastTimestamp = timestamp;
+            const deltaTime = timestamp - lastTimestamp;
+            lastTimestamp = timestamp;
+
+            if (scrollContainer) {
+                // If scrolled to end, reset to start seamlessly (or as seamlessly as possible without duplicating nodes)
+                // For a true seamless marquee, we'd need duplicated children. 
+                // For now, let's just checking specific boundaries.
+
+                // Correction: A "Ticker" feel typically needs standard JS loop.
+                // However, user said "animation... is not smooth".
+                // Let's try a very gentle scrollBy.
+
+                if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 1) {
+                    scrollContainer.scrollLeft = 0;
                 } else {
-                    // Scroll forward
-                    scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    scrollContainer.scrollLeft += 0.5; // Very slow, continuous drift
                 }
             }
-        }, 3000); // 3 seconds interval for better readability (2s might be too fast for interaction, but user asked for 2s so will adjust)
+            animationId = requestAnimationFrame(step);
+        };
 
-        return () => clearInterval(interval);
-    }, []);
+        // Start animation
+        animationId = requestAnimationFrame(step);
 
-    // Adjust interval strictly to user request of 2 seconds
-    React.useEffect(() => {
-        const interval = setInterval(() => {
-            if (scrollRef.current) {
-                const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-                const firstCard = scrollRef.current.firstElementChild as HTMLElement;
-                const cardWidth = firstCard ? firstCard.clientWidth : 156;
-                const gap = 16;
-                const scrollAmount = (cardWidth + gap) * 2; // Scroll 2 items
+        // Pause on hover (handled via CSS pointer-events or JS listener? Let's use JS listener for simplicity)
+        const pause = () => cancelAnimationFrame(animationId);
+        const resume = () => { lastTimestamp = 0; animationId = requestAnimationFrame(step); };
 
-                if (scrollLeft + clientWidth >= scrollWidth - 5) {
-                    scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-                } else {
-                    scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                }
-            }
-        }, 2500); // 2.5s to balance "smooth 2 sec" feel (2s animation + pause)
+        scrollContainer.addEventListener('mouseenter', pause);
+        scrollContainer.addEventListener('mouseleave', resume);
+        scrollContainer.addEventListener('touchstart', pause);
+        scrollContainer.addEventListener('touchend', resume);
 
-        return () => clearInterval(interval);
+        return () => {
+            cancelAnimationFrame(animationId);
+            scrollContainer.removeEventListener('mouseenter', pause);
+            scrollContainer.removeEventListener('mouseleave', resume);
+            scrollContainer.removeEventListener('touchstart', pause);
+            scrollContainer.removeEventListener('touchend', resume);
+        };
     }, []);
 
     return (

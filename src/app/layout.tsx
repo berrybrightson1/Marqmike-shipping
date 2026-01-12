@@ -39,10 +39,11 @@ export default function RootLayout({
         </div>
         <Toaster
           position="top-center"
+          expand={false}
           toastOptions={{
             unstyled: true,
             classNames: {
-              toast: "bg-[#0a0a0a] border border-white/10 shadow-2xl rounded-2xl px-6 py-4 flex items-center gap-3 w-auto max-w-[90vw] mb-6",
+              toast: "bg-[#0a0a0a] border border-white/10 shadow-2xl rounded-2xl px-6 py-4 flex items-center gap-3 w-auto min-w-[300px] mb-6 mx-auto", // added mx-auto and min-width
               title: "text-white font-bold text-sm",
               description: "text-white/60 text-xs font-medium",
               actionButton: "bg-white text-black hover:bg-slate-200",
@@ -51,6 +52,11 @@ export default function RootLayout({
               success: "bg-[#051a05] border-green-900/50 text-green-200",
               warning: "bg-[#1a1205] border-orange-900/50 text-orange-200",
               info: "bg-[#050f1a] border-blue-900/50 text-blue-200",
+            },
+            style: {
+              marginTop: '1rem', // Ensure spacing from top
+              left: '50%',
+              transform: 'translateX(-50%)' // Force center alignment if Sonner fails
             }
           }}
         />

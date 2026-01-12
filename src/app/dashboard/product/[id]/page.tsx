@@ -59,6 +59,33 @@ export default function ProductDetailsPage() {
         `https://placehold.co/400x400/f1f5f9/1e293b?text=Detail+Shot`
     ].filter(Boolean);
 
+    const [isWishlisted, setIsWishlisted] = useState(false);
+
+    const handleShare = async () => {
+        if (!product) return;
+        const shareData = {
+            title: product.name,
+            text: `Check out ${product.name} on Marqmike!`,
+            url: window.location.href,
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                await navigator.clipboard.writeText(window.location.href);
+                toast.success("Link copied to clipboard!");
+            }
+        } catch (err) {
+            console.error("Error sharing:", err);
+        }
+    };
+
+    const toggleWishlist = () => {
+        setIsWishlisted(!isWishlisted);
+        toast.success(isWishlisted ? "Removed from wishlist" : "Added to wishlist");
+    };
+
     return (
         <div className="min-h-screen bg-slate-50 pb-24">
             {/* Header / Nav */}
@@ -68,11 +95,19 @@ export default function ProductDetailsPage() {
                 </button>
                 <div className="font-bold text-slate-900 truncate max-w-[200px]">{product.name}</div>
                 <div className="flex gap-2">
-                    <button title="Share Product" className="p-2 rounded-full hover:bg-slate-100 transition-colors text-slate-500">
+                    <button
+                        title="Share Product"
+                        onClick={handleShare}
+                        className="p-2 rounded-full hover:bg-slate-100 transition-colors text-slate-500"
+                    >
                         <Share2 size={20} />
                     </button>
-                    <button title="Add to Wishlist" className="p-2 rounded-full hover:bg-slate-100 transition-colors text-slate-500 hover:text-red-500">
-                        <Heart size={20} />
+                    <button
+                        title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+                        onClick={toggleWishlist}
+                        className={`p-2 rounded-full hover:bg-slate-100 transition-colors ${isWishlisted ? 'text-red-500 bg-red-50' : 'text-slate-500 hover:text-red-500'}`}
+                    >
+                        <Heart size={20} className={isWishlisted ? "fill-red-500" : ""} />
                     </button>
                 </div>
             </div>
